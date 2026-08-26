@@ -649,45 +649,38 @@ init_session_state()
 
 def render_brand_header(show_back_button: bool = False) -> None:
     """Renders authentic Myntra brand lockup with optional back navigation."""
-    nav_left_html = """
-    <div class="brand-lockup-left">
-        <!-- Authentic Myntra Vector SVG Ribbon Logo -->
-        <svg width="42" height="34" viewBox="0 0 108 84" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14.5 73.2C8.2 63.8 7.5 45.3 17.8 28.2C27.5 12.1 40.1 6.5 43.7 13.2C47.4 20 38.3 38.8 28.5 54.8C19.8 69.1 18.2 78.7 14.5 73.2Z" fill="url(#myntra_pink)"/>
-            <path d="M43.7 13.2C40.1 6.5 27.5 12.1 17.8 28.2C27.2 43.8 45.4 69.8 54.2 72.8C63 75.8 56.4 51.2 43.7 13.2Z" fill="url(#myntra_orange)" opacity="0.95"/>
-            <path d="M64.3 13.2C67.9 6.5 80.5 12.1 90.2 28.2C80.8 43.8 62.6 69.8 53.8 72.8C45 75.8 51.6 51.2 64.3 13.2Z" fill="url(#myntra_orange)" opacity="0.95"/>
-            <path d="M93.5 73.2C99.8 63.8 100.5 45.3 90.2 28.2C80.5 12.1 67.9 6.5 64.3 13.2C60.6 20 69.7 38.8 79.5 54.8C88.2 69.1 89.8 78.7 93.5 73.2Z" fill="url(#myntra_pink)"/>
-            <defs>
-                <linearGradient id="myntra_pink" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#FF3F6C" />
-                    <stop offset="100%" stop-color="#EA1D76" />
-                </linearGradient>
-                <linearGradient id="myntra_orange" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#FF7A00" />
-                    <stop offset="100%" stop-color="#FF527B" />
-                </linearGradient>
-            </defs>
-        </svg>
-        <div class="brand-title-group">
-            <div class="brand-main-title">
-                <span class="brand-wordmark">myntra</span>
-                <span class="brand-stylesync-tag">StyleSync</span>
-                <span class="brand-ai-badge">✦ AI</span>
-            </div>
-            <div class="brand-subtext">Smart Wardrobe Matcher & Lookbook</div>
-        </div>
-    </div>
-    """
-    
     st.markdown(
-        f"""
-        <div class="brand-header-wrap">
-            {nav_left_html}
-            <div class="wishlist-pill">
-                💛 Wishlist (24)
-            </div>
-        </div>
-        """,
+        """<div class="brand-header-wrap">
+<div class="brand-lockup-left">
+<svg width="42" height="34" viewBox="0 0 108 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M14.5 73.2C8.2 63.8 7.5 45.3 17.8 28.2C27.5 12.1 40.1 6.5 43.7 13.2C47.4 20 38.3 38.8 28.5 54.8C19.8 69.1 18.2 78.7 14.5 73.2Z" fill="url(#myntra_pink)"/>
+<path d="M43.7 13.2C40.1 6.5 27.5 12.1 17.8 28.2C27.2 43.8 45.4 69.8 54.2 72.8C63 75.8 56.4 51.2 43.7 13.2Z" fill="url(#myntra_orange)" opacity="0.95"/>
+<path d="M64.3 13.2C67.9 6.5 80.5 12.1 90.2 28.2C80.8 43.8 62.6 69.8 53.8 72.8C45 75.8 51.6 51.2 64.3 13.2Z" fill="url(#myntra_orange)" opacity="0.95"/>
+<path d="M93.5 73.2C99.8 63.8 100.5 45.3 90.2 28.2C80.5 12.1 67.9 6.5 64.3 13.2C60.6 20 69.7 38.8 79.5 54.8C88.2 69.1 89.8 78.7 93.5 73.2Z" fill="url(#myntra_pink)"/>
+<defs>
+<linearGradient id="myntra_pink" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="#FF3F6C" />
+<stop offset="100%" stop-color="#EA1D76" />
+</linearGradient>
+<linearGradient id="myntra_orange" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="#FF7A00" />
+<stop offset="100%" stop-color="#FF527B" />
+</linearGradient>
+</defs>
+</svg>
+<div class="brand-title-group">
+<div class="brand-main-title">
+<span class="brand-wordmark">myntra</span>
+<span class="brand-stylesync-tag">StyleSync</span>
+<span class="brand-ai-badge">✦ AI</span>
+</div>
+<div class="brand-subtext">Smart Wardrobe Matcher & Lookbook</div>
+</div>
+</div>
+<div class="wishlist-pill">
+💛 Wishlist (24)
+</div>
+</div>""",
         unsafe_allow_html=True
     )
 
