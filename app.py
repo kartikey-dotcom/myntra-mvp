@@ -768,41 +768,15 @@ def render_social_loop() -> None:
 
 
 def render_footer() -> None:
-    """
-    Renders Section 4: PM Walkthrough, Architecture Notes, and Live Demo Controls.
-    Provides complete transparency for stakeholder reviews and portfolio presentations.
-    """
-    st.markdown("<br/><br/>", unsafe_allow_html=True)
-    
-    with st.expander("📋 Product Manager Walkthrough & Architecture Notes"):
-        st.markdown(
-            """
-            ### 🎯 Product Strategy & Value Hypothesis
-            * **Core Friction Solved:**
-              1. **Styling Paralysis:** Users wishlist garments but don't complete the purchase because they aren't sure how to style them with clothes they already own.
-              2. **Off-Platform Leakage:** Users take screenshots to WhatsApp to ask friends for validation, breaking checkout momentum and abandoning the funnel.
-            * **Defensive Moats:**
-              * **Universal Closet Moat:** Combines verified on-platform Myntra purchases with camera-roll uploads (`📸 Offline Closet`), establishing durable cross-platform lock-in.
-              * **In-App Social Validation Loop:** Eliminates drop-off by bringing the peer voting loop natively into the product.
-
-            ---
-
-            ### 🏗️ Technical Architecture & Lifecycle
-            * **Wizard of Oz AI Simulation:**
-              * Deterministic mock data structures model the exact production schema.
-              * 2.0s calibrated delay builds realistic AI anticipation while guaranteeing zero network failures, zero token costs, and 100% demo reliability.
-            * **Streamlit Session State Resilience:**
-              * Script re-runs from top-to-bottom on every user click.
-              * Gating Lookbook & WhatsApp rendering on `st.session_state.is_styled` prevents UI reset when users interact with secondary poll buttons.
-            """
-        )
-
-    with st.expander("🛠️ Portfolio Demo Controls & State Registry"):
-        st.caption("Inspect live session state or reset the prototype to demonstrate from scratch:")
-        st.json(get_session_debug_state())
-        if st.button("🔄 Reset Prototype State", help="Reset all state flags to demonstrate from scratch"):
-            reset_session_state()
-            st.rerun()
+    """Renders a clean, authentic Myntra consumer footer."""
+    st.markdown(
+        """
+        <div style="text-align: center; color: #94969F; font-size: 0.76rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #EEEEF0;">
+            🔒 <strong>100% Original Products</strong> &nbsp;•&nbsp; 🚚 <strong>Free Delivery</strong> &nbsp;•&nbsp; 🔄 <strong>Easy 14 Days Returns</strong>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 
 # ==============================================================================
