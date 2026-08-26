@@ -57,26 +57,61 @@ CUSTOM_CSS = """
         border-radius: 16px;
     }
 
-    /* Header Bar */
-    .mobile-header {
+    /* Header Bar & Brand Lockup */
+    .brand-header-wrap {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.6rem 0 1.2rem 0;
+        padding: 0.4rem 0 1.2rem 0;
         border-bottom: 1.5px solid #F0F0F2;
         margin-bottom: 1.5rem;
     }
-    .header-logo {
+    .brand-lockup-left {
         display: flex;
         align-items: center;
-        gap: 8px;
-        font-size: 1.55rem;
+        gap: 12px;
+    }
+    .brand-title-group {
+        display: flex;
+        flex-direction: column;
+    }
+    .brand-main-title {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        line-height: 1.1;
+    }
+    .brand-wordmark {
+        font-size: 1.45rem;
         font-weight: 900;
-        letter-spacing: -0.5px;
+        letter-spacing: -0.6px;
         color: #282C3F;
     }
-    .header-logo span {
+    .brand-stylesync-tag {
+        font-size: 1.25rem;
+        font-weight: 800;
+        background: linear-gradient(90deg, #FF3F6C 0%, #FF7A00 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.3px;
+    }
+    .brand-ai-badge {
+        font-size: 0.65rem;
+        font-weight: 800;
         color: #FF3F6C;
+        background: #FFF0F4;
+        border: 1px solid #FFD8E4;
+        border-radius: 4px;
+        padding: 2px 6px;
+        margin-left: 2px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .brand-subtext {
+        font-size: 0.73rem;
+        color: #878B94;
+        font-weight: 500;
+        margin-top: 2px;
     }
     .wishlist-pill {
         background: #FFF0F4;
@@ -89,6 +124,7 @@ CUSTOM_CSS = """
         display: flex;
         align-items: center;
         gap: 6px;
+        box-shadow: 0 1px 4px rgba(255, 63, 108, 0.08);
     }
 
     /* Product Card */
@@ -497,12 +533,36 @@ init_session_state()
 # ==============================================================================
 
 def render_header() -> None:
-    """Renders iOS App Header with Wishlist Counter."""
+    """Renders authentic Myntra brand lockup with vector SVG ribbon logo and StyleSync AI badge."""
     st.markdown(
         """
-        <div class="mobile-header">
-            <div class="header-logo">
-                🛍️ myntra <span>StyleSync</span>
+        <div class="brand-header-wrap">
+            <div class="brand-lockup-left">
+                <!-- Authentic Myntra Multi-Color 'M' Vector Logo -->
+                <svg width="42" height="34" viewBox="0 0 108 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14.5 73.2C8.2 63.8 7.5 45.3 17.8 28.2C27.5 12.1 40.1 6.5 43.7 13.2C47.4 20 38.3 38.8 28.5 54.8C19.8 69.1 18.2 78.7 14.5 73.2Z" fill="url(#myntra_pink)"/>
+                    <path d="M43.7 13.2C40.1 6.5 27.5 12.1 17.8 28.2C27.2 43.8 45.4 69.8 54.2 72.8C63 75.8 56.4 51.2 43.7 13.2Z" fill="url(#myntra_orange)" opacity="0.95"/>
+                    <path d="M64.3 13.2C67.9 6.5 80.5 12.1 90.2 28.2C80.8 43.8 62.6 69.8 53.8 72.8C45 75.8 51.6 51.2 64.3 13.2Z" fill="url(#myntra_orange)" opacity="0.95"/>
+                    <path d="M93.5 73.2C99.8 63.8 100.5 45.3 90.2 28.2C80.5 12.1 67.9 6.5 64.3 13.2C60.6 20 69.7 38.8 79.5 54.8C88.2 69.1 89.8 78.7 93.5 73.2Z" fill="url(#myntra_pink)"/>
+                    <defs>
+                        <linearGradient id="myntra_pink" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FF3F6C" />
+                            <stop offset="100%" stop-color="#EA1D76" />
+                        </linearGradient>
+                        <linearGradient id="myntra_orange" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FF7A00" />
+                            <stop offset="100%" stop-color="#FF527B" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="brand-title-group">
+                    <div class="brand-main-title">
+                        <span class="brand-wordmark">myntra</span>
+                        <span class="brand-stylesync-tag">StyleSync</span>
+                        <span class="brand-ai-badge">✦ AI</span>
+                    </div>
+                    <div class="brand-subtext">Smart Wardrobe Matcher & Lookbook</div>
+                </div>
             </div>
             <div class="wishlist-pill">
                 💛 Wishlist (24)
