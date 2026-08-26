@@ -656,6 +656,86 @@ IMAGE_LIGHT_DENIM = "https://images.unsplash.com/photo-1541099649105-f69ad21f324
 IMAGE_FOSSIL_WATCH = "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&auto=format&fit=crop&q=80"
 IMAGE_PUMA_SNEAKERS = "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&auto=format&fit=crop&q=80"
 
+class WishlistProduct(TypedDict):
+    id: str
+    brand: str
+    name: str
+    price: str
+    original_price: str
+    discount: str
+    rating: str
+    image_url: str
+    tag: str
+
+WISHLIST_PRODUCTS: List[WishlistProduct] = [
+    {
+        "id": "W-101",
+        "brand": "FOSSIL",
+        "name": "The Minimalist 3H Black Dial Leather Watch",
+        "price": "₹8,495",
+        "original_price": "₹10,495",
+        "discount": "19% OFF",
+        "rating": "4.8 ★ (890)",
+        "image_url": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=500&auto=format&fit=crop&q=80",
+        "tag": "Accessory Match"
+    },
+    {
+        "id": "W-102",
+        "brand": "PUMA",
+        "name": "RS-X Efekt Retro Chunky Unisex Sneakers",
+        "price": "₹5,999",
+        "original_price": "₹9,999",
+        "discount": "40% OFF",
+        "rating": "4.5 ★ (1.4k)",
+        "image_url": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&auto=format&fit=crop&q=80",
+        "tag": "Footwear Match"
+    },
+    {
+        "id": "W-103",
+        "brand": "ZARA MAN",
+        "name": "Slim-Fit Textured Cotton Knit Polo Shirt",
+        "price": "₹2,290",
+        "original_price": "₹2,990",
+        "discount": "23% OFF",
+        "rating": "4.6 ★ (620)",
+        "image_url": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=80",
+        "tag": "Closet Sync"
+    },
+    {
+        "id": "W-104",
+        "brand": "LEVI'S",
+        "name": "511 Slim Fit Light Wash Selvedge Jeans",
+        "price": "₹3,799",
+        "original_price": "₹4,999",
+        "discount": "24% OFF",
+        "rating": "4.7 ★ (2.1k)",
+        "image_url": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=500&auto=format&fit=crop&q=80",
+        "tag": "Weekend Pair"
+    },
+    {
+        "id": "W-105",
+        "brand": "H&M EDITION",
+        "name": "Premium Suede Chelsea Ankle Boots",
+        "price": "₹4,499",
+        "original_price": "₹5,999",
+        "discount": "25% OFF",
+        "rating": "4.4 ★ (410)",
+        "image_url": "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=500&auto=format&fit=crop&q=80",
+        "tag": "Trending"
+    },
+    {
+        "id": "W-106",
+        "brand": "RAY-BAN",
+        "name": "Hexagonal Flat Lenses Gold-Tone Sunglasses",
+        "price": "₹7,190",
+        "original_price": "₹8,990",
+        "discount": "20% OFF",
+        "rating": "4.9 ★ (1.8k)",
+        "image_url": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500&auto=format&fit=crop&q=80",
+        "tag": "Summer Essential"
+    }
+]
+
 
 # ==============================================================================
 # 3. ROUTER & STATE MACHINE
@@ -844,31 +924,29 @@ def render_screen_wishlist_anchor() -> None:
             time.sleep(1.5)
         navigate_to("stylesync_results")
 
-    # "More from your Wishlist" Section (Desktop 2-Column Grid)
-    st.markdown("<div class='more-wishlist-heading' style='margin-top: 24px;'>More from your Wishlist</div>", unsafe_allow_html=True)
-    m_col1, m_col2 = st.columns(2)
-    with m_col1:
-        st.markdown(
-            f"""<div class="more-grid-card">
-<img src="{IMAGE_FOSSIL_WATCH}" class="more-grid-img" alt="Fossil Watch"/>
-<div style="font-size: 0.72rem; color: #282C3F; font-weight: 700; margin-top: 4px;">⭐ 4.8 | Verified</div>
-<div style="font-size: 0.85rem; font-weight: 800; color: #282C3F;">Fossil</div>
-<div style="font-size: 0.78rem; color: #7E818C;">Minimalist Analog Watch</div>
-<div style="font-size: 0.90rem; font-weight: 800; color: #282C3F; margin-top: 4px;">₹ 8,495</div>
+    # "More from your Wishlist" Section (Desktop 3-Column Grid)
+    st.markdown("<div class='more-wishlist-heading' style='margin-top: 28px;'>Saved Items in Your Wishlist (6 Pieces)</div>", unsafe_allow_html=True)
+    
+    # 3-Column Desktop Grid for Wishlist items
+    grid_cols = st.columns(3)
+    for idx, prod in enumerate(WISHLIST_PRODUCTS):
+        with grid_cols[idx % 3]:
+            st.markdown(
+                f"""<div class="more-grid-card" style="margin-bottom: 16px;">
+<div style="position: relative;">
+<img src="{prod['image_url']}" class="more-grid-img" alt="{prod['name']}"/>
+<div style="position: absolute; top: 8px; right: 8px; background: #FFF; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">❤️</div>
+</div>
+<div style="font-size: 0.68rem; color: #03A685; font-weight: 700; background: #E8F8F5; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 4px;">{prod['tag']}</div>
+<div style="font-size: 0.70rem; color: #282C3F; font-weight: 700;">{prod['rating']}</div>
+<div style="font-size: 0.84rem; font-weight: 800; color: #282C3F; margin-top: 2px;">{prod['brand']}</div>
+<div style="font-size: 0.76rem; color: #535766; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{prod['name']}</div>
+<div style="font-size: 0.90rem; font-weight: 800; color: #282C3F; margin-top: 4px;">{prod['price']} <span style="font-size: 0.74rem; color: #94969F; text-decoration: line-through;">{prod['original_price']}</span> <span style="font-size: 0.72rem; color: #FF3F6C; background: #FFF0F4; padding: 1px 4px; border-radius: 3px;">{prod['discount']}</span></div>
 </div>""",
-            unsafe_allow_html=True
-        )
-    with m_col2:
-        st.markdown(
-            f"""<div class="more-grid-card">
-<img src="{IMAGE_PUMA_SNEAKERS}" class="more-grid-img" alt="Puma RS-X"/>
-<div style="font-size: 0.72rem; color: #282C3F; font-weight: 700; margin-top: 4px;">⭐ 4.5 | Verified</div>
-<div style="font-size: 0.85rem; font-weight: 800; color: #282C3F;">Puma</div>
-<div style="font-size: 0.78rem; color: #7E818C;">RS-X Retro Sneakers</div>
-<div style="font-size: 0.90rem; font-weight: 800; color: #282C3F; margin-top: 4px;">₹ 5,999 <span style="font-size: 0.76rem; color: #94969F; text-decoration: line-through;">₹9,999</span></div>
-</div>""",
-            unsafe_allow_html=True
-        )
+                unsafe_allow_html=True
+            )
+            if st.button("🛍️ Move to Bag", key=f"move_to_bag_{prod['id']}", use_container_width=True):
+                st.toast(f"🛍️ Moved {prod['brand']} {prod['name'][:20]}... to your Bag!")
 
 
 # ==============================================================================
