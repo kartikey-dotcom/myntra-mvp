@@ -567,6 +567,30 @@ CUSTOM_CSS = """
         transform: translateY(-1px) !important;
     }
 
+    /* Top Header Bar Clickable Wishlist Pill Button */
+    .st-key-nav_wishlist_btn_pdp button,
+    .st-key-nav_wishlist_btn_wishlist_anchor button,
+    .st-key-nav_wishlist_btn_stylesync_results button {
+        background-color: #FFF0F4 !important;
+        color: #FF3F6C !important;
+        border: 1.5px solid #FFD8E4 !important;
+        border-radius: 20px !important;
+        font-size: 0.84rem !important;
+        font-weight: 800 !important;
+        padding: 0.45rem 1.1rem !important;
+        box-shadow: 0 2px 6px rgba(255, 63, 108, 0.08) !important;
+        transition: all 0.15s ease !important;
+        margin-top: 4px !important;
+    }
+    .st-key-nav_wishlist_btn_pdp button:hover,
+    .st-key-nav_wishlist_btn_wishlist_anchor button:hover,
+    .st-key-nav_wishlist_btn_stylesync_results button:hover {
+        background-color: #FFE2EB !important;
+        border-color: #FF3F6C !important;
+        color: #FF3F6C !important;
+        transform: translateY(-1px) !important;
+    }
+
     /* Back / Outline Buttons */
     div.stButton > button:not([kind="primary"]):not([kind="secondary"]) {
         background-color: #FFFFFF !important;
@@ -659,9 +683,11 @@ init_session_state()
 # ==============================================================================
 
 def render_desktop_header() -> None:
-    """Renders the authentic Myntra Desktop Header with Vector Ribbon Logo."""
-    st.markdown(
-        """<div class="desktop-header-wrap">
+    """Renders the authentic Myntra Desktop Header with Vector Ribbon Logo & Clickable Wishlist."""
+    h_col1, h_col2 = st.columns([3.8, 1.2])
+    with h_col1:
+        st.markdown(
+            """<div class="desktop-header-wrap" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
 <div class="desktop-brand-left">
 <svg width="44" height="35" viewBox="0 0 108 84" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M14.5 73.2C8.2 63.8 7.5 45.3 17.8 28.2C27.5 12.1 40.1 6.5 43.7 13.2C47.4 20 38.3 38.8 28.5 54.8C19.8 69.1 18.2 78.7 14.5 73.2Z" fill="url(#myntra_pink)"/>
@@ -688,14 +714,16 @@ def render_desktop_header() -> None:
 <div class="brand-subtext">Smart Wardrobe Matcher & Lookbook</div>
 </div>
 </div>
-<div class="desktop-header-right">
-<div class="wishlist-counter-badge">
-💛 Wishlist (24)
-</div>
-</div>
 </div>""",
-        unsafe_allow_html=True
-    )
+            unsafe_allow_html=True
+        )
+    with h_col2:
+        current_view = st.session_state.get("current_view", "pdp")
+        # Clickable Wishlist Pill Button
+        if st.button("💛 Wishlist (24)", key=f"nav_wishlist_btn_{current_view}", use_container_width=True, help="Open your saved Wishlist"):
+            navigate_to("wishlist_anchor")
+
+    st.markdown("<div style='border-bottom: 1.5px solid #F0F0F2; margin-bottom: 1.2rem; margin-top: 4px;'></div>", unsafe_allow_html=True)
 
 
 def render_desktop_footer() -> None:
