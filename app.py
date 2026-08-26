@@ -44,16 +44,17 @@ CUSTOM_CSS = """
         z-index: 1 !important;
     }
 
-    /* Mobile Viewport Simulation (iOS App Container) */
+    /* Desktop Viewport Container */
     .block-container {
-        max-width: 480px !important;
-        padding-top: 3.8rem !important;
-        padding-bottom: 2.5rem !important;
-        padding-left: 1.1rem !important;
-        padding-right: 1.1rem !important;
+        max-width: 860px !important;
+        padding-top: 3.5rem !important;
+        padding-bottom: 3rem !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
         background-color: #FFFFFF;
         min-height: 100vh;
-        box-shadow: 0 0 25px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        border-radius: 16px;
     }
 
     /* Header Bar */
@@ -61,17 +62,17 @@ CUSTOM_CSS = """
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.6rem 0 1rem 0;
-        border-bottom: 1px solid #F0F0F2;
-        margin-bottom: 1.2rem;
+        padding: 0.6rem 0 1.2rem 0;
+        border-bottom: 1.5px solid #F0F0F2;
+        margin-bottom: 1.5rem;
     }
     .header-logo {
         display: flex;
         align-items: center;
-        gap: 6px;
-        font-size: 1.25rem;
+        gap: 8px;
+        font-size: 1.55rem;
         font-weight: 900;
-        letter-spacing: -0.4px;
+        letter-spacing: -0.5px;
         color: #282C3F;
     }
     .header-logo span {
@@ -80,38 +81,38 @@ CUSTOM_CSS = """
     .wishlist-pill {
         background: #FFF0F4;
         color: #FF3F6C;
-        font-size: 0.72rem;
+        font-size: 0.82rem;
         font-weight: 700;
-        padding: 5px 10px;
+        padding: 6px 14px;
         border-radius: 20px;
         border: 1px solid #FFD8E4;
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: 6px;
     }
 
     /* Product Card */
     .product-card {
         background: #FFFFFF;
-        border-radius: 12px;
+        border-radius: 14px;
         border: 1px solid #EAEAEC;
-        padding: 12px;
-        box-shadow: 0 2px 10px rgba(40, 44, 63, 0.06);
-        margin-bottom: 1rem;
+        padding: 18px;
+        box-shadow: 0 4px 16px rgba(40, 44, 63, 0.05);
+        margin-bottom: 1.25rem;
     }
 
     /* Split layout for Anchor Item */
     .anchor-grid {
         display: grid;
-        grid-template-columns: 100px 1fr;
-        gap: 12px;
+        grid-template-columns: 140px 1fr;
+        gap: 20px;
         align-items: center;
     }
     .anchor-img {
-        width: 100px;
-        height: 133px;
+        width: 140px;
+        height: 186px;
         object-fit: cover;
-        border-radius: 8px;
+        border-radius: 10px;
         background-color: #F5F5F6;
     }
     .anchor-details {
@@ -120,98 +121,98 @@ CUSTOM_CSS = """
         justify-content: center;
     }
     .anchor-brand {
-        font-size: 0.72rem;
+        font-size: 0.78rem;
         font-weight: 700;
         color: #94969F;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.8px;
     }
     .anchor-title {
-        font-size: 0.95rem;
+        font-size: 1.25rem;
         font-weight: 800;
         color: #282C3F;
-        margin: 2px 0 4px 0;
-        line-height: 1.2;
+        margin: 4px 0 6px 0;
+        line-height: 1.25;
     }
     .anchor-price-row {
         display: flex;
         align-items: baseline;
-        gap: 6px;
-        margin: 2px 0 6px 0;
+        gap: 8px;
+        margin: 4px 0 8px 0;
     }
     .anchor-price-now {
-        font-size: 1.15rem;
+        font-size: 1.35rem;
         font-weight: 800;
         color: #282C3F;
     }
     .anchor-price-orig {
-        font-size: 0.82rem;
+        font-size: 0.95rem;
         color: #94969F;
         text-decoration: line-through;
     }
     .anchor-discount {
-        font-size: 0.75rem;
+        font-size: 0.82rem;
         font-weight: 700;
         color: #FF3F6C;
         background: #FFF0F4;
-        padding: 2px 5px;
-        border-radius: 4px;
+        padding: 3px 8px;
+        border-radius: 6px;
     }
 
     /* Custom Badges (Pill-shaped) */
     .badge-owned {
         background-color: #E8F8F5;
         color: #03A685;
-        font-size: 0.68rem;
+        font-size: 0.72rem;
         font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 12px;
+        padding: 4px 10px;
+        border-radius: 14px;
         display: inline-block;
-        margin-top: 4px;
+        margin-top: 6px;
         border: 1px solid #B8EADF;
     }
     .badge-offline {
         background-color: #F3E8FF;
         color: #7E22CE;
-        font-size: 0.68rem;
+        font-size: 0.72rem;
         font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 12px;
+        padding: 4px 10px;
+        border-radius: 14px;
         display: inline-block;
-        margin-top: 4px;
+        margin-top: 6px;
         border: 1px solid #E4CDFC;
     }
     .badge-wishlist {
         background-color: #FFF4EE;
         color: #FF905A;
-        font-size: 0.68rem;
+        font-size: 0.72rem;
         font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 12px;
+        padding: 4px 10px;
+        border-radius: 14px;
         display: inline-block;
-        margin-top: 4px;
+        margin-top: 6px;
         border: 1px solid #FFE0D0;
     }
     .badge-fit {
         background-color: #ECFDF5;
         color: #047857;
-        font-size: 0.68rem;
+        font-size: 0.72rem;
         font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 12px;
+        padding: 4px 10px;
+        border-radius: 14px;
         display: inline-block;
-        margin-top: 4px;
+        margin-top: 6px;
         border: 1px solid #A7F3D0;
     }
     .badge-target {
         background-color: #FFF0F4;
         color: #FF3F6C;
-        font-size: 0.68rem;
+        font-size: 0.72rem;
         font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 12px;
+        padding: 4px 10px;
+        border-radius: 14px;
         display: inline-block;
-        margin-top: 4px;
+        margin-top: 6px;
         border: 1px solid #FFCDD2;
     }
 
@@ -219,44 +220,44 @@ CUSTOM_CSS = """
     .lookbook-column-card {
         background: #FAFAFB;
         border: 1px solid #EAEAEC;
-        border-radius: 12px;
-        padding: 10px;
+        border-radius: 14px;
+        padding: 14px;
         display: flex;
         flex-direction: column;
         height: 100%;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     }
     .lookbook-title {
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         font-weight: 800;
         color: #282C3F;
-        margin-bottom: 2px;
+        margin-bottom: 3px;
     }
     .lookbook-subtitle {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         color: #7E818C;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
     }
     .lookbook-item-block {
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         background: #FFFFFF;
-        border-radius: 8px;
-        padding: 6px;
+        border-radius: 10px;
+        padding: 8px;
         border: 1px solid #EEEEF0;
         display: flex;
         flex-direction: column;
     }
     .lookbook-img {
         width: 100%;
-        height: 110px;
+        height: 160px;
         object-fit: cover;
-        border-radius: 6px;
+        border-radius: 8px;
     }
     .lookbook-item-title {
-        font-size: 0.72rem;
+        font-size: 0.78rem;
         font-weight: 700;
         color: #282C3F;
-        margin-top: 4px;
+        margin-top: 6px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
