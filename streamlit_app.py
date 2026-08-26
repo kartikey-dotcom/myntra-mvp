@@ -799,8 +799,9 @@ def render_desktop_header() -> None:
         )
     with h_col2:
         current_view = st.session_state.get("current_view", "pdp")
-        # Clickable Wishlist Pill Button
-        if st.button("💛 Wishlist (24)", key=f"nav_wishlist_btn_{current_view}", use_container_width=True, help="Open your saved Wishlist"):
+        wishlist_count = len(WISHLIST_PRODUCTS)
+        # Clickable Dynamic Wishlist Pill Button
+        if st.button(f"💛 Wishlist ({wishlist_count})", key=f"nav_wishlist_btn_{current_view}", use_container_width=True, help="Open your saved Wishlist"):
             navigate_to("wishlist_anchor")
 
     st.markdown("<div style='border-bottom: 1.5px solid #F0F0F2; margin-bottom: 1.2rem; margin-top: 4px;'></div>", unsafe_allow_html=True)
