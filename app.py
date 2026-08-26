@@ -30,21 +30,22 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Custom CSS for polished, responsive e-commerce look & feel
+# Custom CSS for polished, responsive e-commerce look & feel (Myntra Design System)
 CUSTOM_CSS = """
 <style>
     /* Global Typography & Background adjustments */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: #282C3F;
     }
     
-    /* Main Container Padding */
+    /* Main Streamlit Container */
     .block-container {
-        padding-top: 2rem;
-        padding-bottom: 3rem;
-        max-width: 780px;
+        padding-top: 1.8rem;
+        padding-bottom: 3.5rem;
+        max-width: 800px;
     }
     
     /* Brand Header Banner */
@@ -52,13 +53,13 @@ CUSTOM_CSS = """
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-bottom: 0.8rem;
+        padding-bottom: 0.9rem;
         border-bottom: 2px solid #F5F5F6;
         margin-bottom: 1.5rem;
     }
     .brand-logo {
-        font-size: 1.6rem;
-        font-weight: 800;
+        font-size: 1.65rem;
+        font-weight: 900;
         letter-spacing: -0.5px;
         color: #282C3F;
     }
@@ -66,50 +67,58 @@ CUSTOM_CSS = """
         color: #FF3F6C; /* Myntra Signature Pink */
     }
     .brand-tagline {
-        font-size: 0.82rem;
-        color: #696E79;
-        font-weight: 500;
+        font-size: 0.8rem;
+        color: #FF3F6C;
+        font-weight: 700;
         background-color: #FFF0F4;
-        padding: 4px 10px;
-        border-radius: 12px;
+        padding: 5px 12px;
+        border-radius: 20px;
         border: 1px solid #FFD8E4;
+        box-shadow: 0 1px 3px rgba(255, 63, 108, 0.08);
     }
 
-    /* Card Containers */
+    /* Product & Look Cards */
     .product-card {
         background: #FFFFFF;
         border: 1px solid #EAEAEC;
-        border-radius: 14px;
-        padding: 1.25rem;
-        box-shadow: 0 4px 14px rgba(40, 44, 63, 0.04);
+        border-radius: 16px;
+        padding: 1.4rem;
+        box-shadow: 0 4px 16px rgba(40, 44, 63, 0.06);
         margin-bottom: 1.25rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .product-card:hover {
+        box-shadow: 0 6px 20px rgba(40, 44, 63, 0.10);
     }
     
     .look-card {
         background: #FAFAFB;
         border: 1px solid #E2E2E7;
-        border-radius: 12px;
-        padding: 1.1rem;
+        border-radius: 14px;
+        padding: 1.2rem;
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        transition: all 0.25s ease-in-out;
     }
     .look-card:hover {
         border-color: #FF3F6C;
-        box-shadow: 0 4px 12px rgba(255, 63, 108, 0.12);
-        transition: all 0.2s ease-in-out;
+        background: #FFFFFF;
+        box-shadow: 0 6px 20px rgba(255, 63, 108, 0.14);
+        transform: translateY(-2px);
     }
 
     /* Badges & Psychological Anchors */
     .badge {
         display: inline-block;
         font-size: 0.76rem;
-        font-weight: 600;
-        padding: 3px 8px;
+        font-weight: 700;
+        padding: 4px 9px;
         border-radius: 6px;
-        margin-top: 3px;
+        margin-top: 4px;
+        letter-spacing: 0.1px;
     }
     .badge-owned-myntra {
         background-color: #E8F8F5;
@@ -137,30 +146,62 @@ CUSTOM_CSS = """
         border: 1px solid #FFCDD2;
     }
 
+    /* Custom Streamlit Button Overrides */
+    div.stButton > button[kind="primary"] {
+        background: linear-gradient(90deg, #FF3F6C 0%, #FF527B 100%) !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 0.6rem 1.2rem !important;
+        box-shadow: 0 4px 12px rgba(255, 63, 108, 0.28) !important;
+        transition: all 0.2s ease !important;
+    }
+    div.stButton > button[kind="primary"]:hover {
+        box-shadow: 0 6px 16px rgba(255, 63, 108, 0.42) !important;
+        transform: scale(1.01) !important;
+    }
+
+    div.stButton > button[kind="secondary"] {
+        background-color: #25D366 !important; /* WhatsApp Green */
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 0.6rem 1.2rem !important;
+        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.28) !important;
+        transition: all 0.2s ease !important;
+    }
+    div.stButton > button[kind="secondary"]:hover {
+        box-shadow: 0 6px 16px rgba(37, 211, 102, 0.42) !important;
+        transform: scale(1.01) !important;
+    }
+
     /* WhatsApp Interactive Mockup */
     .whatsapp-container {
         background-color: #EFEAE2;
         background-image: radial-gradient(#D1D7DB 0.75px, transparent 0.75px);
         background-size: 12px 12px;
-        border-radius: 14px;
-        padding: 1.25rem;
+        border-radius: 16px;
+        padding: 1.4rem;
         border: 1px solid #DAD3CC;
         margin-top: 1rem;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
     }
     .whatsapp-bubble {
         background-color: #FFFFFF;
-        border-radius: 10px 10px 10px 2px;
-        padding: 14px 16px;
-        max-width: 92%;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.12);
-        font-size: 0.9rem;
+        border-radius: 12px 12px 12px 2px;
+        padding: 16px 18px;
+        max-width: 95%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.10);
+        font-size: 0.92rem;
         color: #111B21;
     }
     .whatsapp-meta {
         font-size: 0.72rem;
         color: #667781;
         text-align: right;
-        margin-top: 4px;
+        margin-top: 6px;
     }
 </style>
 """
@@ -727,10 +768,37 @@ def render_social_loop() -> None:
 
 
 def render_footer() -> None:
-    """Renders debug/reset options for seamless stakeholder re-demos."""
+    """
+    Renders Section 4: PM Walkthrough, Architecture Notes, and Live Demo Controls.
+    Provides complete transparency for stakeholder reviews and portfolio presentations.
+    """
     st.markdown("<br/><br/>", unsafe_allow_html=True)
-    with st.expander("🛠️ Portfolio Demo Controls"):
-        st.write("Live State Registry:")
+    
+    with st.expander("📋 Product Manager Walkthrough & Architecture Notes"):
+        st.markdown(
+            """
+            ### 🎯 Product Strategy & Value Hypothesis
+            * **Core Friction Solved:**
+              1. **Styling Paralysis:** Users wishlist garments but don't complete the purchase because they aren't sure how to style them with clothes they already own.
+              2. **Off-Platform Leakage:** Users take screenshots to WhatsApp to ask friends for validation, breaking checkout momentum and abandoning the funnel.
+            * **Defensive Moats:**
+              * **Universal Closet Moat:** Combines verified on-platform Myntra purchases with camera-roll uploads (`📸 Offline Closet`), establishing durable cross-platform lock-in.
+              * **In-App Social Validation Loop:** Eliminates drop-off by bringing the peer voting loop natively into the product.
+
+            ---
+
+            ### 🏗️ Technical Architecture & Lifecycle
+            * **Wizard of Oz AI Simulation:**
+              * Deterministic mock data structures model the exact production schema.
+              * 2.0s calibrated delay builds realistic AI anticipation while guaranteeing zero network failures, zero token costs, and 100% demo reliability.
+            * **Streamlit Session State Resilience:**
+              * Script re-runs from top-to-bottom on every user click.
+              * Gating Lookbook & WhatsApp rendering on `st.session_state.is_styled` prevents UI reset when users interact with secondary poll buttons.
+            """
+        )
+
+    with st.expander("🛠️ Portfolio Demo Controls & State Registry"):
+        st.caption("Inspect live session state or reset the prototype to demonstrate from scratch:")
         st.json(get_session_debug_state())
         if st.button("🔄 Reset Prototype State", help="Reset all state flags to demonstrate from scratch"):
             reset_session_state()
