@@ -37,13 +37,20 @@ CUSTOM_CSS = """
         background-color: #F4F4F6;
     }
 
+    /* Hide or minimize Streamlit default top header bar */
+    header[data-testid="stHeader"] {
+        background: transparent !important;
+        height: 2.5rem !important;
+        z-index: 1 !important;
+    }
+
     /* Mobile Viewport Simulation (iOS App Container) */
     .block-container {
         max-width: 480px !important;
-        padding-top: 1rem !important;
+        padding-top: 3.8rem !important;
         padding-bottom: 2.5rem !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
+        padding-left: 1.1rem !important;
+        padding-right: 1.1rem !important;
         background-color: #FFFFFF;
         min-height: 100vh;
         box-shadow: 0 0 25px rgba(0, 0, 0, 0.06);
