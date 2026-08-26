@@ -518,7 +518,7 @@ def render_anchor_card() -> None:
     )
 
     # Primary Action Trigger to activate AI Closet Matching
-    if not st.session_state.is_styled:
+    if not st.session_state.get("is_styled", False):
         st.caption("Hesitating on how to pair this blazer? Let StyleSync check your wardrobe.")
         if st.button(
             "✨ Style with My Closet & Wishlist",
@@ -694,7 +694,7 @@ def render_social_loop() -> None:
     st.caption("Send an instant 1-tap poll to your WhatsApp group so your trusted circle can vote before you buy.")
 
     # WhatsApp Trigger CTA
-    if not st.session_state.poll_sent:
+    if not st.session_state.get("poll_sent", False):
         if st.button(
             "💬 Send Poll to WhatsApp",
             use_container_width=True,
@@ -706,7 +706,7 @@ def render_social_loop() -> None:
             st.rerun()
 
     # Social Loop Confirmation & Interactive Mockup Preview
-    if st.session_state.poll_sent:
+    if st.session_state.get("poll_sent", False):
         st.success("✅ **Poll dispatched to WhatsApp!** We'll notify you here the moment your friends vote.")
         
         st.markdown(
@@ -784,11 +784,14 @@ def render_footer() -> None:
 # ==============================================================================
 def main() -> None:
     """Main orchestration sequence."""
+    # Ensure session state is initialized on every run
+    init_session_state()
+
     render_header()
     render_anchor_card()
 
     # Conditional section renders based on resilient session state
-    if st.session_state.is_styled:
+    if st.session_state.get("is_styled", False):
         render_lookbook()
         render_social_loop()
 
