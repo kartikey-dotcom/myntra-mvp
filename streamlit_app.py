@@ -437,6 +437,10 @@ def get_session_debug_state() -> Dict[str, any]:
     }
 
 
+# Initialize state immediately on module load
+init_session_state()
+
+
 # ==============================================================================
 # 4. PHASE 3: PRESENTATION LAYER – HEADER & WISHLIST ANCHOR VIEW
 # ==============================================================================
