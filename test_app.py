@@ -41,9 +41,11 @@ class TestStyleSyncDataAndState(unittest.TestCase):
         self.assertIn("badge-wishlist", look_2_badges, "Look 2 must contain wishlist piece")
 
     def test_session_state_helpers(self):
-        """Verify session state defaults."""
+        """Verify session state defaults and router state."""
         import streamlit as st
         init_session_state()
+        self.assertIn("current_view", st.session_state)
+        self.assertEqual(st.session_state["current_view"], "pdp")
         self.assertIn("is_styled", st.session_state)
         self.assertIn("poll_sent", st.session_state)
 
