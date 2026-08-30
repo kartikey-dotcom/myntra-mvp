@@ -1238,6 +1238,7 @@ def render_catalog_view() -> None:
                 use_container_width=True
             ):
                 st.session_state["selected_category_filter"] = cat_name
+                st.session_state["search_query"] = ""
                 st.rerun()
 
     st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
@@ -1268,15 +1269,6 @@ def render_catalog_view() -> None:
         return results
 
     filtered_items = filter_catalog(selected_filter)
-    
-    # Auto-fallback: if filtered category had 0 results but query exists in another category, search 'All'
-    if not filtered_items and query and selected_filter != "All":
-        fallback_items = filter_catalog("All")
-        if fallback_items:
-            filtered_items = fallback_items
-            st.session_state["selected_category_filter"] = "All"
-            selected_filter = "All"
-            st.toast(f"Switched category to 'All' to show {len(filtered_items)} matches for '{query}'!")
 
     # Results Header
     st.markdown(
