@@ -368,7 +368,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(40% OFF)",
         "rating": "4.6 ★",
         "is_stylesync_eligible": False,
-        "tags": "kurti kurta ethnic anarkali biba dress suit embroidery traditional women apparel",
+        "tags": "kurti kurta ethnic anarkali biba dress embroidery traditional women apparel salwar_suit",
         "img": "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -889,7 +889,7 @@ SYNONYMS = {
     "shirt": ["shirt", "mandarin collar", "formal shirt", "casual shirt"],
     "tshirt": ["t-shirt", "tee", "graphic tee", "crewneck"],
     "tee": ["t-shirt", "tee", "graphic tee"],
-    "blazer": ["blazer", "suit", "jacket", "coat", "mango man"],
+    "blazer": ["blazer", "blazers", "coat", "mango man"],
     "jacket": ["jacket", "blazer", "coat", "trucker"],
     "trousers": ["trousers", "pleated trousers", "formal trousers", "chinos"],
     "pants": ["trousers", "pants", "chinos"],
