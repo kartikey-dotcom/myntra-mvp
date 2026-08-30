@@ -1,16 +1,16 @@
 """
 Myntra E-Commerce Platform & StyleSync™ Smart Wardrobe MVP
 ==========================================================
-High-Fidelity Desktop E-Commerce Experience & Fully Interactive Native App:
-1. Storefront Homepage (Active navigation, ticket coupon copier, linen collection hero, category drawers)
-2. Product Display Page (PDP - Thumbnail gallery switcher, interactive size picker, delivery pincode checker, size chart modal)
-3. Shopping Bag Drawer & Profile Modal (Live item list, coupon discounts, order summary)
-4. Wishlist Anchor & Smart Closet (Move to Bag, item detail modals, 'Style with My Closet' AI orchestrator)
-5. StyleSync AI Studio & WhatsApp Social Validation (Rule-of-3 Outfits, Bundle Add-to-Bag, Live Peer Polling & Checkout)
+Master Micro-Catalog & Search Architecture + StyleSync AI Engine:
+1. Master Micro-Catalog (31 items across Apparel, Footwear, Beauty, Accessories, Home)
+2. Interactive Search & Filter Engine (Free-text search + Category Chips)
+3. Dynamic PDP with StyleSync AI Interceptor (Rust Linen Blazer triggers StyleSync Wardrobe Match)
+4. Wishlist Anchor & Smart Closet Matcher
+5. StyleSync AI Studio & WhatsApp Social Validation Loop ("Buy or Drop" Peer Poll)
 """
 
 import time
-from typing import TypedDict, List, Dict
+from typing import TypedDict, List, Dict, Optional
 import streamlit as st
 
 # ==============================================================================
@@ -125,7 +125,7 @@ CUSTOM_CSS = """
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
-        margin: 2rem 0 1.2rem 0;
+        margin: 1.5rem 0 1rem 0;
     }
     .section-title {
         font-size: 1.35rem;
@@ -138,6 +138,31 @@ CUSTOM_CSS = """
         font-size: 0.85rem;
         color: #7E818C;
         font-weight: 500;
+    }
+
+    /* Product Grid Card */
+    .catalog-item-card {
+        background: #FFFFFF;
+        border: 1px solid #ECEEF0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .catalog-item-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+    .catalog-item-info {
+        padding: 10px 12px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
     /* StyleSync Studio Collage Card */
@@ -205,21 +230,443 @@ CUSTOM_CSS = """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. DATA SCHEMAS & Wizard of Oz ASSETS
+# 2. MASTER MICRO-CATALOG (31 Realistic Items Across 5 Master Categories)
 # ==============================================================================
 
-class TargetItem(TypedDict):
+class CatalogItem(TypedDict):
     id: str
     name: str
     brand: str
+    master_category: str
+    sub_category: str
     price: str
-    original_price: str
+    mrp: str
     discount: str
     rating: str
-    reviews: str
-    image_url: str
+    is_stylesync_eligible: bool
+    img: str
 
-TARGET_ITEM: TargetItem = {
+MICRO_CATALOG: List[CatalogItem] = [
+    # 1. Apparel - Men (hero_1 is the ONLY is_stylesync_eligible == True)
+    {
+        "id": "hero_1",
+        "name": "Rust Linen Relaxed-Fit Blazer",
+        "brand": "MANGO MAN",
+        "master_category": "Apparel",
+        "sub_category": "Men",
+        "price": "₹3,499",
+        "mrp": "₹4,999",
+        "discount": "(30% OFF)",
+        "rating": "4.4 ★",
+        "is_stylesync_eligible": True,
+        "img": "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "men_2",
+        "name": "Classic Pure Linen White Shirt",
+        "brand": "H&M",
+        "master_category": "Apparel",
+        "sub_category": "Men",
+        "price": "₹1,999",
+        "mrp": "₹2,499",
+        "discount": "(20% OFF)",
+        "rating": "4.3 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "men_3",
+        "name": "Tailored Pleated Formal Trousers",
+        "brand": "ZARA",
+        "master_category": "Apparel",
+        "sub_category": "Men",
+        "price": "₹2,990",
+        "mrp": "₹3,990",
+        "discount": "(25% OFF)",
+        "rating": "4.5 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "men_4",
+        "name": "511 Slim Fit Raw Indigo Denim",
+        "brand": "LEVIS",
+        "master_category": "Apparel",
+        "sub_category": "Men",
+        "price": "₹3,199",
+        "mrp": "₹4,599",
+        "discount": "(30% OFF)",
+        "rating": "4.6 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "men_5",
+        "name": "Olive Mandarin Collar Casual Shirt",
+        "brand": "Roadster",
+        "master_category": "Apparel",
+        "sub_category": "Men",
+        "price": "₹1,299",
+        "mrp": "₹1,999",
+        "discount": "(35% OFF)",
+        "rating": "4.1 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80"
+    },
+
+    # 2. Apparel - Women
+    {
+        "id": "women_1",
+        "name": "Embroidered Anarkali Kurta Set",
+        "brand": "Biba",
+        "master_category": "Apparel",
+        "sub_category": "Women",
+        "price": "₹3,299",
+        "mrp": "₹5,499",
+        "discount": "(40% OFF)",
+        "rating": "4.6 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "women_2",
+        "name": "Floral Printed Maxi Wrap Dress",
+        "brand": "H&M",
+        "master_category": "Apparel",
+        "sub_category": "Women",
+        "price": "₹2,499",
+        "mrp": "₹3,499",
+        "discount": "(28% OFF)",
+        "rating": "4.4 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "women_3",
+        "name": "Pure Chanderi Silk Festive Kurti",
+        "brand": "Libas",
+        "master_category": "Apparel",
+        "sub_category": "Women",
+        "price": "₹1,899",
+        "mrp": "₹3,199",
+        "discount": "(40% OFF)",
+        "rating": "4.5 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "women_4",
+        "name": "Ribbed Cotton Lounge Co-ord Set",
+        "brand": "Marks & Spencer",
+        "master_category": "Apparel",
+        "sub_category": "Women",
+        "price": "₹2,799",
+        "mrp": "₹3,999",
+        "discount": "(30% OFF)",
+        "rating": "4.3 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "women_5",
+        "name": "Oversized Denim Trucker Jacket",
+        "brand": "MANGO",
+        "master_category": "Apparel",
+        "sub_category": "Women",
+        "price": "₹3,990",
+        "mrp": "₹5,990",
+        "discount": "(33% OFF)",
+        "rating": "4.7 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80"
+    },
+
+    # 3. Apparel - Kids & Infants
+    {
+        "id": "kids_1",
+        "name": "Organic Cotton Infant Onesie (3-Pack)",
+        "brand": "Mothercare",
+        "master_category": "Apparel",
+        "sub_category": "Kids",
+        "price": "₹1,499",
+        "mrp": "₹2,199",
+        "discount": "(31% OFF)",
+        "rating": "4.8 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1522771930-78848d9293e8?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "kids_2",
+        "name": "Boys Graphic Crewneck Cotton T-Shirt",
+        "brand": "Gini & Jony",
+        "master_category": "Apparel",
+        "sub_category": "Kids",
+        "price": "₹699",
+        "mrp": "₹1,199",
+        "discount": "(41% OFF)",
+        "rating": "4.2 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "kids_3",
+        "name": "Girls Tiered Tulle Party Frock",
+        "brand": "Cutecumber",
+        "master_category": "Apparel",
+        "sub_category": "Kids",
+        "price": "₹1,799",
+        "mrp": "₹2,999",
+        "discount": "(40% OFF)",
+        "rating": "4.5 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "kids_4",
+        "name": "Infant Knit Dungaree & Tee Set",
+        "brand": "Carter's",
+        "master_category": "Apparel",
+        "sub_category": "Kids",
+        "price": "₹1,899",
+        "mrp": "₹2,499",
+        "discount": "(24% OFF)",
+        "rating": "4.7 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=800&auto=format&fit=crop&q=80"
+    },
+
+    # 4. Footwear
+    {
+        "id": "foot_1",
+        "name": "Air Max SC Leather Retro Sneakers",
+        "brand": "Nike",
+        "master_category": "Footwear",
+        "sub_category": "Men",
+        "price": "₹5,995",
+        "mrp": "₹7,495",
+        "discount": "(20% OFF)",
+        "rating": "4.7 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "foot_2",
+        "name": "Caven 2.0 Court Low-Top Sneakers",
+        "brand": "Puma",
+        "master_category": "Footwear",
+        "sub_category": "Men",
+        "price": "₹2,749",
+        "mrp": "₹4,999",
+        "discount": "(45% OFF)",
+        "rating": "4.3 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "foot_3",
+        "name": "Strappy Block Heeled Evening Sandals",
+        "brand": "Carlton London",
+        "master_category": "Footwear",
+        "sub_category": "Women",
+        "price": "₹1,899",
+        "mrp": "₹3,499",
+        "discount": "(45% OFF)",
+        "rating": "4.4 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "foot_4",
+        "name": "Ultraboost Light Running Shoes",
+        "brand": "Adidas",
+        "master_category": "Footwear",
+        "sub_category": "Men",
+        "price": "₹8,999",
+        "mrp": "₹14,999",
+        "discount": "(40% OFF)",
+        "rating": "4.8 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "foot_5",
+        "name": "Suede Chelsea High-Top Boots",
+        "brand": "Roadster",
+        "master_category": "Footwear",
+        "sub_category": "Men",
+        "price": "₹2,499",
+        "mrp": "₹4,299",
+        "discount": "(41% OFF)",
+        "rating": "4.2 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=800&auto=format&fit=crop&q=80"
+    },
+
+    # 5. Beauty & Personal Care
+    {
+        "id": "beauty_1",
+        "name": "10% Niacinamide Clarifying Face Serum",
+        "brand": "Minimalist",
+        "master_category": "Beauty",
+        "sub_category": "Skincare",
+        "price": "₹599",
+        "mrp": "₹699",
+        "discount": "(14% OFF)",
+        "rating": "4.6 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "beauty_2",
+        "name": "Retro Matte Longwear Lipstick - Ruby Woo",
+        "brand": "MAC",
+        "master_category": "Beauty",
+        "sub_category": "Makeup",
+        "price": "₹1,950",
+        "mrp": "₹2,300",
+        "discount": "(15% OFF)",
+        "rating": "4.8 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "beauty_3",
+        "name": "Club De Nuit Intense Man Luxury EDP",
+        "brand": "Armaf",
+        "master_category": "Beauty",
+        "sub_category": "Fragrance",
+        "price": "₹3,450",
+        "mrp": "₹4,900",
+        "discount": "(29% OFF)",
+        "rating": "4.7 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "beauty_4",
+        "name": "Revitalift Hyaluronic Acid Plumping Serum",
+        "brand": "L'Oreal Paris",
+        "master_category": "Beauty",
+        "sub_category": "Skincare",
+        "price": "₹899",
+        "mrp": "₹1,199",
+        "discount": "(25% OFF)",
+        "rating": "4.4 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1608248597359-009139828456?w=800&auto=format&fit=crop&q=80"
+    },
+
+    # 6. Accessories & Jewelry
+    {
+        "id": "acc_1",
+        "name": "Grant Chronograph Blue Dial Watch",
+        "brand": "Fossil",
+        "master_category": "Accessories",
+        "sub_category": "Watches",
+        "price": "₹7,995",
+        "mrp": "₹12,495",
+        "discount": "(36% OFF)",
+        "rating": "4.6 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "acc_2",
+        "name": "Classic Aviator Polarized Sunglasses",
+        "brand": "Ray-Ban",
+        "master_category": "Accessories",
+        "sub_category": "Eyewear",
+        "price": "₹6,890",
+        "mrp": "₹8,590",
+        "discount": "(20% OFF)",
+        "rating": "4.8 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "acc_3",
+        "name": "Faux Leather Structured Satchel Handbag",
+        "brand": "Caprese",
+        "master_category": "Accessories",
+        "sub_category": "Bags",
+        "price": "₹2,499",
+        "mrp": "₹4,999",
+        "discount": "(50% OFF)",
+        "rating": "4.3 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "acc_4",
+        "name": "Reversible Genuine Leather Belt",
+        "brand": "Tommy Hilfiger",
+        "master_category": "Accessories",
+        "sub_category": "Belts",
+        "price": "₹1,899",
+        "mrp": "₹2,999",
+        "discount": "(36% OFF)",
+        "rating": "4.5 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=800&auto=format&fit=crop&q=80"
+    },
+
+    # 7. Home & Lifestyle
+    {
+        "id": "home_1",
+        "name": "100% Cotton 300TC King Size Bed Sheet",
+        "brand": "Bombay Dyeing",
+        "master_category": "Home",
+        "sub_category": "Bedding",
+        "price": "₹1,999",
+        "mrp": "₹3,499",
+        "discount": "(42% OFF)",
+        "rating": "4.5 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "home_2",
+        "name": "Nordic Ceramic Fluted Flower Vase",
+        "brand": "Home Centre",
+        "master_category": "Home",
+        "sub_category": "Decor",
+        "price": "₹899",
+        "mrp": "₹1,499",
+        "discount": "(40% OFF)",
+        "rating": "4.6 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "home_3",
+        "name": "Textured Velvet Cushion Covers (Set of 5)",
+        "brand": "D'Decor",
+        "master_category": "Home",
+        "sub_category": "Furnishing",
+        "price": "₹1,199",
+        "mrp": "₹2,199",
+        "discount": "(45% OFF)",
+        "rating": "4.4 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "home_4",
+        "name": "Aroma Diffuser with Essential Oil",
+        "brand": "PureSource",
+        "master_category": "Home",
+        "sub_category": "Living",
+        "price": "₹1,299",
+        "mrp": "₹1,999",
+        "discount": "(35% OFF)",
+        "rating": "4.7 ★",
+        "is_stylesync_eligible": False,
+        "img": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800&auto=format&fit=crop&q=80"
+    }
+]
+
+# Legacy Compatibility for test_app.py
+TARGET_ITEM = {
     "id": "ITEM-9081",
     "name": "Rust Linen Relaxed-Fit Blazer",
     "brand": "MANGO MAN",
@@ -244,18 +691,7 @@ IMAGE_LIGHT_DENIM = "https://images.unsplash.com/photo-1541099649105-f69ad21f324
 IMAGE_FOSSIL_WATCH = "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&auto=format&fit=crop&q=80"
 IMAGE_PUMA_SNEAKERS = "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&auto=format&fit=crop&q=80"
 
-class WishlistProduct(TypedDict):
-    id: str
-    brand: str
-    name: str
-    price: str
-    original_price: str
-    discount: str
-    rating: str
-    image_url: str
-    tag: str
-
-WISHLIST_PRODUCTS: List[WishlistProduct] = [
+WISHLIST_PRODUCTS = [
     {
         "id": "W-101",
         "brand": "FOSSIL",
@@ -325,21 +761,25 @@ WISHLIST_PRODUCTS: List[WishlistProduct] = [
 ]
 
 # ==============================================================================
-# 3. SESSION STATE & NAVIGATION MACHINE
+# 3. STATE MANAGEMENT & ROUTING
 # ==============================================================================
 
 def init_session_state() -> None:
-    """Initializes router state defaults ensuring compatibility with test_app.py."""
+    """Initializes router state defaults ensuring compliance with prompt specifications."""
     if "current_view" not in st.session_state:
-        st.session_state["current_view"] = "homepage"
+        st.session_state["current_view"] = "catalog"
+    if "selected_item" not in st.session_state or st.session_state["selected_item"] is None:
+        st.session_state["selected_item"] = MICRO_CATALOG[0]
+    if "search_query" not in st.session_state:
+        st.session_state["search_query"] = ""
+    if "selected_category_filter" not in st.session_state:
+        st.session_state["selected_category_filter"] = "All"
     if "bag_count" not in st.session_state:
         st.session_state["bag_count"] = 2
     if "wishlist_count" not in st.session_state:
         st.session_state["wishlist_count"] = 1
     if "selected_size" not in st.session_state:
         st.session_state["selected_size"] = "40"
-    if "pdp_active_img" not in st.session_state:
-        st.session_state["pdp_active_img"] = TARGET_ITEM["image_url"]
     if "poll_sent" not in st.session_state:
         st.session_state["poll_sent"] = False
     if "vote_feedback" not in st.session_state:
@@ -350,8 +790,6 @@ def init_session_state() -> None:
         st.session_state["show_profile_modal"] = False
     if "show_size_chart" not in st.session_state:
         st.session_state["show_size_chart"] = False
-    if "active_modal" not in st.session_state:
-        st.session_state["active_modal"] = None
 
 init_session_state()
 
@@ -360,19 +798,22 @@ def set_view(view_name: str) -> None:
     st.session_state["show_bag_drawer"] = False
     st.session_state["show_profile_modal"] = False
     st.session_state["show_size_chart"] = False
-    st.session_state["active_modal"] = None
+    st.rerun()
+
+def view_product_pdp(item: CatalogItem) -> None:
+    st.session_state["selected_item"] = item
+    st.session_state["current_view"] = "pdp"
     st.rerun()
 
 # ==============================================================================
-# 4. TOP NAVIGATION BAR COMPONENT
+# 4. TOP BRAND NAVIGATION BAR
 # ==============================================================================
 
 def render_top_navbar() -> None:
-    curr = st.session_state.get("current_view", "homepage")
+    curr = st.session_state.get("current_view", "catalog")
     bag_num = st.session_state.get("bag_count", 2)
     wl_num = st.session_state.get("wishlist_count", 1)
 
-    # Top Brand Ribbon & Search Bar
     nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([2.5, 4.5, 3, 2.5])
     
     with nav_col1:
@@ -395,81 +836,80 @@ def render_top_navbar() -> None:
         )
 
     with nav_col2:
-        # Category Tabs
         b1, b2, b3, b4, b5 = st.columns(5)
         with b1:
-            if st.button("HOME", key="nav_home_s", use_container_width=True):
-                st.toast("🏠 Welcome to Myntra Storefront!")
-                set_view("homepage")
+            if st.button("CATALOG", key="nav_cat_tab_s", use_container_width=True):
+                set_view("catalog")
         with b2:
-            if st.button("MEN", key="nav_men_s", use_container_width=True):
-                st.toast("👔 Opening Men's Linen Blazer Collection")
-                set_view("pdp")
+            if st.button("HOME", key="nav_home_s", use_container_width=True):
+                set_view("homepage")
         with b3:
-            if st.button("WOMEN", key="nav_women_s", use_container_width=True):
-                st.session_state["active_modal"] = "women_collection"
-                st.toast("👗 Showing Women's Capsule Outfits")
-                st.rerun()
-        with b4:
             if st.button("STUDIO ✨", key="nav_studio_s", use_container_width=True):
-                st.toast("✨ Entering StyleSync™ AI Wardrobe Studio")
                 set_view("stylesync")
+        with b4:
+            if st.button("WISHLIST", key="nav_wl_tab_s", use_container_width=True):
+                set_view("wishlist")
         with b5:
-            if st.button("BEAUTY", key="nav_beauty_tab_s", use_container_width=True):
-                st.session_state["active_modal"] = "beauty_collection"
-                st.toast("💄 Showing Beauty & Grooming Picks")
+            if st.button("BAG", key="nav_bag_tab_s", use_container_width=True):
+                st.session_state["show_bag_drawer"] = not st.session_state["show_bag_drawer"]
                 st.rerun()
 
     with nav_col3:
-        search_query = st.text_input("🔍 Search products, brands...", placeholder="Type 'blazer', 'linen', 'zara'...", label_visibility="collapsed", key="search_bar_s")
-        if search_query:
-            st.session_state["active_modal"] = f"search_{search_query.strip().lower()}"
+        quick_search = st.text_input(
+            "Quick Search",
+            value=st.session_state.get("search_query", ""),
+            placeholder="🔍 Search across fashion, beauty, home...",
+            label_visibility="collapsed",
+            key="top_quick_search_s"
+        )
+        if quick_search != st.session_state.get("search_query", ""):
+            st.session_state["search_query"] = quick_search
+            st.session_state["current_view"] = "catalog"
+            st.rerun()
 
     with nav_col4:
         ic1, ic2, ic3 = st.columns(3)
         with ic1:
             if st.button("👤 Profile", key="top_prof_btn_s", use_container_width=True):
                 st.session_state["show_profile_modal"] = not st.session_state["show_profile_modal"]
-                st.session_state["show_bag_drawer"] = False
                 st.rerun()
         with ic2:
             if st.button(f"❤️ ({wl_num})", key="top_wl_btn_s", use_container_width=True):
-                st.toast(f"❤️ Opening Wishlist ({wl_num} saved items)")
                 set_view("wishlist")
         with ic3:
             if st.button(f"🛍️ ({bag_num})", key="top_bag_btn_s", use_container_width=True):
                 st.session_state["show_bag_drawer"] = not st.session_state["show_bag_drawer"]
-                st.session_state["show_profile_modal"] = False
                 st.rerun()
 
     # Journey Stepper Quick Navigator Bar
     st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
-    step1, step2, step3, step4 = st.columns(4)
+    step1, step2, step3, step4, step5 = st.columns(5)
     with step1:
-        if st.button("🏠 Storefront Home", key="st_step1", use_container_width=True, type="primary" if curr == "homepage" else "secondary"):
-            set_view("homepage")
+        if st.button("🔍 1. Master Catalog & Search", key="step1_s", use_container_width=True, type="primary" if curr == "catalog" else "secondary"):
+            set_view("catalog")
     with step2:
-        if st.button("🛍️ 1. Product PDP", key="st_step2", use_container_width=True, type="primary" if curr == "pdp" else "secondary"):
-            set_view("pdp")
+        if st.button("🏠 Storefront Hero", key="step2_s", use_container_width=True, type="primary" if curr == "homepage" else "secondary"):
+            set_view("homepage")
     with step3:
-        if st.button("❤️ 2. Wishlist & Closet", key="st_step3", use_container_width=True, type="primary" if curr == "wishlist" else "secondary"):
-            set_view("wishlist")
+        if st.button("🛍️ 2. Product Display (PDP)", key="step3_s", use_container_width=True, type="primary" if curr == "pdp" else "secondary"):
+            set_view("pdp")
     with step4:
-        if st.button("✨ 3. StyleSync AI Studio", key="st_step4", use_container_width=True, type="primary" if curr == "stylesync" else "secondary"):
+        if st.button("❤️ 3. Wishlist & Closet", key="step4_s", use_container_width=True, type="primary" if curr == "wishlist" else "secondary"):
+            set_view("wishlist")
+    with step5:
+        if st.button("✨ 4. StyleSync Studio", key="step5_s", use_container_width=True, type="primary" if curr == "stylesync" else "secondary"):
             set_view("stylesync")
     
     st.markdown("<hr style='margin: 0.8rem 0 1.2rem 0; border: none; border-top: 1px solid #ECEEF0;'>", unsafe_allow_html=True)
 
-    # Render Active Modals / Drawers if toggled
     render_drawers_and_modals()
 
 
 # ==============================================================================
-# 5. DRAWERS & INTERACTIVE OVERLAYS
+# 5. DRAWERS & MODALS
 # ==============================================================================
 
 def render_drawers_and_modals() -> None:
-    # 1. Shopping Bag Drawer
     if st.session_state.get("show_bag_drawer", False):
         bag_count = st.session_state.get("bag_count", 2)
         st.markdown(
@@ -494,7 +934,7 @@ def render_drawers_and_modals() -> None:
                     </div>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ECEEF0; padding-top: 10px;">
-                    <div><b>Total Payable:</b> <span style="font-size: 1.2rem; font-weight: 900; color: #282C3F;">₹6,489</span> (Coupon: <code>MYNTRASAVE</code> applied -₹200)</div>
+                    <div><b>Total Payable:</b> <span style="font-size: 1.2rem; font-weight: 900; color: #282C3F;">₹6,289</span> (Coupon: <code>MYNTRASAVE</code> applied -₹200)</div>
                 </div>
             </div>
             """,
@@ -512,7 +952,6 @@ def render_drawers_and_modals() -> None:
                 st.session_state["show_bag_drawer"] = False
                 st.rerun()
 
-    # 2. Profile & Closet Preferences Modal
     if st.session_state.get("show_profile_modal", False):
         st.markdown(
             """
@@ -542,103 +981,142 @@ def render_drawers_and_modals() -> None:
             st.session_state["show_profile_modal"] = False
             st.rerun()
 
-    # 3. Dynamic Modals (Women's Collection, Beauty, Search, Size Chart)
-    active_m = st.session_state.get("active_modal")
-    if active_m:
-        if active_m == "women_collection":
-            st.markdown(
-                """
-                <div class="modal-banner">
-                    <h3>👗 WOMEN'S SUMMER LINEN CAPSULE</h3>
-                    <p>Curated Mediterranean Linen Dresses, Coordinates, and Tailored Vests.</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-            col_w1, col_w2 = st.columns(2)
-            with col_w1:
-                if st.button("🛍️ View Women's Linen Co-ord (₹2,999)", key="w_item1_s", use_container_width=True):
-                    st.toast("Added Women's Co-ord to Bag!")
-                    st.session_state["bag_count"] += 1
-            with col_w2:
-                if st.button("✖️ Close View", key="close_w_btn_s", use_container_width=True):
-                    st.session_state["active_modal"] = None
-                    st.rerun()
 
-        elif active_m == "beauty_collection":
-            st.markdown(
-                """
-                <div class="modal-banner">
-                    <h3>💄 BEAUTY & GROOMING ESSENTIALS</h3>
-                    <p>Luxury fragrances, beard oils, and skin hydrators matching your capsule aesthetic.</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-            col_b1, col_b2 = st.columns(2)
-            with col_b1:
-                if st.button("🧴 Add Woody Citrus Eau De Parfum (₹1,899)", key="b_item1_s", use_container_width=True):
-                    st.toast("Added Parfum to Bag!")
-                    st.session_state["bag_count"] += 1
-            with col_b2:
-                if st.button("✖️ Close View", key="close_b_btn_s", use_container_width=True):
-                    st.session_state["active_modal"] = None
-                    st.rerun()
+# ==============================================================================
+# 6. SCREEN 1: THE MASTER SEARCH & DISCOVERY UI (`current_view == "catalog"`)
+# ==============================================================================
 
-        elif str(active_m).startswith("search_"):
-            q = str(active_m).replace("search_", "")
-            st.markdown(
-                f"""
-                <div class="modal-banner">
-                    <h4>🔍 Search Results for "{q}"</h4>
-                    <p>Found <b>3 matches</b> across your catalog and smart closet pairings.</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-            s_c1, s_c2 = st.columns(2)
-            with s_c1:
-                if st.button(f"👉 View '{TARGET_ITEM['name']}' PDP", key="search_match_btn_s", type="primary", use_container_width=True):
-                    st.session_state["active_modal"] = None
-                    set_view("pdp")
-            with s_c2:
-                if st.button("✖️ Clear Search", key="clear_s_btn_s", use_container_width=True):
-                    st.session_state["active_modal"] = None
-                    st.rerun()
+def render_catalog_view() -> None:
+    st.markdown(
+        """
+        <div class="section-header-wrap" style="margin-top: 0;">
+            <div>
+                <div class="section-title">🔍 MYNTRA MASTER CATALOG & SEARCH</div>
+                <div class="section-subtitle">Browse all 5 Master Categories • Apparel, Footwear, Beauty, Accessories & Home</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-        elif active_m == "size_chart":
-            st.markdown(
-                """
-                <div class="modal-banner">
-                    <h3>📐 MANGO MAN SIZE & FIT GUIDE (INCHES)</h3>
-                    <table style="width: 100%; text-align: left; margin: 10px 0; border-collapse: collapse; font-size: 0.88rem;">
-                        <tr style="border-bottom: 1px solid #ECEEF0; font-weight: 800;">
-                            <th>Size</th><th>Chest (in)</th><th>Shoulder (in)</th><th>Length (in)</th><th>Recommendation</th>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #ECEEF0;">
-                            <td><b>38 (S)</b></td><td>38 - 39</td><td>17.5</td><td>28.5</td><td>Slim Silhouette</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #ECEEF0; background: #FFF0F4;">
-                            <td><b>40 (M)</b></td><td>40 - 41</td><td>18.0</td><td>29.0</td><td>⭐ <b>Your Perfect Match</b></td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #ECEEF0;">
-                            <td><b>42 (L)</b></td><td>42 - 43</td><td>18.5</td><td>29.5</td><td>Relaxed Layering</td>
-                        </tr>
-                        <tr>
-                            <td><b>44 (XL)</b></td><td>44 - 46</td><td>19.0</td><td>30.0</td><td>Oversized Fit</td>
-                        </tr>
-                    </table>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-            if st.button("✖️ Close Size Chart", key="close_sc_btn_s", use_container_width=True):
-                st.session_state["active_modal"] = None
+    # 1. Top Wide Free-Text Search Bar
+    search_input = st.text_input(
+        "Free-Text Catalog Search",
+        value=st.session_state.get("search_query", ""),
+        placeholder="🔍 Search across fashion, beauty, home, and more (e.g. linen blazer, sneakers, kurti, watch)...",
+        label_visibility="collapsed",
+        key="main_catalog_search_s"
+    )
+    if search_input != st.session_state.get("search_query", ""):
+        st.session_state["search_query"] = search_input
+        st.rerun()
+
+    # 2. Horizontal Category Filter Chips
+    st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
+    categories = ["All", "Apparel", "Footwear", "Beauty", "Accessories", "Home"]
+    current_cat = st.session_state.get("selected_category_filter", "All")
+    
+    chip_cols = st.columns(len(categories))
+    for idx, cat_name in enumerate(categories):
+        with chip_cols[idx]:
+            is_active = (current_cat == cat_name)
+            if st.button(
+                f"{'⭐ ' if cat_name == 'All' else ''}{cat_name}",
+                key=f"chip_s_{cat_name}",
+                type="primary" if is_active else "secondary",
+                use_container_width=True
+            ):
+                st.session_state["selected_category_filter"] = cat_name
                 st.rerun()
+
+    st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+
+    # 3. Filtering Engine
+    query = st.session_state.get("search_query", "").strip().lower()
+    selected_filter = st.session_state.get("selected_category_filter", "All")
+
+    filtered_items: List[CatalogItem] = []
+    for item in MICRO_CATALOG:
+        # Category check
+        if selected_filter != "All" and item["master_category"] != selected_filter:
+            continue
+        # Search text check
+        if query:
+            match_str = f"{item['name']} {item['brand']} {item['master_category']} {item['sub_category']}".lower()
+            if query not in match_str:
+                continue
+        filtered_items.append(item)
+
+    # Results Header
+    st.markdown(
+        f"""
+        <div style="font-size: 0.85rem; font-weight: 700; color: #535766; margin-bottom: 1rem;">
+            Showing <b>{len(filtered_items)} items</b> in <i>{selected_filter}</i> {f'matching "{query}"' if query else ''}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    if not filtered_items:
+        st.info("No matching products found. Try clearing your search query or selecting 'All' categories.")
+        if st.button("Reset Search Filters", key="reset_filters_btn_s"):
+            st.session_state["search_query"] = ""
+            st.session_state["selected_category_filter"] = "All"
+            st.rerun()
+        return
+
+    # 4. Grid Display (4-Column Layout)
+    num_cols = 4
+    rows = [filtered_items[i:i + num_cols] for i in range(0, len(filtered_items), num_cols)]
+
+    for row_items in rows:
+        cols = st.columns(num_cols)
+        for idx, item in enumerate(row_items):
+            with cols[idx]:
+                st.image(item["img"], use_container_width=True)
+                
+                # StyleSync Tag Badge
+                if item["is_stylesync_eligible"]:
+                    st.markdown(
+                        """
+                        <span style="font-size: 0.68rem; font-weight: 900; background: #FFF0F4; color: #FF3F6C; border: 1px solid #FFD8E4; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
+                            ✨ StyleSync Eligible
+                        </span>
+                        """,
+                        unsafe_allow_html=True
+                    )
+                else:
+                    st.markdown(
+                        f"""
+                        <span style="font-size: 0.68rem; font-weight: 700; background: #F5F5F6; color: #7E818C; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
+                            {item['sub_category']}
+                        </span>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+                st.markdown(
+                    f"""
+                    <div style="margin-top: 4px;">
+                        <div style="font-weight: 900; font-size: 0.82rem; color: #282C3F; text-transform: uppercase;">{item['brand']}</div>
+                        <div style="font-size: 0.8rem; color: #535766; font-weight: 500; height: 38px; overflow: hidden; text-overflow: ellipsis; line-height: 1.25; margin-top: 2px;">
+                            {item['name']}
+                        </div>
+                        <div style="display: flex; align-items: baseline; gap: 6px; margin: 4px 0 8px 0;">
+                            <span style="font-weight: 900; font-size: 0.92rem; color: #282C3F;">{item['price']}</span>
+                            <span style="font-size: 0.75rem; color: #94969F; text-decoration: line-through;">{item['mrp']}</span>
+                            <span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C;">{item['discount']}</span>
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+                if st.button("👉 View Product", key=f"view_prod_s_{item['id']}", use_container_width=True):
+                    view_product_pdp(item)
 
 
 # ==============================================================================
-# 6. SCREEN 1: HOMEPAGE STOREFRONT
+# 7. SCREEN 2: HOMEPAGE STOREFRONT
 # ==============================================================================
 
 def render_homepage_view() -> None:
@@ -660,7 +1138,7 @@ def render_homepage_view() -> None:
             unsafe_allow_html=True
         )
     with t_col2:
-        if st.button("📋 Copy Code 'MYNTRASAVE'", key="copy_coupon_btn_s", use_container_width=True):
+        if st.button("📋 Copy Code 'MYNTRASAVE'", key="copy_coupon_btn_h_s", use_container_width=True):
             st.toast("🎟️ Coupon 'MYNTRASAVE' applied to your cart! 25% OFF active.")
 
     # 2. Linen Collection Hero Banner
@@ -692,18 +1170,14 @@ def render_homepage_view() -> None:
         )
         c_btn1, c_btn2, c_btn3 = st.columns(3)
         with c_btn1:
-            if st.button("🔥 EXPLORE NOW", key="hero_explore_btn_s", type="primary", use_container_width=True):
-                st.toast("Opening Rust Linen Blazer Product Page...")
-                set_view("pdp")
+            if st.button("🔥 EXPLORE NOW", key="hero_explore_btn_h_s", type="primary", use_container_width=True):
+                view_product_pdp(MICRO_CATALOG[0])
         with c_btn2:
-            if st.button("✨ Style with Closet", key="hero_stylesync_btn_s", use_container_width=True):
-                st.toast("Opening StyleSync Wardrobe Matcher...")
+            if st.button("✨ Style with Closet", key="hero_stylesync_btn_h_s", use_container_width=True):
                 set_view("stylesync")
         with c_btn3:
-            if st.button("❤️ Save to Wishlist", key="hero_wl_btn_s", use_container_width=True):
-                st.session_state["wishlist_count"] += 1
-                st.toast("❤️ Added Linen Blazer to Wishlist!")
-                st.rerun()
+            if st.button("🔍 Search Catalog", key="hero_catalog_btn_s", use_container_width=True):
+                set_view("catalog")
 
     # 3. Shop by Category Grid
     st.markdown(
@@ -711,7 +1185,7 @@ def render_homepage_view() -> None:
         <div class="section-header-wrap">
             <div>
                 <div class="section-title">SHOP BY CATEGORY</div>
-                <div class="section-subtitle">Curated trends designed to complement your current wardrobe</div>
+                <div class="section-subtitle">Curated trends across 5 master categories</div>
             </div>
         </div>
         """,
@@ -722,182 +1196,161 @@ def render_homepage_view() -> None:
     with cat1:
         st.image(IMAGE_MEN_CAT, use_container_width=True)
         st.markdown("<h4 style='margin: 6px 0 2px 0; font-weight: 800;'>MEN'S CASUALS</h4><p style='color: #7E818C; font-size: 0.8rem;'>Linens, Polos & Trousers</p>", unsafe_allow_html=True)
-        if st.button("Explore Men's →", key="cat_men_btn_s", use_container_width=True):
-            st.toast("Browsing Men's Catalog")
-            set_view("pdp")
+        if st.button("Browse Apparel →", key="cat_men_btn_h_s", use_container_width=True):
+            st.session_state["selected_category_filter"] = "Apparel"
+            set_view("catalog")
 
     with cat2:
         st.image(IMAGE_WOMEN_CAT, use_container_width=True)
         st.markdown("<h4 style='margin: 6px 0 2px 0; font-weight: 800;'>WOMEN'S WEAR</h4><p style='color: #7E818C; font-size: 0.8rem;'>Dresses, Tops & Coordinates</p>", unsafe_allow_html=True)
-        if st.button("Explore Women's →", key="cat_women_btn_s", use_container_width=True):
-            st.session_state["active_modal"] = "women_collection"
-            st.rerun()
+        if st.button("Browse Women's →", key="cat_women_btn_h_s", use_container_width=True):
+            st.session_state["selected_category_filter"] = "Apparel"
+            set_view("catalog")
 
     with cat3:
         st.image(IMAGE_BEAUTY_CAT, use_container_width=True)
         st.markdown("<h4 style='margin: 6px 0 2px 0; font-weight: 800;'>BEAUTY & GROOMING</h4><p style='color: #7E818C; font-size: 0.8rem;'>Fragrance, Skincare & Grooming</p>", unsafe_allow_html=True)
-        if st.button("Explore Beauty →", key="cat_beauty_btn_s", use_container_width=True):
-            st.session_state["active_modal"] = "beauty_collection"
-            st.rerun()
+        if st.button("Browse Beauty →", key="cat_beauty_btn_h_s", use_container_width=True):
+            st.session_state["selected_category_filter"] = "Beauty"
+            set_view("catalog")
 
     with cat4:
         st.image(IMAGE_HOME_CAT, use_container_width=True)
         st.markdown("<h4 style='margin: 6px 0 2px 0; font-weight: 800;'>HOME LIVING</h4><p style='color: #7E818C; font-size: 0.8rem;'>Modern Decor & Bedroom Accents</p>", unsafe_allow_html=True)
-        if st.button("Explore Home →", key="cat_home_btn_s", use_container_width=True):
-            st.toast("🏡 Home Living Catalog loaded!")
+        if st.button("Browse Home →", key="cat_home_btn_h_s", use_container_width=True):
+            st.session_state["selected_category_filter"] = "Home"
+            set_view("catalog")
 
 
 # ==============================================================================
-# 7. SCREEN 2: PRODUCT DISPLAY PAGE (PDP)
+# 8. SCREEN 3: DYNAMIC PRODUCT DISPLAY PAGE (`current_view == "pdp"`)
 # ==============================================================================
 
 def render_pdp_view() -> None:
-    # Breadcrumbs
-    st.markdown(
-        """
-        <div style="font-size: 0.78rem; font-weight: 600; color: #7E818C; margin-bottom: 1.2rem;">
-            <span>Home</span> / <span>Men</span> / <span>Topwear</span> / <span>Blazers</span> / 
-            <span style="color: #282C3F; font-weight: 800;">MANGO MAN Rust Linen Blazer</span>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    item: CatalogItem = st.session_state.get("selected_item", MICRO_CATALOG[0])
 
-    col_img, col_details = st.columns([1.1, 1.2], gap="large")
-
-    with col_img:
-        active_img = st.session_state.get("pdp_active_img", TARGET_ITEM["image_url"])
-        st.image(active_img, use_container_width=True)
-        
-        # Interactive Thumbnail Switcher Buttons
-        st.markdown("<div style='font-size: 0.75rem; font-weight: 700; color: #7E818C; margin: 6px 0 4px 0;'>CLICK TO SWITCH ANGLE / PAIRING VIEW:</div>", unsafe_allow_html=True)
-        t1, t2, t3 = st.columns(3)
-        with t1:
-            st.image(TARGET_ITEM["image_url"], use_container_width=True)
-            if st.button("📸 Front View", key="thumb_front_s", use_container_width=True):
-                st.session_state["pdp_active_img"] = TARGET_ITEM["image_url"]
-                st.rerun()
-        with t2:
-            st.image(IMAGE_OLIVE_SHIRT, use_container_width=True)
-            if st.button("🌿 Olive Pair", key="thumb_olive_s", use_container_width=True):
-                st.session_state["pdp_active_img"] = IMAGE_OLIVE_SHIRT
-                st.rerun()
-        with t3:
-            st.image(IMAGE_BLACK_TROUSERS, use_container_width=True)
-            if st.button("👖 Trouser Pair", key="thumb_pant_s", use_container_width=True):
-                st.session_state["pdp_active_img"] = IMAGE_BLACK_TROUSERS
-                st.rerun()
-
-    with col_details:
-        st.markdown(f"<span style='font-size: 0.85rem; font-weight: 900; color: #FF3F6C; letter-spacing: 1px;'>{TARGET_ITEM['brand']}</span>", unsafe_allow_html=True)
-        st.markdown(f"<h1 style='font-size: 1.8rem; font-weight: 900; color: #282C3F; margin: 4px 0 10px 0;'>{TARGET_ITEM['name']}</h1>", unsafe_allow_html=True)
-        
-        # Ratings Pill
+    # Header Back Button
+    b_col1, b_col2 = st.columns([1.5, 4])
+    with b_col1:
+        if st.button("← Back to Catalog", key="pdp_back_catalog_btn_s", use_container_width=True):
+            set_view("catalog")
+    with b_col2:
         st.markdown(
             f"""
-            <div style="display: inline-flex; align-items: center; gap: 6px; background: #FAFAFA; border: 1px solid #EAEAEC; border-radius: 6px; padding: 4px 10px; font-size: 0.82rem; font-weight: 800; margin-bottom: 1rem;">
-                <span style="color: #03A685;">★ {TARGET_ITEM['rating']}</span>
-                <span style="color: #94969F;">|</span>
-                <span style="color: #535766;">{TARGET_ITEM['reviews']}</span>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #7E818C; padding-top: 6px;">
+                <span>Home</span> / <span>{item.get('master_category', 'Apparel')}</span> / <span>{item.get('sub_category', 'Men')}</span> / 
+                <span style="color: #282C3F; font-weight: 800;">{item['brand']} {item['name']}</span>
             </div>
             """,
             unsafe_allow_html=True
         )
 
-        # Price Row
+    st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+
+    col_img, col_details = st.columns([1.1, 1.2], gap="large")
+
+    with col_img:
+        st.image(item["img"], use_container_width=True)
+        # Thumbnails
+        t1, t2, t3 = st.columns(3)
+        with t1:
+            st.image(item["img"], use_container_width=True)
+        with t2:
+            st.image(IMAGE_OLIVE_SHIRT if item["is_stylesync_eligible"] else item["img"], use_container_width=True)
+        with t3:
+            st.image(IMAGE_BLACK_TROUSERS if item["is_stylesync_eligible"] else item["img"], use_container_width=True)
+
+    with col_details:
+        st.markdown(f"<span style='font-size: 0.85rem; font-weight: 900; color: #FF3F6C; letter-spacing: 1px;'>{item['brand']}</span>", unsafe_allow_html=True)
+        st.markdown(f"<h1 style='font-size: 1.8rem; font-weight: 900; color: #282C3F; margin: 4px 0 10px 0;'>{item['name']}</h1>", unsafe_allow_html=True)
+        
+        # Rating
+        st.markdown(
+            f"""
+            <div style="display: inline-flex; align-items: center; gap: 6px; background: #FAFAFA; border: 1px solid #EAEAEC; border-radius: 6px; padding: 4px 10px; font-size: 0.82rem; font-weight: 800; margin-bottom: 1rem;">
+                <span style="color: #03A685;">{item['rating']}</span>
+                <span style="color: #94969F;">|</span>
+                <span style="color: #535766;">Verified Customer Ratings</span>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        # Price
         st.markdown(
             f"""
             <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px;">
-                <span style="font-size: 1.8rem; font-weight: 900; color: #282C3F;">{TARGET_ITEM['price']}</span>
-                <span style="font-size: 1.1rem; color: #94969F; text-decoration: line-through;">{TARGET_ITEM['original_price']}</span>
-                <span style="font-size: 0.95rem; font-weight: 800; color: #FF5722; background: #FFF5F0; padding: 3px 8px; border-radius: 6px;">{TARGET_ITEM['discount']}</span>
+                <span style="font-size: 1.8rem; font-weight: 900; color: #282C3F;">{item['price']}</span>
+                <span style="font-size: 1.1rem; color: #94969F; text-decoration: line-through;">{item['mrp']}</span>
+                <span style="font-size: 0.95rem; font-weight: 800; color: #FF5722; background: #FFF5F0; padding: 3px 8px; border-radius: 6px;">{item['discount']}</span>
             </div>
             <div style="font-size: 0.76rem; font-weight: 800; color: #03A685; margin-bottom: 1.2rem;">inclusive of all taxes • Free Shipping & 14-Day Returns</div>
             """,
             unsafe_allow_html=True
         )
 
-        # Size Selector
-        sz_head, sz_chart = st.columns([2, 1])
-        with sz_head:
-            st.markdown("<div style='font-size: 0.84rem; font-weight: 900; color: #282C3F;'>SELECT SIZE (CHEST)</div>", unsafe_allow_html=True)
-        with sz_chart:
-            if st.button("📏 Size Chart", key="sc_open_btn_s", use_container_width=True):
-                st.session_state["active_modal"] = "size_chart"
-                st.rerun()
+        # ======================================================================
+        # THE STYLESYNC INTERCEPTOR (If is_stylesync_eligible == True)
+        # ======================================================================
+        if item.get("is_stylesync_eligible", False):
+            st.markdown(
+                """
+                <div style="background: linear-gradient(135deg, #FFF0F4 0%, #F5F0FF 100%); border: 2px solid #FF3F6C; border-radius: 14px; padding: 1.2rem; margin-bottom: 1.5rem; box-shadow: 0 4px 16px rgba(255, 63, 108, 0.08);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                        <span style="font-size: 1.4rem;">✨</span>
+                        <span style="font-size: 1rem; font-weight: 900; color: #FF3F6C;">StyleSync™ Smart Match Found!</span>
+                    </div>
+                    <p style="font-size: 0.85rem; color: #282C3F; font-weight: 600; margin-bottom: 0.8rem; line-height: 1.4;">
+                        We detected <b>3 items in your purchase history</b> (Zara Trousers, Olive Linen Shirt, Fossil Watch) that create full modular outfits with this item.
+                    </p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            if st.button("✨ Launch StyleSync™ AI Studio & WhatsApp Poll →", key="pdp_stylesync_cta_btn_s", type="primary", use_container_width=True):
+                st.toast("Opening StyleSync Wardrobe Matcher...")
+                set_view("stylesync")
 
-        s1, s2, s3, s4 = st.columns(4)
-        curr_size = st.session_state.get("selected_size", "40")
-        with s1:
-            if st.button("38", key="sz_38_s", type="primary" if curr_size == "38" else "secondary", use_container_width=True):
-                st.session_state["selected_size"] = "38"
-                st.toast("Selected Size 38 (Small)")
-                st.rerun()
-        with s2:
-            if st.button("40 ⭐", key="sz_40_s", type="primary" if curr_size == "40" else "secondary", use_container_width=True):
-                st.session_state["selected_size"] = "40"
-                st.toast("Selected Size 40 (Your Perfect Fit)")
-                st.rerun()
-        with s3:
-            if st.button("42", key="sz_42_s", type="primary" if curr_size == "42" else "secondary", use_container_width=True):
-                st.session_state["selected_size"] = "42"
-                st.toast("Selected Size 42 (Large)")
-                st.rerun()
-        with s4:
-            if st.button("44", key="sz_44_s", type="primary" if curr_size == "44" else "secondary", use_container_width=True):
-                st.session_state["selected_size"] = "44"
-                st.toast("Selected Size 44 (XL)")
-                st.rerun()
+            st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
 
-        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+        # Size Selector (Apparel/Footwear)
+        if item["master_category"] in ["Apparel", "Footwear"]:
+            st.markdown("<div style='font-size: 0.84rem; font-weight: 900; color: #282C3F; margin-bottom: 6px;'>SELECT SIZE</div>", unsafe_allow_html=True)
+            s1, s2, s3, s4 = st.columns(4)
+            curr_size = st.session_state.get("selected_size", "40")
+            with s1:
+                if st.button("38 / S", key="p_sz_38_s", type="primary" if curr_size == "38" else "secondary", use_container_width=True):
+                    st.session_state["selected_size"] = "38"
+                    st.rerun()
+            with s2:
+                if st.button("40 / M ⭐", key="p_sz_40_s", type="primary" if curr_size == "40" else "secondary", use_container_width=True):
+                    st.session_state["selected_size"] = "40"
+                    st.rerun()
+            with s3:
+                if st.button("42 / L", key="p_sz_42_s", type="primary" if curr_size == "42" else "secondary", use_container_width=True):
+                    st.session_state["selected_size"] = "42"
+                    st.rerun()
+            with s4:
+                if st.button("44 / XL", key="p_sz_44_s", type="primary" if curr_size == "44" else "secondary", use_container_width=True):
+                    st.session_state["selected_size"] = "44"
+                    st.rerun()
 
-        # Action Buttons
+        # Standard Action Buttons
         btn_bag, btn_wish = st.columns([1.2, 1])
         with btn_bag:
-            if st.button("🛍️ ADD TO BAG", key="pdp_add_bag_btn_s", type="primary", use_container_width=True):
-                st.session_state["bag_count"] = st.session_state.get("bag_count", 2) + 1
-                st.toast(f"✅ Rust Linen Blazer (Size {curr_size}) added to Bag!")
+            if st.button("🛍️ ADD TO BAG", key="pdp_add_bag_standard_s", type="primary" if not item.get("is_stylesync_eligible") else "secondary", use_container_width=True):
+                st.session_state["bag_count"] += 1
+                st.toast(f"✅ {item['brand']} {item['name']} added to shopping bag!")
                 st.rerun()
         with btn_wish:
-            if st.button("❤️ WISHLIST", key="pdp_add_wl_btn_s", use_container_width=True):
+            if st.button("❤️ WISHLIST", key="pdp_add_wl_standard_s", use_container_width=True):
                 st.session_state["wishlist_count"] += 1
-                st.toast("❤️ Added to Wishlist! Opening Smart Closet...")
-                set_view("wishlist")
-
-        # Pincode Delivery Checker
-        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
-        pin_col1, pin_col2 = st.columns([2, 1])
-        with pin_col1:
-            pin_code = st.text_input("Delivery Pincode", placeholder="Enter 6-digit Pincode (e.g. 110001)", label_visibility="collapsed", key="pin_input_s")
-        with pin_col2:
-            if st.button("Check ⚡", key="pin_btn_s", use_container_width=True):
-                if pin_code:
-                    st.success(f"⚡ Delivery to {pin_code} by Tomorrow, 5 PM! Free Shipping.")
-                else:
-                    st.info("⚡ Standard delivery by Tomorrow, 5 PM across Metro cities.")
-
-        # StyleSync AI Recommendation Box
-        st.markdown(
-            """
-            <div style="background: linear-gradient(135deg, #FFF0F4 0%, #F5F0FF 100%); border: 1.5px solid #FFD8E4; border-radius: 12px; padding: 1.1rem; margin-top: 1.2rem;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                    <span style="font-size: 1.3rem;">✨</span>
-                    <span style="font-size: 0.95rem; font-weight: 900; color: #282C3F;">StyleSync™ Smart Match Found!</span>
-                </div>
-                <p style="font-size: 0.82rem; color: #535766; margin-bottom: 0.8rem; line-height: 1.4;">
-                    We detected <b>3 items in your purchase history</b> (Zara Trousers, Olive Linen Shirt, Fossil Watch) that create 3 full modular outfits with this blazer.
-                </p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        if st.button("✨ View 3 Wardrobe Outfits & WhatsApp Poll →", key="pdp_to_stylesync_btn_s", type="primary", use_container_width=True):
-            st.toast("Generating Rule-of-3 Outfits from your closet...")
-            set_view("stylesync")
+                st.toast(f"❤️ Added {item['name']} to Wishlist!")
+                st.rerun()
 
 
 # ==============================================================================
-# 8. SCREEN 3: WISHLIST & SMART CLOSET ANCHOR
+# 9. SCREEN 4: WISHLIST & SMART CLOSET ANCHOR
 # ==============================================================================
 
 def render_wishlist_view() -> None:
@@ -906,7 +1359,7 @@ def render_wishlist_view() -> None:
         <div class="section-header-wrap" style="margin-top: 0;">
             <div>
                 <div class="section-title">MY WISHLIST & SAVED WARDROBE</div>
-                <div class="section-subtitle">1 Target Anchor Garment • 6 Paired Wardrobe & Catalog Pieces</div>
+                <div class="section-subtitle">1 Target Anchor Garment • 6 Paired Wardrobe Pieces</div>
             </div>
         </div>
         """,
@@ -1000,7 +1453,7 @@ def render_wishlist_view() -> None:
 
 
 # ==============================================================================
-# 9. SCREEN 4: STYLESYNC AI STUDIO & WHATSAPP SOCIAL POLL
+# 10. SCREEN 5: STYLESYNC AI STUDIO & WHATSAPP SOCIAL POLL
 # ==============================================================================
 
 def render_stylesync_view() -> None:
@@ -1016,7 +1469,6 @@ def render_stylesync_view() -> None:
         unsafe_allow_html=True
     )
 
-    # 3 Curated Rule-of-3 Outfit Collages
     l_col1, l_col2, l_col3 = st.columns(3)
 
     # Look 1
@@ -1203,7 +1655,7 @@ def render_stylesync_view() -> None:
 
 
 # ==============================================================================
-# 10. FOOTER COMPONENT
+# 11. FOOTER COMPONENT
 # ==============================================================================
 
 def render_footer() -> None:
@@ -1244,15 +1696,17 @@ def render_footer() -> None:
 
 
 # ==============================================================================
-# 11. MAIN ROUTER
+# 12. MAIN ROUTER
 # ==============================================================================
 
 def main() -> None:
     render_top_navbar()
 
-    current_view = st.session_state.get("current_view", "homepage")
+    current_view = st.session_state.get("current_view", "catalog")
 
-    if current_view == "homepage":
+    if current_view == "catalog":
+        render_catalog_view()
+    elif current_view == "homepage":
         render_homepage_view()
     elif current_view == "pdp":
         render_pdp_view()
@@ -1261,7 +1715,7 @@ def main() -> None:
     elif current_view == "stylesync":
         render_stylesync_view()
     else:
-        render_homepage_view()
+        render_catalog_view()
 
     render_footer()
 
