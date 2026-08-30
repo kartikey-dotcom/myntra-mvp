@@ -1,11 +1,12 @@
 """
 Myntra E-Commerce Platform & StyleSync™ Smart Wardrobe MVP
 ==========================================================
-High-Fidelity Desktop E-Commerce Experience & Native 4-Screen Flow:
-1. Storefront Homepage (Navigation, Ticket Promo Banner, Linen Collection Hero, 4-Category Grid)
-2. Product Display Page (PDP - Rust Linen Blazer, Dynamic Size Picker, StyleSync AI Preview)
-3. Wishlist Anchor & Smart Closet (Saved Blazer, Closet Inventory, 'Style with My Closet' CTA)
-4. StyleSync AI Studio & WhatsApp Social Validation (Rule-of-3 Outfits & Interactive WhatsApp Poll)
+High-Fidelity Desktop E-Commerce Experience & Fully Interactive Native App:
+1. Storefront Homepage (Active navigation, ticket coupon copier, linen collection hero, category drawers)
+2. Product Display Page (PDP - Thumbnail gallery switcher, interactive size picker, delivery pincode checker, size chart modal)
+3. Shopping Bag Drawer & Profile Modal (Live item list, coupon discounts, order summary)
+4. Wishlist Anchor & Smart Closet (Move to Bag, item detail modals, 'Style with My Closet' AI orchestrator)
+5. StyleSync AI Studio & WhatsApp Social Validation (Rule-of-3 Outfits, Bundle Add-to-Bag, Live Peer Polling & Checkout)
 """
 
 import time
@@ -34,7 +35,6 @@ CUSTOM_CSS = """
         background-color: #FAFBFC;
     }
 
-    /* Remove Streamlit default header/footer padding */
     header[data-testid="stHeader"] {
         background: transparent !important;
         height: 1.5rem !important;
@@ -52,37 +52,18 @@ CUSTOM_CSS = """
         margin: auto !important;
     }
 
-    /* Custom Navbar Card */
-    .myntra-nav-container {
+    /* Modal / Alert Card Overlay */
+    .modal-banner {
         background: #FFFFFF;
-        border-bottom: 1px solid #F0F0F2;
-        padding: 0.8rem 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-        border-radius: 12px;
-        margin-bottom: 1.2rem;
+        border: 2px solid #FF3F6C;
+        border-radius: 14px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 10px 30px rgba(255, 63, 108, 0.12);
+        animation: fadeIn 0.3s ease-in-out;
     }
 
-    /* Brand Ribbon Logo */
-    .brand-logo-wrap {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        cursor: pointer;
-    }
-    .brand-name-title {
-        font-size: 1.45rem;
-        font-weight: 900;
-        letter-spacing: -0.5px;
-        color: #282C3F;
-    }
-    .brand-pink-accent {
-        color: #FF3F6C;
-    }
-
-    /* Ticket Promo Banner */
+    /* Promo Ticket Box */
     .promo-ticket-box {
         background: linear-gradient(90deg, #FFF0F3 0%, #FFE8EE 50%, #FFF0F3 100%);
         border: 1.5px dashed #FFCCD7;
@@ -92,7 +73,6 @@ CUSTOM_CSS = """
         display: flex;
         align-items: center;
         justify-content: space-between;
-        position: relative;
         box-shadow: 0 2px 10px rgba(255, 63, 108, 0.06);
     }
     .ticket-heading {
@@ -106,24 +86,6 @@ CUSTOM_CSS = """
         font-weight: 600;
         color: #535766;
     }
-    .coupon-pill {
-        background: #FFFFFF;
-        padding: 0.5rem 1.2rem;
-        border-radius: 30px;
-        font-size: 0.82rem;
-        font-weight: 800;
-        color: #282C3F;
-        border: 1px solid #FFE0E6;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .coupon-code {
-        color: #FF3F6C;
-        font-weight: 900;
-        letter-spacing: 0.5px;
-    }
 
     /* Hero Banner */
     .hero-banner-container {
@@ -134,21 +96,6 @@ CUSTOM_CSS = """
         display: flex;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         border: 1px solid #EAE6DC;
-    }
-    .hero-img-col {
-        flex: 1.1;
-        min-height: 380px;
-        background-size: cover;
-        background-position: center top;
-    }
-    .hero-text-col {
-        flex: 1;
-        padding: 3rem 2.5rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        background: #F4F1EA;
     }
     .hero-super-title {
         font-size: 0.82rem;
@@ -173,37 +120,6 @@ CUSTOM_CSS = """
         margin-bottom: 1.5rem;
     }
 
-    /* Category Cards */
-    .category-card {
-        background: #FFFFFF;
-        border-radius: 14px;
-        overflow: hidden;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-        border: 1px solid #F0F0F2;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        position: relative;
-        text-decoration: none;
-    }
-    .category-img-box {
-        height: 220px;
-        background-size: cover;
-        background-position: center top;
-        position: relative;
-    }
-    .category-title-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(180deg, transparent 0%, rgba(40, 44, 63, 0.85) 100%);
-        padding: 1.2rem 1rem 0.6rem 1rem;
-        color: #FFFFFF;
-        font-size: 1rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
     /* Section Headings */
     .section-header-wrap {
         display: flex;
@@ -222,87 +138,6 @@ CUSTOM_CSS = """
         font-size: 0.85rem;
         color: #7E818C;
         font-weight: 500;
-    }
-
-    /* Product Cards & Wishlist Items */
-    .product-grid-card {
-        background: #FFFFFF;
-        border: 1px solid #ECEEF0;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    .product-img-frame {
-        height: 230px;
-        background-size: cover;
-        background-position: center top;
-        position: relative;
-    }
-    .product-badge-pill {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        font-size: 0.68rem;
-        font-weight: 800;
-        padding: 3px 8px;
-        border-radius: 4px;
-        text-transform: uppercase;
-    }
-    .badge-in-closet {
-        background: #282C3F;
-        color: #FFFFFF;
-    }
-    .badge-suggested {
-        background: #E8F8F5;
-        color: #03A685;
-        border: 1px solid #B8EADF;
-    }
-    .product-info-padding {
-        padding: 12px 14px;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-    .product-brand-text {
-        font-size: 0.78rem;
-        font-weight: 800;
-        color: #282C3F;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    .product-name-text {
-        font-size: 0.86rem;
-        color: #535766;
-        font-weight: 500;
-        margin: 2px 0 6px 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .product-price-row {
-        display: flex;
-        align-items: baseline;
-        gap: 8px;
-        margin-top: 4px;
-    }
-    .product-price-bold {
-        font-size: 0.95rem;
-        font-weight: 800;
-        color: #282C3F;
-    }
-    .product-price-orig {
-        font-size: 0.78rem;
-        color: #94969F;
-        text-decoration: line-through;
-    }
-    .product-price-disc {
-        font-size: 0.75rem;
-        font-weight: 800;
-        color: #FF3F6C;
     }
 
     /* StyleSync Studio Collage Card */
@@ -352,19 +187,6 @@ CUSTOM_CSS = """
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         margin-bottom: 1rem;
         position: relative;
-    }
-    .whatsapp-poll-btn {
-        width: 100%;
-        border-radius: 8px;
-        padding: 0.6rem 1rem;
-        font-size: 0.88rem;
-        font-weight: 700;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.5rem;
-        cursor: pointer;
-        transition: all 0.2s;
     }
 
     /* Streamlit Button Custom Styler */
@@ -512,19 +334,33 @@ def init_session_state() -> None:
         st.session_state["current_view"] = "homepage"
     if "bag_count" not in st.session_state:
         st.session_state["bag_count"] = 2
+    if "wishlist_count" not in st.session_state:
+        st.session_state["wishlist_count"] = 1
     if "selected_size" not in st.session_state:
         st.session_state["selected_size"] = "40"
+    if "pdp_active_img" not in st.session_state:
+        st.session_state["pdp_active_img"] = TARGET_ITEM["image_url"]
     if "poll_sent" not in st.session_state:
         st.session_state["poll_sent"] = False
     if "vote_feedback" not in st.session_state:
         st.session_state["vote_feedback"] = None
-    if "toast_msg" not in st.session_state:
-        st.session_state["toast_msg"] = None
+    if "show_bag_drawer" not in st.session_state:
+        st.session_state["show_bag_drawer"] = False
+    if "show_profile_modal" not in st.session_state:
+        st.session_state["show_profile_modal"] = False
+    if "show_size_chart" not in st.session_state:
+        st.session_state["show_size_chart"] = False
+    if "active_modal" not in st.session_state:
+        st.session_state["active_modal"] = None
 
 init_session_state()
 
 def set_view(view_name: str) -> None:
     st.session_state["current_view"] = view_name
+    st.session_state["show_bag_drawer"] = False
+    st.session_state["show_profile_modal"] = False
+    st.session_state["show_size_chart"] = False
+    st.session_state["active_modal"] = None
     st.rerun()
 
 # ==============================================================================
@@ -534,6 +370,7 @@ def set_view(view_name: str) -> None:
 def render_top_navbar() -> None:
     curr = st.session_state.get("current_view", "homepage")
     bag_num = st.session_state.get("bag_count", 2)
+    wl_num = st.session_state.get("wishlist_count", 1)
 
     # Top Brand Ribbon & Search Bar
     nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([2.5, 4.5, 3, 2.5])
@@ -561,73 +398,270 @@ def render_top_navbar() -> None:
         # Category Tabs
         b1, b2, b3, b4, b5 = st.columns(5)
         with b1:
-            if st.button("HOME", key="nav_home", use_container_width=True):
+            if st.button("HOME", key="nav_home_s", use_container_width=True):
+                st.toast("🏠 Welcome to Myntra Storefront!")
                 set_view("homepage")
         with b2:
-            if st.button("MEN", key="nav_men", use_container_width=True):
+            if st.button("MEN", key="nav_men_s", use_container_width=True):
+                st.toast("👔 Opening Men's Linen Blazer Collection")
                 set_view("pdp")
         with b3:
-            if st.button("WOMEN", key="nav_women", use_container_width=True):
-                set_view("homepage")
+            if st.button("WOMEN", key="nav_women_s", use_container_width=True):
+                st.session_state["active_modal"] = "women_collection"
+                st.toast("👗 Showing Women's Capsule Outfits")
+                st.rerun()
         with b4:
-            if st.button("STUDIO ✨", key="nav_studio", use_container_width=True):
+            if st.button("STUDIO ✨", key="nav_studio_s", use_container_width=True):
+                st.toast("✨ Entering StyleSync™ AI Wardrobe Studio")
                 set_view("stylesync")
         with b5:
-            if st.button("WISHLIST", key="nav_wl_tab", use_container_width=True):
-                set_view("wishlist")
+            if st.button("BEAUTY", key="nav_beauty_tab_s", use_container_width=True):
+                st.session_state["active_modal"] = "beauty_collection"
+                st.toast("💄 Showing Beauty & Grooming Picks")
+                st.rerun()
 
     with nav_col3:
-        st.text_input("🔍 Search products, brands...", placeholder="Search for products, brands and more", label_visibility="collapsed", key="search_bar")
+        search_query = st.text_input("🔍 Search products, brands...", placeholder="Type 'blazer', 'linen', 'zara'...", label_visibility="collapsed", key="search_bar_s")
+        if search_query:
+            st.session_state["active_modal"] = f"search_{search_query.strip().lower()}"
 
     with nav_col4:
-        ic1, ic2 = st.columns(2)
+        ic1, ic2, ic3 = st.columns(3)
         with ic1:
-            if st.button(f"❤️ Wishlist (1)", key="top_wl_btn", use_container_width=True):
-                set_view("wishlist")
+            if st.button("👤 Profile", key="top_prof_btn_s", use_container_width=True):
+                st.session_state["show_profile_modal"] = not st.session_state["show_profile_modal"]
+                st.session_state["show_bag_drawer"] = False
+                st.rerun()
         with ic2:
-            st.button(f"🛍️ Bag ({bag_num})", key="top_bag_btn", use_container_width=True)
+            if st.button(f"❤️ ({wl_num})", key="top_wl_btn_s", use_container_width=True):
+                st.toast(f"❤️ Opening Wishlist ({wl_num} saved items)")
+                set_view("wishlist")
+        with ic3:
+            if st.button(f"🛍️ ({bag_num})", key="top_bag_btn_s", use_container_width=True):
+                st.session_state["show_bag_drawer"] = not st.session_state["show_bag_drawer"]
+                st.session_state["show_profile_modal"] = False
+                st.rerun()
 
     # Journey Stepper Quick Navigator Bar
     st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
     step1, step2, step3, step4 = st.columns(4)
     with step1:
-        if st.button("🏠 Storefront Home", use_container_width=True, type="primary" if curr == "homepage" else "secondary"):
+        if st.button("🏠 Storefront Home", key="st_step1", use_container_width=True, type="primary" if curr == "homepage" else "secondary"):
             set_view("homepage")
     with step2:
-        if st.button("🛍️ 1. Product PDP", use_container_width=True, type="primary" if curr == "pdp" else "secondary"):
+        if st.button("🛍️ 1. Product PDP", key="st_step2", use_container_width=True, type="primary" if curr == "pdp" else "secondary"):
             set_view("pdp")
     with step3:
-        if st.button("❤️ 2. Wishlist & Closet", use_container_width=True, type="primary" if curr == "wishlist" else "secondary"):
+        if st.button("❤️ 2. Wishlist & Closet", key="st_step3", use_container_width=True, type="primary" if curr == "wishlist" else "secondary"):
             set_view("wishlist")
     with step4:
-        if st.button("✨ 3. StyleSync AI Studio", use_container_width=True, type="primary" if curr == "stylesync" else "secondary"):
+        if st.button("✨ 3. StyleSync AI Studio", key="st_step4", use_container_width=True, type="primary" if curr == "stylesync" else "secondary"):
             set_view("stylesync")
     
-    st.markdown("<hr style='margin: 0.8rem 0 1.5rem 0; border: none; border-top: 1px solid #ECEEF0;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin: 0.8rem 0 1.2rem 0; border: none; border-top: 1px solid #ECEEF0;'>", unsafe_allow_html=True)
+
+    # Render Active Modals / Drawers if toggled
+    render_drawers_and_modals()
 
 
 # ==============================================================================
-# 5. SCREEN 1: HOMEPAGE STOREFRONT
+# 5. DRAWERS & INTERACTIVE OVERLAYS
+# ==============================================================================
+
+def render_drawers_and_modals() -> None:
+    # 1. Shopping Bag Drawer
+    if st.session_state.get("show_bag_drawer", False):
+        bag_count = st.session_state.get("bag_count", 2)
+        st.markdown(
+            f"""
+            <div class="modal-banner">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div style="font-size: 1.25rem; font-weight: 900; color: #282C3F;">
+                        🛍️ YOUR SHOPPING BAG ({bag_count} Items)
+                    </div>
+                    <span style="font-size: 0.8rem; font-weight: 800; color: #03A685; background: #E8F8F5; padding: 4px 10px; border-radius: 6px;">
+                        ⚡ 100% Genuine Guaranteed
+                    </span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="background: #F9FAFB; padding: 12px; border-radius: 10px; border: 1px solid #ECEEF0;">
+                        <b>MANGO MAN Rust Linen Blazer</b> (Size {st.session_state.get('selected_size', '40')})<br>
+                        <span style="color: #FF3F6C; font-weight: 800;">₹3,499</span> <span style="color: #94969F; text-decoration: line-through;">₹4,999</span> (30% OFF)
+                    </div>
+                    <div style="background: #F9FAFB; padding: 12px; border-radius: 10px; border: 1px solid #ECEEF0;">
+                        <b>ZARA Tailored Pleated Trousers</b> (Size 32)<br>
+                        <span style="color: #FF3F6C; font-weight: 800;">₹2,990</span> <span style="color: #94969F; text-decoration: line-through;">₹3,990</span> (25% OFF)
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ECEEF0; padding-top: 10px;">
+                    <div><b>Total Payable:</b> <span style="font-size: 1.2rem; font-weight: 900; color: #282C3F;">₹6,489</span> (Coupon: <code>MYNTRASAVE</code> applied -₹200)</div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        b_c1, b_c2 = st.columns(2)
+        with b_c1:
+            if st.button("💳 Proceed to Checkout Now", key="drawer_checkout_btn_s", type="primary", use_container_width=True):
+                st.balloons()
+                st.toast("🎉 Order placed successfully! Delivery scheduled by tomorrow.")
+                st.session_state["show_bag_drawer"] = False
+                st.rerun()
+        with b_c2:
+            if st.button("✖️ Close Bag", key="close_bag_btn_s", use_container_width=True):
+                st.session_state["show_bag_drawer"] = False
+                st.rerun()
+
+    # 2. Profile & Closet Preferences Modal
+    if st.session_state.get("show_profile_modal", False):
+        st.markdown(
+            """
+            <div class="modal-banner">
+                <div style="font-size: 1.25rem; font-weight: 900; color: #282C3F; margin-bottom: 0.5rem;">
+                    👤 PROFILE & STYLESYNC PREFERENCES
+                </div>
+                <p style="font-size: 0.85rem; color: #535766; margin-bottom: 1rem;">
+                    Logged in as <b>Kartikey Sharma</b> (Myntra Insider VIP Member 👑)
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                    <div style="background: #F9FAFB; padding: 12px; border-radius: 8px;">
+                        <b>📏 Measurements</b><br>Chest: 40" • Waist: 32" • Fit: Relaxed
+                    </div>
+                    <div style="background: #F9FAFB; padding: 12px; border-radius: 8px;">
+                        <b>🎨 Color Palette</b><br>Earth Tones, Linen, Neutrals, Rust
+                    </div>
+                    <div style="background: #F9FAFB; padding: 12px; border-radius: 8px;">
+                        <b>📦 Orders Synced</b><br>14 Past Garments in Smart Closet
+                    </div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        if st.button("✖️ Close Profile", key="close_prof_btn_s", use_container_width=True):
+            st.session_state["show_profile_modal"] = False
+            st.rerun()
+
+    # 3. Dynamic Modals (Women's Collection, Beauty, Search, Size Chart)
+    active_m = st.session_state.get("active_modal")
+    if active_m:
+        if active_m == "women_collection":
+            st.markdown(
+                """
+                <div class="modal-banner">
+                    <h3>👗 WOMEN'S SUMMER LINEN CAPSULE</h3>
+                    <p>Curated Mediterranean Linen Dresses, Coordinates, and Tailored Vests.</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            col_w1, col_w2 = st.columns(2)
+            with col_w1:
+                if st.button("🛍️ View Women's Linen Co-ord (₹2,999)", key="w_item1_s", use_container_width=True):
+                    st.toast("Added Women's Co-ord to Bag!")
+                    st.session_state["bag_count"] += 1
+            with col_w2:
+                if st.button("✖️ Close View", key="close_w_btn_s", use_container_width=True):
+                    st.session_state["active_modal"] = None
+                    st.rerun()
+
+        elif active_m == "beauty_collection":
+            st.markdown(
+                """
+                <div class="modal-banner">
+                    <h3>💄 BEAUTY & GROOMING ESSENTIALS</h3>
+                    <p>Luxury fragrances, beard oils, and skin hydrators matching your capsule aesthetic.</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            col_b1, col_b2 = st.columns(2)
+            with col_b1:
+                if st.button("🧴 Add Woody Citrus Eau De Parfum (₹1,899)", key="b_item1_s", use_container_width=True):
+                    st.toast("Added Parfum to Bag!")
+                    st.session_state["bag_count"] += 1
+            with col_b2:
+                if st.button("✖️ Close View", key="close_b_btn_s", use_container_width=True):
+                    st.session_state["active_modal"] = None
+                    st.rerun()
+
+        elif str(active_m).startswith("search_"):
+            q = str(active_m).replace("search_", "")
+            st.markdown(
+                f"""
+                <div class="modal-banner">
+                    <h4>🔍 Search Results for "{q}"</h4>
+                    <p>Found <b>3 matches</b> across your catalog and smart closet pairings.</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            s_c1, s_c2 = st.columns(2)
+            with s_c1:
+                if st.button(f"👉 View '{TARGET_ITEM['name']}' PDP", key="search_match_btn_s", type="primary", use_container_width=True):
+                    st.session_state["active_modal"] = None
+                    set_view("pdp")
+            with s_c2:
+                if st.button("✖️ Clear Search", key="clear_s_btn_s", use_container_width=True):
+                    st.session_state["active_modal"] = None
+                    st.rerun()
+
+        elif active_m == "size_chart":
+            st.markdown(
+                """
+                <div class="modal-banner">
+                    <h3>📐 MANGO MAN SIZE & FIT GUIDE (INCHES)</h3>
+                    <table style="width: 100%; text-align: left; margin: 10px 0; border-collapse: collapse; font-size: 0.88rem;">
+                        <tr style="border-bottom: 1px solid #ECEEF0; font-weight: 800;">
+                            <th>Size</th><th>Chest (in)</th><th>Shoulder (in)</th><th>Length (in)</th><th>Recommendation</th>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #ECEEF0;">
+                            <td><b>38 (S)</b></td><td>38 - 39</td><td>17.5</td><td>28.5</td><td>Slim Silhouette</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #ECEEF0; background: #FFF0F4;">
+                            <td><b>40 (M)</b></td><td>40 - 41</td><td>18.0</td><td>29.0</td><td>⭐ <b>Your Perfect Match</b></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #ECEEF0;">
+                            <td><b>42 (L)</b></td><td>42 - 43</td><td>18.5</td><td>29.5</td><td>Relaxed Layering</td>
+                        </tr>
+                        <tr>
+                            <td><b>44 (XL)</b></td><td>44 - 46</td><td>19.0</td><td>30.0</td><td>Oversized Fit</td>
+                        </tr>
+                    </table>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            if st.button("✖️ Close Size Chart", key="close_sc_btn_s", use_container_width=True):
+                st.session_state["active_modal"] = None
+                st.rerun()
+
+
+# ==============================================================================
+# 6. SCREEN 1: HOMEPAGE STOREFRONT
 # ==============================================================================
 
 def render_homepage_view() -> None:
     # 1. Promo Ticket Banner
-    st.markdown(
-        """
-        <div class="promo-ticket-box">
-            <div>
-                <div class="ticket-heading">GET 25% OFF</div>
-                <div class="ticket-sub">Up To ₹200 Off On First StyleSync Wardrobe Match*</div>
+    t_col1, t_col2 = st.columns([3, 1.2])
+    with t_col1:
+        st.markdown(
+            """
+            <div class="promo-ticket-box">
+                <div>
+                    <div class="ticket-heading">GET 25% OFF</div>
+                    <div class="ticket-sub">Up To ₹200 Off On First StyleSync Wardrobe Match*</div>
+                </div>
+                <div style="font-weight: 800; color: #282C3F;">
+                    COUPON: <span style="color: #FF3F6C; letter-spacing: 1px;">MYNTRASAVE</span> 🎟️
+                </div>
             </div>
-            <div class="coupon-pill">
-                <span>COUPON CODE:</span>
-                <span class="coupon-code">MYNTRASAVE</span>
-                <span style="font-size: 1.2rem; margin-left: 6px;">🎟️</span>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            """,
+            unsafe_allow_html=True
+        )
+    with t_col2:
+        if st.button("📋 Copy Code 'MYNTRASAVE'", key="copy_coupon_btn_s", use_container_width=True):
+            st.toast("🎟️ Coupon 'MYNTRASAVE' applied to your cart! 25% OFF active.")
 
     # 2. Linen Collection Hero Banner
     h_col1, h_col2 = st.columns([1.1, 1.2])
@@ -640,15 +674,15 @@ def render_homepage_view() -> None:
     with h_col2:
         st.markdown(
             """
-            <div style="padding: 1rem 0;">
+            <div style="padding: 0.5rem 0;">
                 <span class="hero-super-title">NEW SEASON CAPSULE</span>
                 <h1 class="hero-main-title">THE NEW LINEN<br>COLLECTION</h1>
                 <p class="hero-description">
                     Breathable European flax tailored for effortless versatility. 
                     Paired seamlessly with your existing wardrobe through StyleSync™ AI.
                 </p>
-                <div style="display: flex; gap: 12px; margin-bottom: 1.5rem;">
-                    <span style="font-size: 1.5rem; font-weight: 900; color: #282C3F;">₹3,499</span>
+                <div style="display: flex; gap: 12px; margin-bottom: 1.2rem;">
+                    <span style="font-size: 1.6rem; font-weight: 900; color: #282C3F;">₹3,499</span>
                     <span style="font-size: 1.1rem; color: #94969F; text-decoration: line-through; margin-top: 4px;">₹4,999</span>
                     <span style="font-size: 0.9rem; font-weight: 800; color: #FF3F6C; background: #FFF0F4; padding: 4px 10px; border-radius: 6px;">30% OFF</span>
                 </div>
@@ -656,13 +690,20 @@ def render_homepage_view() -> None:
             """,
             unsafe_allow_html=True
         )
-        c_btn1, c_btn2 = st.columns(2)
+        c_btn1, c_btn2, c_btn3 = st.columns(3)
         with c_btn1:
-            if st.button("🔥 EXPLORE NOW", key="hero_explore_btn", type="primary", use_container_width=True):
+            if st.button("🔥 EXPLORE NOW", key="hero_explore_btn_s", type="primary", use_container_width=True):
+                st.toast("Opening Rust Linen Blazer Product Page...")
                 set_view("pdp")
         with c_btn2:
-            if st.button("✨ Style with My Closet", key="hero_stylesync_btn", use_container_width=True):
+            if st.button("✨ Style with Closet", key="hero_stylesync_btn_s", use_container_width=True):
+                st.toast("Opening StyleSync Wardrobe Matcher...")
                 set_view("stylesync")
+        with c_btn3:
+            if st.button("❤️ Save to Wishlist", key="hero_wl_btn_s", use_container_width=True):
+                st.session_state["wishlist_count"] += 1
+                st.toast("❤️ Added Linen Blazer to Wishlist!")
+                st.rerun()
 
     # 3. Shop by Category Grid
     st.markdown(
@@ -681,30 +722,33 @@ def render_homepage_view() -> None:
     with cat1:
         st.image(IMAGE_MEN_CAT, use_container_width=True)
         st.markdown("<h4 style='margin: 6px 0 2px 0; font-weight: 800;'>MEN'S CASUALS</h4><p style='color: #7E818C; font-size: 0.8rem;'>Linens, Polos & Trousers</p>", unsafe_allow_html=True)
-        if st.button("View Casuals →", key="cat_men_btn", use_container_width=True):
+        if st.button("Explore Men's →", key="cat_men_btn_s", use_container_width=True):
+            st.toast("Browsing Men's Catalog")
             set_view("pdp")
 
     with cat2:
         st.image(IMAGE_WOMEN_CAT, use_container_width=True)
         st.markdown("<h4 style='margin: 6px 0 2px 0; font-weight: 800;'>WOMEN'S WEAR</h4><p style='color: #7E818C; font-size: 0.8rem;'>Dresses, Tops & Coordinates</p>", unsafe_allow_html=True)
-        if st.button("View Women →", key="cat_women_btn", use_container_width=True):
-            set_view("pdp")
+        if st.button("Explore Women's →", key="cat_women_btn_s", use_container_width=True):
+            st.session_state["active_modal"] = "women_collection"
+            st.rerun()
 
     with cat3:
         st.image(IMAGE_BEAUTY_CAT, use_container_width=True)
         st.markdown("<h4 style='margin: 6px 0 2px 0; font-weight: 800;'>BEAUTY & GROOMING</h4><p style='color: #7E818C; font-size: 0.8rem;'>Fragrance, Skincare & Grooming</p>", unsafe_allow_html=True)
-        if st.button("View Beauty →", key="cat_beauty_btn", use_container_width=True):
-            set_view("pdp")
+        if st.button("Explore Beauty →", key="cat_beauty_btn_s", use_container_width=True):
+            st.session_state["active_modal"] = "beauty_collection"
+            st.rerun()
 
     with cat4:
         st.image(IMAGE_HOME_CAT, use_container_width=True)
         st.markdown("<h4 style='margin: 6px 0 2px 0; font-weight: 800;'>HOME LIVING</h4><p style='color: #7E818C; font-size: 0.8rem;'>Modern Decor & Bedroom Accents</p>", unsafe_allow_html=True)
-        if st.button("View Home →", key="cat_home_btn", use_container_width=True):
-            set_view("pdp")
+        if st.button("Explore Home →", key="cat_home_btn_s", use_container_width=True):
+            st.toast("🏡 Home Living Catalog loaded!")
 
 
 # ==============================================================================
-# 6. SCREEN 2: PRODUCT DISPLAY PAGE (PDP)
+# 7. SCREEN 2: PRODUCT DISPLAY PAGE (PDP)
 # ==============================================================================
 
 def render_pdp_view() -> None:
@@ -722,15 +766,27 @@ def render_pdp_view() -> None:
     col_img, col_details = st.columns([1.1, 1.2], gap="large")
 
     with col_img:
-        st.image(TARGET_ITEM["image_url"], use_container_width=True)
-        # Secondary Thumbnail row
+        active_img = st.session_state.get("pdp_active_img", TARGET_ITEM["image_url"])
+        st.image(active_img, use_container_width=True)
+        
+        # Interactive Thumbnail Switcher Buttons
+        st.markdown("<div style='font-size: 0.75rem; font-weight: 700; color: #7E818C; margin: 6px 0 4px 0;'>CLICK TO SWITCH ANGLE / PAIRING VIEW:</div>", unsafe_allow_html=True)
         t1, t2, t3 = st.columns(3)
         with t1:
             st.image(TARGET_ITEM["image_url"], use_container_width=True)
+            if st.button("📸 Front View", key="thumb_front_s", use_container_width=True):
+                st.session_state["pdp_active_img"] = TARGET_ITEM["image_url"]
+                st.rerun()
         with t2:
             st.image(IMAGE_OLIVE_SHIRT, use_container_width=True)
+            if st.button("🌿 Olive Pair", key="thumb_olive_s", use_container_width=True):
+                st.session_state["pdp_active_img"] = IMAGE_OLIVE_SHIRT
+                st.rerun()
         with t3:
             st.image(IMAGE_BLACK_TROUSERS, use_container_width=True)
+            if st.button("👖 Trouser Pair", key="thumb_pant_s", use_container_width=True):
+                st.session_state["pdp_active_img"] = IMAGE_BLACK_TROUSERS
+                st.rerun()
 
     with col_details:
         st.markdown(f"<span style='font-size: 0.85rem; font-weight: 900; color: #FF3F6C; letter-spacing: 1px;'>{TARGET_ITEM['brand']}</span>", unsafe_allow_html=True)
@@ -756,30 +812,41 @@ def render_pdp_view() -> None:
                 <span style="font-size: 1.1rem; color: #94969F; text-decoration: line-through;">{TARGET_ITEM['original_price']}</span>
                 <span style="font-size: 0.95rem; font-weight: 800; color: #FF5722; background: #FFF5F0; padding: 3px 8px; border-radius: 6px;">{TARGET_ITEM['discount']}</span>
             </div>
-            <div style="font-size: 0.76rem; font-weight: 800; color: #03A685; margin-bottom: 1.5rem;">inclusive of all taxes</div>
+            <div style="font-size: 0.76rem; font-weight: 800; color: #03A685; margin-bottom: 1.2rem;">inclusive of all taxes • Free Shipping & 14-Day Returns</div>
             """,
             unsafe_allow_html=True
         )
 
         # Size Selector
-        st.markdown("<div style='font-size: 0.84rem; font-weight: 900; color: #282C3F; margin-bottom: 8px;'>SELECT SIZE (CHEST)</div>", unsafe_allow_html=True)
+        sz_head, sz_chart = st.columns([2, 1])
+        with sz_head:
+            st.markdown("<div style='font-size: 0.84rem; font-weight: 900; color: #282C3F;'>SELECT SIZE (CHEST)</div>", unsafe_allow_html=True)
+        with sz_chart:
+            if st.button("📏 Size Chart", key="sc_open_btn_s", use_container_width=True):
+                st.session_state["active_modal"] = "size_chart"
+                st.rerun()
+
         s1, s2, s3, s4 = st.columns(4)
         curr_size = st.session_state.get("selected_size", "40")
         with s1:
             if st.button("38", key="sz_38_s", type="primary" if curr_size == "38" else "secondary", use_container_width=True):
                 st.session_state["selected_size"] = "38"
+                st.toast("Selected Size 38 (Small)")
                 st.rerun()
         with s2:
-            if st.button("40 (Standard)", key="sz_40_s", type="primary" if curr_size == "40" else "secondary", use_container_width=True):
+            if st.button("40 ⭐", key="sz_40_s", type="primary" if curr_size == "40" else "secondary", use_container_width=True):
                 st.session_state["selected_size"] = "40"
+                st.toast("Selected Size 40 (Your Perfect Fit)")
                 st.rerun()
         with s3:
             if st.button("42", key="sz_42_s", type="primary" if curr_size == "42" else "secondary", use_container_width=True):
                 st.session_state["selected_size"] = "42"
+                st.toast("Selected Size 42 (Large)")
                 st.rerun()
         with s4:
             if st.button("44", key="sz_44_s", type="primary" if curr_size == "44" else "secondary", use_container_width=True):
                 st.session_state["selected_size"] = "44"
+                st.toast("Selected Size 44 (XL)")
                 st.rerun()
 
         st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
@@ -789,17 +856,30 @@ def render_pdp_view() -> None:
         with btn_bag:
             if st.button("🛍️ ADD TO BAG", key="pdp_add_bag_btn_s", type="primary", use_container_width=True):
                 st.session_state["bag_count"] = st.session_state.get("bag_count", 2) + 1
-                st.toast("✅ Rust Linen Blazer added to your shopping bag!")
+                st.toast(f"✅ Rust Linen Blazer (Size {curr_size}) added to Bag!")
                 st.rerun()
         with btn_wish:
             if st.button("❤️ WISHLIST", key="pdp_add_wl_btn_s", use_container_width=True):
+                st.session_state["wishlist_count"] += 1
                 st.toast("❤️ Added to Wishlist! Opening Smart Closet...")
                 set_view("wishlist")
+
+        # Pincode Delivery Checker
+        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
+        pin_col1, pin_col2 = st.columns([2, 1])
+        with pin_col1:
+            pin_code = st.text_input("Delivery Pincode", placeholder="Enter 6-digit Pincode (e.g. 110001)", label_visibility="collapsed", key="pin_input_s")
+        with pin_col2:
+            if st.button("Check ⚡", key="pin_btn_s", use_container_width=True):
+                if pin_code:
+                    st.success(f"⚡ Delivery to {pin_code} by Tomorrow, 5 PM! Free Shipping.")
+                else:
+                    st.info("⚡ Standard delivery by Tomorrow, 5 PM across Metro cities.")
 
         # StyleSync AI Recommendation Box
         st.markdown(
             """
-            <div style="background: linear-gradient(135deg, #FFF0F4 0%, #F5F0FF 100%); border: 1.5px solid #FFD8E4; border-radius: 12px; padding: 1.1rem; margin-top: 1.5rem;">
+            <div style="background: linear-gradient(135deg, #FFF0F4 0%, #F5F0FF 100%); border: 1.5px solid #FFD8E4; border-radius: 12px; padding: 1.1rem; margin-top: 1.2rem;">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
                     <span style="font-size: 1.3rem;">✨</span>
                     <span style="font-size: 0.95rem; font-weight: 900; color: #282C3F;">StyleSync™ Smart Match Found!</span>
@@ -811,12 +891,13 @@ def render_pdp_view() -> None:
             """,
             unsafe_allow_html=True
         )
-        if st.button("✨ View 3 Wardrobe Outfits & WhatsApp Poll →", key="pdp_to_stylesync_btn_s", use_container_width=True):
+        if st.button("✨ View 3 Wardrobe Outfits & WhatsApp Poll →", key="pdp_to_stylesync_btn_s", type="primary", use_container_width=True):
+            st.toast("Generating Rule-of-3 Outfits from your closet...")
             set_view("stylesync")
 
 
 # ==============================================================================
-# 7. SCREEN 3: WISHLIST & SMART CLOSET ANCHOR
+# 8. SCREEN 3: WISHLIST & SMART CLOSET ANCHOR
 # ==============================================================================
 
 def render_wishlist_view() -> None:
@@ -847,7 +928,7 @@ def render_wishlist_view() -> None:
                     <span style="font-size: 0.95rem; color: #94969F; text-decoration: line-through;">{TARGET_ITEM['original_price']}</span>
                     <span style="font-size: 0.85rem; font-weight: 800; color: #FF3F6C;">({TARGET_ITEM['discount']})</span>
                 </div>
-                <p style="font-size: 0.84rem; color: #535766; line-height: 1.4; margin-bottom: 1.2rem;">
+                <p style="font-size: 0.84rem; color: #535766; line-height: 1.4; margin-bottom: 1rem;">
                     Unlocks <b>3 modular outfits</b> using clothes you already own in your closet. Zero styling hesitation!
                 </p>
             </div>
@@ -856,7 +937,8 @@ def render_wishlist_view() -> None:
         )
         if st.button("✨ Style with My Closet (Run StyleSync AI) →", key="wl_run_ai_btn_s", type="primary", use_container_width=True):
             with st.spinner("✨ StyleSync AI analyzing your wardrobe purchase history & color harmonies..."):
-                time.sleep(0.8)
+                time.sleep(0.6)
+            st.toast("3 Outfits Assembled!")
             set_view("stylesync")
 
     # 2. Curated Wardrobe & Wishlist Grid
@@ -878,7 +960,7 @@ def render_wishlist_view() -> None:
             st.image(item["image_url"], use_container_width=True)
             st.markdown(
                 f"""
-                <div style="padding: 4px 0 10px 0;">
+                <div style="padding: 4px 0 6px 0;">
                     <span style="font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; {'background: #282C3F; color: #FFF;' if 'Closet' in item['tag'] else 'background: #E8F8F5; color: #03A685;'}">
                         {item['tag']}
                     </span>
@@ -889,6 +971,10 @@ def render_wishlist_view() -> None:
                 """,
                 unsafe_allow_html=True
             )
+            if st.button(f"🛍️ Move to Bag", key=f"wl_bag_s_{item['id']}", use_container_width=True):
+                st.session_state["bag_count"] += 1
+                st.toast(f"Added {item['name']} to Bag!")
+                st.rerun()
 
     g4, g5, g6 = st.columns(3)
     for idx, item in enumerate(WISHLIST_PRODUCTS[3:6]):
@@ -896,7 +982,7 @@ def render_wishlist_view() -> None:
             st.image(item["image_url"], use_container_width=True)
             st.markdown(
                 f"""
-                <div style="padding: 4px 0 10px 0;">
+                <div style="padding: 4px 0 6px 0;">
                     <span style="font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; {'background: #282C3F; color: #FFF;' if 'Closet' in item['tag'] else 'background: #E8F8F5; color: #03A685;'}">
                         {item['tag']}
                     </span>
@@ -907,10 +993,14 @@ def render_wishlist_view() -> None:
                 """,
                 unsafe_allow_html=True
             )
+            if st.button(f"🛍️ Move to Bag", key=f"wl_bag_s_{item['id']}", use_container_width=True):
+                st.session_state["bag_count"] += 1
+                st.toast(f"Added {item['name']} to Bag!")
+                st.rerun()
 
 
 # ==============================================================================
-# 8. SCREEN 4: STYLESYNC AI STUDIO & WHATSAPP SOCIAL POLL
+# 9. SCREEN 4: STYLESYNC AI STUDIO & WHATSAPP SOCIAL POLL
 # ==============================================================================
 
 def render_stylesync_view() -> None:
@@ -948,14 +1038,22 @@ def render_stylesync_view() -> None:
         st.image(TARGET_ITEM["image_url"], caption="Anchor: Rust Linen Blazer (₹3,499)", use_container_width=True)
         img_sub1, img_sub2 = st.columns(2)
         with img_sub1:
-            st.image(IMAGE_OLIVE_SHIRT, caption="H&M Olive Shirt (In Closet)", use_container_width=True)
+            st.image(IMAGE_OLIVE_SHIRT, caption="H&M Shirt (In Closet)", use_container_width=True)
         with img_sub2:
-            st.image(IMAGE_BLACK_TROUSERS, caption="Zara Trousers (In Closet)", use_container_width=True)
+            st.image(IMAGE_BLACK_TROUSERS, caption="Zara Pants (In Closet)", use_container_width=True)
         
-        if st.button("💬 Poll Look 1 on WhatsApp", key="poll_look_1_btn_s", type="primary", use_container_width=True):
-            st.session_state["poll_sent"] = True
-            st.session_state["poll_look_title"] = "Look 1: Sunset Linen"
-            st.rerun()
+        b_p1, b_p2 = st.columns(2)
+        with b_p1:
+            if st.button("💬 Poll Look 1", key="poll_look_1_btn_s", type="primary", use_container_width=True):
+                st.session_state["poll_sent"] = True
+                st.session_state["poll_look_title"] = "Look 1: Sunset Linen"
+                st.toast("💬 Look 1 shared to WhatsApp Poll!")
+                st.rerun()
+        with b_p2:
+            if st.button("🛍️ Add Look 1", key="add_l1_btn_s", use_container_width=True):
+                st.session_state["bag_count"] += 1
+                st.toast("Added Look 1 Anchor Blazer to Bag!")
+                st.rerun()
 
     # Look 2
     with l_col2:
@@ -980,10 +1078,18 @@ def render_stylesync_view() -> None:
         with img_sub4:
             st.image(IMAGE_PUMA_SNEAKERS, caption="Puma Sneakers (Wishlist)", use_container_width=True)
 
-        if st.button("💬 Poll Look 2 on WhatsApp", key="poll_look_2_btn_s", use_container_width=True):
-            st.session_state["poll_sent"] = True
-            st.session_state["poll_look_title"] = "Look 2: Urban Brunch"
-            st.rerun()
+        b_p3, b_p4 = st.columns(2)
+        with b_p3:
+            if st.button("💬 Poll Look 2", key="poll_look_2_btn_s", use_container_width=True):
+                st.session_state["poll_sent"] = True
+                st.session_state["poll_look_title"] = "Look 2: Urban Brunch"
+                st.toast("💬 Look 2 shared to WhatsApp Poll!")
+                st.rerun()
+        with b_p4:
+            if st.button("🛍️ Add Look 2", key="add_l2_btn_s", use_container_width=True):
+                st.session_state["bag_count"] += 2
+                st.toast("Added Look 2 Blazer + Tank to Bag!")
+                st.rerun()
 
     # Look 3
     with l_col3:
@@ -1008,10 +1114,18 @@ def render_stylesync_view() -> None:
         with img_sub6:
             st.image(IMAGE_LIGHT_DENIM, caption="Levi's Denim (Wishlist)", use_container_width=True)
 
-        if st.button("💬 Poll Look 3 on WhatsApp", key="poll_look_3_btn_s", use_container_width=True):
-            st.session_state["poll_sent"] = True
-            st.session_state["poll_look_title"] = "Look 3: Smart Business"
-            st.rerun()
+        b_p5, b_p6 = st.columns(2)
+        with b_p5:
+            if st.button("💬 Poll Look 3", key="poll_look_3_btn_s", use_container_width=True):
+                st.session_state["poll_sent"] = True
+                st.session_state["poll_look_title"] = "Look 3: Smart Business"
+                st.toast("💬 Look 3 shared to WhatsApp Poll!")
+                st.rerun()
+        with b_p6:
+            if st.button("🛍️ Add Look 3", key="add_l3_btn_s", use_container_width=True):
+                st.session_state["bag_count"] += 1
+                st.toast("Added Look 3 to Bag!")
+                st.rerun()
 
     st.markdown("<hr style='margin: 2rem 0; border: none; border-top: 1px solid #ECEEF0;'>", unsafe_allow_html=True)
 
@@ -1069,7 +1183,7 @@ def render_stylesync_view() -> None:
             st.success("🌟 **Peer Confidence Verified!** 5 of 6 friends recommend buying. Ready to complete order with 1-click checkout.")
             if st.button("🛍️ PROCEED TO CHECKOUT (₹3,499)", key="wa_checkout_btn_s", type="primary", use_container_width=True):
                 st.balloons()
-                st.toast("Order placed successfully with StyleSync savings!")
+                st.toast("🎉 Order placed successfully with StyleSync savings!")
         elif feedback == "drop":
             st.info("💡 Friends suggested checking out alternative colors or exploring other casual jackets.")
         else:
@@ -1089,7 +1203,7 @@ def render_stylesync_view() -> None:
 
 
 # ==============================================================================
-# 9. FOOTER COMPONENT
+# 10. FOOTER COMPONENT
 # ==============================================================================
 
 def render_footer() -> None:
@@ -1130,7 +1244,7 @@ def render_footer() -> None:
 
 
 # ==============================================================================
-# 10. MAIN ROUTER
+# 11. MAIN ROUTER
 # ==============================================================================
 
 def main() -> None:

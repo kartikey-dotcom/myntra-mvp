@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Myntra Exact Clone</title>
+    <title>Myntra - Fashion, Shopping & Lifestyle</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -116,6 +117,130 @@
         <span id="toast-message">Item added to Wishlist!</span>
     </div>
 
+    <!-- Shopping Bag Slide-Over Drawer -->
+    <div id="bag-drawer" class="fixed inset-0 z-[90] bg-black/40 hidden justify-end">
+        <div class="w-full max-w-md bg-white h-full shadow-2xl p-6 flex flex-col justify-between transform transition-transform duration-300">
+            <div>
+                <div class="flex justify-between items-center border-b pb-4 mb-4">
+                    <h2 class="text-xl font-black text-[#282C3F] flex items-center gap-2">
+                        <i class="ph-bold ph-handbag text-myntra-pink"></i>
+                        <span>SHOPPING BAG (<span id="drawer-bag-count">2</span>)</span>
+                    </h2>
+                    <button onclick="toggleBagDrawer(false)" class="text-gray-400 hover:text-black text-2xl font-bold">×</button>
+                </div>
+                
+                <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
+                    <div class="flex gap-4 p-3 bg-gray-50 rounded-xl border border-gray-200">
+                        <img src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=200&auto=format&fit=crop&q=80" class="w-16 h-20 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-xs text-[#282C3F]">MANGO MAN Rust Linen Blazer</h4>
+                            <p class="text-[11px] text-gray-500">Size: <span id="drawer-item-size">40</span> • Qty: 1</p>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span class="font-bold text-sm text-[#282C3F]">₹3,499</span>
+                                <span class="text-xs text-gray-400 line-through">₹4,999</span>
+                                <span class="text-[10px] font-bold text-myntra-pink">(30% OFF)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 p-3 bg-gray-50 rounded-xl border border-gray-200">
+                        <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=200&auto=format&fit=crop&q=80" class="w-16 h-20 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-xs text-[#282C3F]">ZARA Tailored Pleated Trousers</h4>
+                            <p class="text-[11px] text-gray-500">Size: 32 • Qty: 1</p>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span class="font-bold text-sm text-[#282C3F]">₹2,990</span>
+                                <span class="text-xs text-gray-400 line-through">₹3,990</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t pt-4">
+                <div class="bg-pink-50 p-3 rounded-lg flex items-center justify-between mb-4 border border-pink-100">
+                    <span class="text-xs font-bold text-[#282C3F]">🎟️ Coupon: <b>MYNTRASAVE</b></span>
+                    <span class="text-xs font-bold text-emerald-600">-₹200 OFF</span>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-bold text-gray-600">Total Payable:</span>
+                    <span class="text-2xl font-black text-[#282C3F]">₹6,289</span>
+                </div>
+                <button onclick="proceedToCheckout()" class="w-full bg-myntra-pink hover:bg-[#E0245E] text-white font-black py-3.5 rounded-lg shadow-lg flex items-center justify-center gap-2 transition-all">
+                    <span>PLACE ORDER (1-CLICK CHECKOUT)</span>
+                    <i class="ph-bold ph-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="fixed inset-0 z-[90] bg-black/40 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="toggleProfileModal(false)" class="absolute top-4 right-4 text-gray-400 hover:text-black text-2xl font-bold">×</button>
+            <div class="flex items-center gap-4 border-b pb-4 mb-4">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-myntra-pink to-orange-400 text-white font-black text-xl flex items-center justify-center shadow-md">
+                    KS
+                </div>
+                <div>
+                    <h3 class="font-black text-lg text-[#282C3F]">Kartikey Sharma</h3>
+                    <p class="text-xs font-bold text-myntra-pink">Myntra Insider VIP Member 👑</p>
+                </div>
+            </div>
+            <div class="space-y-3 text-xs text-gray-600 mb-6">
+                <div class="p-3 bg-gray-50 rounded-lg flex justify-between">
+                    <span>📏 Saved Measurements</span>
+                    <b class="text-[#282C3F]">Chest 40" • Waist 32"</b>
+                </div>
+                <div class="p-3 bg-gray-50 rounded-lg flex justify-between">
+                    <span>🎨 Color Harmony Profile</span>
+                    <b class="text-[#282C3F]">Earth Tones / Linen</b>
+                </div>
+                <div class="p-3 bg-gray-50 rounded-lg flex justify-between">
+                    <span>📦 Orders Synced in Closet</span>
+                    <b class="text-[#282C3F]">14 Garments</b>
+                </div>
+            </div>
+            <button onclick="toggleProfileModal(false)" class="w-full bg-[#282C3F] text-white font-bold py-2.5 rounded-lg">Close</button>
+        </div>
+    </div>
+
+    <!-- Size Chart Modal -->
+    <div id="size-chart-modal" class="fixed inset-0 z-[90] bg-black/40 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+            <button onclick="toggleSizeChart(false)" class="absolute top-4 right-4 text-gray-400 hover:text-black text-2xl font-bold">×</button>
+            <h3 class="font-black text-lg text-[#282C3F] mb-1">📐 MANGO MAN Size & Fit Guide</h3>
+            <p class="text-xs text-gray-500 mb-4">Standard Body Measurements (Inches)</p>
+            <table class="w-full text-xs text-left border-collapse mb-6">
+                <thead>
+                    <tr class="border-b font-bold text-gray-700">
+                        <th class="py-2">Size</th><th>Chest (in)</th><th>Shoulder</th><th>Length</th><th>Fit</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y text-gray-600">
+                    <tr><td class="py-2 font-bold">38 (S)</td><td>38 - 39</td><td>17.5"</td><td>28.5"</td><td>Slim</td></tr>
+                    <tr class="bg-pink-50 text-myntra-pink font-bold"><td class="py-2">40 (M) ⭐</td><td>40 - 41</td><td>18.0"</td><td>29.0"</td><td>Your Perfect Match</td></tr>
+                    <tr><td class="py-2 font-bold">42 (L)</td><td>42 - 43</td><td>18.5"</td><td>29.5"</td><td>Relaxed</td></tr>
+                    <tr><td class="py-2 font-bold">44 (XL)</td><td>44 - 46</td><td>19.0"</td><td>30.0"</td><td>Oversized</td></tr>
+                </tbody>
+            </table>
+            <button onclick="toggleSizeChart(false)" class="w-full bg-myntra-pink text-white font-bold py-2.5 rounded-lg">Done</button>
+        </div>
+    </div>
+
+    <!-- Category Explore Modal -->
+    <div id="category-modal" class="fixed inset-0 z-[90] bg-black/40 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="toggleCategoryModal(false)" class="absolute top-4 right-4 text-gray-400 hover:text-black text-2xl font-bold">×</button>
+            <h3 id="cat-modal-title" class="font-black text-lg text-[#282C3F] mb-2">Category Explore</h3>
+            <p id="cat-modal-desc" class="text-xs text-gray-600 mb-6">Curated pieces from this collection.</p>
+            <div class="flex gap-3">
+                <button onclick="navigateTo('pdp'); toggleCategoryModal(false);" class="flex-1 bg-myntra-pink text-white font-bold py-2.5 rounded-lg text-xs">View Best Sellers</button>
+                <button onclick="toggleCategoryModal(false)" class="bg-gray-100 text-gray-700 font-bold py-2.5 px-4 rounded-lg text-xs">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ========================================================================= -->
     <!-- 1. TOP NAVIGATION BAR -->
     <!-- ========================================================================= -->
@@ -134,271 +259,192 @@
 
             <!-- Nav Links -->
             <nav class="hidden lg:flex items-center space-x-6 h-full">
-                <button onclick="navigateTo('pdp')" class="text-[13px] font-bold tracking-widest text-[#282C3F] hover:text-myntra-pink hover:border-b-4 hover:border-myntra-pink flex items-center h-full transition-all border-b-4 border-transparent uppercase">MEN</button>
-                <button onclick="navigateTo('pdp')" class="text-[13px] font-bold tracking-widest text-[#282C3F] hover:text-myntra-pink hover:border-b-4 hover:border-myntra-pink flex items-center h-full transition-all border-b-4 border-transparent uppercase">WOMEN</button>
-                <button onclick="navigateTo('pdp')" class="text-[13px] font-bold tracking-widest text-[#282C3F] hover:text-myntra-pink hover:border-b-4 hover:border-myntra-pink flex items-center h-full transition-all border-b-4 border-transparent uppercase">KIDS</button>
-                <button onclick="navigateTo('pdp')" class="text-[13px] font-bold tracking-widest text-[#282C3F] hover:text-myntra-pink hover:border-b-4 hover:border-myntra-pink flex flex-col justify-center h-full transition-all border-b-4 border-transparent uppercase text-center leading-tight">
+                <button onclick="navigateTo('homepage')" class="text-[13px] font-bold tracking-widest text-[#282C3F] hover:text-myntra-pink flex items-center h-full transition-all uppercase">HOME</button>
+                <button onclick="navigateTo('pdp')" class="text-[13px] font-bold tracking-widest text-[#282C3F] hover:text-myntra-pink flex items-center h-full transition-all uppercase">MEN</button>
+                <button onclick="openCategoryModal('Women\'s Summer Capsule', 'Explore breezy linens, tops, and coordinated sets.')" class="text-[13px] font-bold tracking-widest text-[#282C3F] hover:text-myntra-pink flex items-center h-full transition-all uppercase">WOMEN</button>
+                <button onclick="openCategoryModal('Kids Festive Wear', 'Comfortable cottons and breathable outfits for kids.')" class="text-[13px] font-bold tracking-widest text-[#282C3F] hover:text-myntra-pink flex items-center h-full transition-all uppercase">KIDS</button>
+                <button onclick="openCategoryModal('Home & Living', 'Modern aesthetic rugs, cushions, and bedroom linen.')" class="text-[13px] font-bold tracking-widest text-[#282C3F] hover:text-myntra-pink flex flex-col justify-center h-full transition-all uppercase text-center leading-tight">
                     <span>HOME &amp;</span>
                     <span>LIVING</span>
                 </button>
-                <button onclick="navigateTo('pdp')" class="text-[13px] font-bold tracking-widest text-[#282C3F] hover:text-myntra-pink hover:border-b-4 hover:border-myntra-pink flex items-center h-full transition-all border-b-4 border-transparent uppercase">BEAUTY</button>
-                <button onclick="navigateTo('stylesync')" class="text-[13px] font-bold tracking-widest text-[#282C3F] hover:text-myntra-pink hover:border-b-4 hover:border-myntra-pink flex items-center h-full transition-all border-b-4 border-transparent uppercase relative">
+                <button onclick="openCategoryModal('Beauty & Grooming', 'Curated luxury fragrances, hair care, and beard styling.')" class="text-[13px] font-bold tracking-widest text-[#282C3F] hover:text-myntra-pink flex items-center h-full transition-all uppercase">BEAUTY</button>
+                <button onclick="navigateTo('stylesync')" class="text-[13px] font-bold tracking-widest text-[#282C3F] hover:text-myntra-pink flex items-center h-full transition-all uppercase relative">
                     STUDIO
                     <span class="absolute top-[1.1rem] -right-6 text-[9px] font-black text-white bg-myntra-pink px-1.5 py-0.5 rounded-full uppercase transform -rotate-12 shadow-sm">NEW</span>
                 </button>
             </nav>
 
             <!-- Search Bar -->
-            <div class="flex-1 max-w-[480px] mx-6 relative hidden md:block">
+            <div class="flex-1 max-w-[480px] mx-8 relative hidden md:block">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                    <i class="ph ph-magnifying-glass text-lg"></i>
+                    <i class="ph-bold ph-magnifying-glass text-base"></i>
                 </div>
                 <input 
                     type="text" 
-                    id="main-search-input"
-                    class="bg-myntra-search w-full py-2.5 pl-11 pr-4 rounded-md text-sm text-[#282C3F] focus:outline-none focus:bg-white focus:ring-1 focus:ring-gray-300 transition-all border border-transparent placeholder-gray-500 font-medium" 
-                    placeholder="Search for products, brands and more"
-                    onkeypress="if(event.key === 'Enter') navigateTo('pdp');"
+                    id="search-input"
+                    onkeypress="handleSearch(event)"
+                    class="w-full bg-[#F5F5F6] border border-transparent focus:border-gray-300 focus:bg-white text-xs font-medium text-gray-800 placeholder-gray-400 rounded-lg pl-10 pr-4 py-2.5 outline-none transition-all"
+                    placeholder="Search for products, brands and more (e.g. linen, blazer)"
                 >
             </div>
 
-            <!-- Right Action Icons -->
-            <div class="flex items-center space-x-6 ml-auto">
-                <!-- Profile -->
-                <div class="flex flex-col items-center justify-center cursor-pointer hover:text-myntra-pink transition-colors group" title="Account & Profile">
-                    <i class="ph ph-user text-2xl text-[#282C3F] group-hover:text-myntra-pink transition-colors"></i>
-                    <span class="text-[11px] font-bold mt-1 text-[#282C3F] tracking-wide">PROFILE</span>
-                </div>
-                <!-- Wishlist -->
-                <div onclick="navigateTo('wishlist')" class="flex flex-col items-center justify-center cursor-pointer hover:text-myntra-pink transition-colors relative group" title="View Wishlist">
-                    <i class="ph ph-heart text-2xl text-[#282C3F] group-hover:text-myntra-pink transition-colors"></i>
-                    <span id="wishlist-badge" class="absolute -top-1 right-2 w-4 h-4 bg-myntra-pink text-white rounded-full text-[9px] font-bold flex items-center justify-center border-2 border-white">1</span>
-                    <span class="text-[11px] font-bold mt-1 text-[#282C3F] tracking-wide">WISHLIST</span>
-                </div>
-                <!-- Bag -->
-                <div onclick="toggleBagDrawer()" class="flex flex-col items-center justify-center cursor-pointer hover:text-myntra-pink transition-colors relative group" title="Shopping Bag">
-                    <i class="ph ph-handbag text-2xl text-[#282C3F] group-hover:text-myntra-pink transition-colors"></i>
-                    <span id="bag-count" class="absolute -top-1.5 right-1 w-4 h-4 bg-myntra-pink text-white rounded-full text-[9px] font-black flex items-center justify-center border border-white">2</span>
-                    <span class="text-[11px] font-bold mt-1 text-[#282C3F] tracking-wide">BAG</span>
-                </div>
+            <!-- Profile, Wishlist, Bag Icons -->
+            <div class="flex items-center gap-6">
+                <button onclick="toggleProfileModal(true)" class="flex flex-col items-center justify-center text-gray-700 hover:text-myntra-pink transition-colors">
+                    <i class="ph-bold ph-user text-xl"></i>
+                    <span class="text-[10px] font-extrabold uppercase mt-1">Profile</span>
+                </button>
+                <button onclick="navigateTo('wishlist')" class="flex flex-col items-center justify-center text-gray-700 hover:text-myntra-pink transition-colors relative">
+                    <i class="ph-bold ph-heart text-xl"></i>
+                    <span class="text-[10px] font-extrabold uppercase mt-1">Wishlist</span>
+                    <span id="nav-wl-badge" class="absolute -top-1 right-1 bg-myntra-pink text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">1</span>
+                </button>
+                <button onclick="toggleBagDrawer(true)" class="flex flex-col items-center justify-center text-gray-700 hover:text-myntra-pink transition-colors relative">
+                    <i class="ph-bold ph-handbag text-xl"></i>
+                    <span class="text-[10px] font-extrabold uppercase mt-1">Bag</span>
+                    <span id="bag-count" class="absolute -top-1 -right-1 bg-myntra-pink text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">2</span>
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- ========================================================================= -->
-    <!-- 2. MAIN VIEW CONTAINER -->
-    <!-- ========================================================================= -->
-    <main class="flex-grow max-w-[1360px] mx-auto px-4 lg:px-8 py-6 w-full">
+    <!-- Main Container -->
+    <main class="flex-1 max-w-[1360px] w-full mx-auto px-4 lg:px-8 py-6">
 
-        <!-- ===================================================================== -->
-        <!-- VIEW 1: EXACT SCREENSHOT HOMEPAGE -->
-        <!-- ===================================================================== -->
+        <!-- ========================================================================= -->
+        <!-- VIEW 1: STOREFRONT HOMEPAGE -->
+        <!-- ========================================================================= -->
         <section id="view-homepage" class="page-view page-active">
-            
             <!-- Promo Ticket Banner -->
-            <div class="w-full bg-gradient-to-r from-[#FFF0F3] via-[#FFE7EE] to-[#FFF0F3] rounded-xl h-20 mb-8 flex items-center justify-between px-10 sm:px-14 ticket-banner shadow-sm overflow-hidden border border-[#FFDCE3]">
-                <!-- Left Details -->
-                <div class="flex flex-col justify-center">
-                    <h2 class="text-[22px] font-black text-[#D84315] tracking-tight leading-tight">GET 25% OFF</h2>
-                    <span class="text-[13px] font-bold text-[#696E79]">Up To ₹200 Off*</span>
+            <div class="ticket-banner rounded-2xl p-5 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+                <div class="flex items-center gap-4">
+                    <div class="text-3xl font-black text-myntra-pink">25%</div>
+                    <div>
+                        <h2 class="text-base font-black text-[#282C3F] tracking-wide">GET 25% OFF ON YOUR FIRST STYLESYNC MATCH</h2>
+                        <p class="text-xs font-semibold text-gray-500">Up To ₹200 Off • Minimum Order ₹1,999</p>
+                    </div>
                 </div>
-                
-                <!-- Center Coupon Capsule -->
-                <div onclick="copyCouponCode()" class="bg-white px-6 py-2 rounded-full shadow-sm flex items-center gap-2 border border-pink-100 cursor-pointer hover:scale-105 transition-transform" title="Click to copy coupon code">
-                    <span class="text-[11px] font-bold text-gray-400 tracking-wider">COUPON CODE</span>
-                    <span class="text-gray-300 font-light">|</span>
-                    <span class="text-[14px] font-black text-myntra-pink tracking-wider">MYNTRASAVE</span>
-                </div>
-                
-                <!-- Right Stylized % -->
-                <div class="text-[#FF3F6C] opacity-35 select-none pr-2 hidden sm:block">
-                    <span class="text-6xl font-black italic">%</span>
-                </div>
+                <button onclick="copyCouponCode()" class="bg-white hover:bg-pink-50 text-[#282C3F] border border-pink-200 px-5 py-2.5 rounded-full text-xs font-black tracking-wider flex items-center gap-2 shadow-sm transition-all active:scale-95">
+                    <span>COUPON CODE:</span>
+                    <span class="text-myntra-pink font-extrabold">MYNTRASAVE</span>
+                    <i class="ph-bold ph-copy text-sm text-gray-400"></i>
+                </button>
             </div>
 
-            <!-- Hero Section -->
-            <section class="relative w-full h-[520px] rounded-2xl mb-12 overflow-hidden group shadow-md cursor-pointer" onclick="navigateTo('pdp')">
-                <!-- High-Resolution Model Image matching screenshot -->
-                <img 
-                    src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=1600&auto=format&fit=crop&q=80" 
-                    alt="The New Linen Collection" 
-                    class="w-full h-full object-cover object-[center_20%] group-hover:scale-[1.02] transition-transform duration-700 ease-out"
-                >
-                
-                <!-- Overlay Gradient & Text content -->
-                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-black/60 flex flex-col justify-center items-end text-right px-8 sm:px-16 lg:px-24">
-                    <h1 class="text-[44px] sm:text-[56px] font-black text-white leading-[1.08] mb-6 drop-shadow-lg tracking-wider">
-                        THE NEW<br>LINEN<br>COLLECTION
-                    </h1>
-                    
-                    <button class="bg-[#C2185B] hover:bg-[#AD1457] active:scale-95 text-white font-black text-[13px] py-3.5 px-9 rounded-full shadow-xl transition-all tracking-widest uppercase flex items-center gap-2">
-                        <span>EXPLORE NOW</span>
-                        <i class="ph-bold ph-arrow-right text-base"></i>
-                    </button>
+            <!-- Linen Collection Hero Banner -->
+            <div class="hero-banner-container bg-[#F4F1EA] rounded-2xl overflow-hidden mb-12 flex flex-col md:flex-row border border-[#EAE6DC] relative shadow-sm">
+                <div class="w-full md:w-1/2 min-h-[380px] bg-cover bg-top cursor-pointer" style="background-image: url('https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=1000&auto=format&fit=crop&q=80');" onclick="navigateTo('pdp')"></div>
+                <div class="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center items-start">
+                    <span class="text-xs font-black text-myntra-pink tracking-widest uppercase mb-2">NEW SEASON CAPSULE</span>
+                    <h1 class="text-3xl lg:text-4xl font-black text-[#282C3F] tracking-tight leading-tight mb-3">THE NEW LINEN<br>COLLECTION</h1>
+                    <p class="text-sm text-gray-600 leading-relaxed mb-6">
+                        Breathable European flax tailored for effortless versatility. Paired seamlessly with items you already own via StyleSync™ AI.
+                    </p>
+                    <div class="flex items-baseline gap-3 mb-6">
+                        <span class="text-2xl font-black text-[#282C3F]">₹3,499</span>
+                        <span class="text-base text-gray-400 line-through font-semibold">₹4,999</span>
+                        <span class="text-xs font-extrabold text-myntra-pink bg-pink-100 px-2 py-0.5 rounded">30% OFF</span>
+                    </div>
+                    <div class="flex gap-4 w-full sm:w-auto">
+                        <button onclick="navigateTo('pdp')" class="bg-myntra-pink hover:bg-[#E0245E] text-white font-black text-xs uppercase px-8 py-3.5 rounded-lg shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
+                            <span>EXPLORE NOW</span>
+                            <i class="ph-bold ph-arrow-right"></i>
+                        </button>
+                        <button onclick="navigateTo('stylesync')" class="bg-white hover:bg-gray-50 border border-gray-300 text-[#282C3F] font-black text-xs uppercase px-6 py-3.5 rounded-lg shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2">
+                            <i class="ph-fill ph-sparkle text-myntra-pink"></i>
+                            <span>Style with Closet</span>
+                        </button>
+                    </div>
                 </div>
-
-                <!-- Right Edge Vertical Tab -->
-                <div class="absolute top-[38%] right-0 bg-[#282C3F] text-white text-[11px] font-black py-4 px-2 rounded-l-md vertical-badge tracking-[0.22em] shadow-lg flex items-center gap-1.5 select-none border-l border-t border-b border-gray-700">
+                <!-- Vertical Tag -->
+                <div class="hidden lg:flex absolute right-0 top-0 bottom-0 w-10 bg-[#282C3F] text-white items-center justify-center font-black text-[10px] tracking-widest vertical-badge uppercase">
                     UPTO ₹200 OFF
                 </div>
-            </section>
-
-            <!-- Shop By Category Section -->
-            <section class="mb-14">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl sm:text-2xl font-black tracking-widest text-[#282C3F] uppercase">SHOP BY CATEGORY</h2>
-                    <button onclick="navigateTo('pdp')" class="text-sm font-bold text-[#E0245E] hover:underline flex items-center gap-1">
-                        <span>View All</span>
-                        <i class="ph-bold ph-caret-right"></i>
-                    </button>
-                </div>
-
-                <!-- 4 Category Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    
-                    <!-- Category 1: Men's Casuals -->
-                    <div onclick="navigateTo('pdp')" class="relative h-[360px] rounded-xl overflow-hidden group block shadow-sm border border-gray-100 cursor-pointer hover:shadow-card-hover transition-all">
-                        <img 
-                            src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=800&auto=format&fit=crop&q=80" 
-                            alt="Men's Casuals" 
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        >
-                        <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/85 via-black/50 to-transparent flex items-end p-4">
-                            <div class="flex justify-between items-center w-full">
-                                <h3 class="text-white font-black text-[14px] tracking-wider">MEN'S CASUALS</h3>
-                                <div class="w-7 h-7 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-myntra-pink transition-colors">
-                                    <i class="ph-bold ph-arrow-right text-sm"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Category 2: Women's Wear -->
-                    <div onclick="navigateTo('pdp')" class="relative h-[360px] rounded-xl overflow-hidden group block shadow-sm border border-gray-100 cursor-pointer hover:shadow-card-hover transition-all">
-                        <img 
-                            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&auto=format&fit=crop&q=80" 
-                            alt="Women's Wear" 
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        >
-                        <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/85 via-black/50 to-transparent flex items-end p-4">
-                            <div class="flex justify-between items-center w-full">
-                                <h3 class="text-white font-black text-[14px] tracking-wider">WOMEN'S WEAR</h3>
-                                <div class="w-7 h-7 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-myntra-pink transition-colors">
-                                    <i class="ph-bold ph-arrow-right text-sm"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Category 3: Beauty & Grooming -->
-                    <div onclick="navigateTo('pdp')" class="relative h-[360px] rounded-xl overflow-hidden group block shadow-sm border border-gray-100 cursor-pointer hover:shadow-card-hover transition-all">
-                        <img 
-                            src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&auto=format&fit=crop&q=80" 
-                            alt="Beauty & Grooming" 
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        >
-                        <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/85 via-black/50 to-transparent flex items-end p-4">
-                            <div class="flex justify-between items-center w-full">
-                                <h3 class="text-white font-black text-[14px] tracking-wider">BEAUTY &amp; GROOMING</h3>
-                                <div class="w-7 h-7 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-myntra-pink transition-colors">
-                                    <i class="ph-bold ph-arrow-right text-sm"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Category 4: Home Living -->
-                    <div onclick="navigateTo('pdp')" class="relative h-[360px] rounded-xl overflow-hidden group block shadow-sm border border-gray-100 cursor-pointer hover:shadow-card-hover transition-all">
-                        <img 
-                            src="https://images.unsplash.com/photo-1617104424032-b9bd6972d0e4?w=800&auto=format&fit=crop&q=80" 
-                            alt="Home Living" 
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        >
-                        <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/85 via-black/50 to-transparent flex items-end p-4">
-                            <div class="flex justify-between items-center w-full">
-                                <h3 class="text-white font-black text-[14px] tracking-wider">HOME LIVING</h3>
-                                <div class="w-7 h-7 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-myntra-pink transition-colors">
-                                    <i class="ph-bold ph-arrow-right text-sm"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-        </section>
-
-        <!-- ===================================================================== -->
-        <!-- VIEW 2: PRODUCT DISPLAY PAGE (PDP) - RUST LINEN BLAZER -->
-        <!-- ===================================================================== -->
-        <section id="view-pdp" class="page-view page-hidden">
-            <!-- Breadcrumbs -->
-            <div class="text-xs text-gray-500 font-medium mb-6 flex items-center gap-2">
-                <button onclick="navigateTo('homepage')" class="hover:text-myntra-pink font-semibold">Home</button>
-                <span>/</span>
-                <span class="hover:text-myntra-pink cursor-pointer">Men Clothing</span>
-                <span>/</span>
-                <span class="hover:text-myntra-pink cursor-pointer">Blazers</span>
-                <span>/</span>
-                <span class="text-[#282C3F] font-bold">MANGO MAN Rust Linen Blazer</span>
             </div>
 
-            <!-- PDP 2-Column Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                
-                <!-- Left: Gallery -->
-                <div class="lg:col-span-7 flex flex-col md:flex-row gap-4">
-                    <!-- Thumbnails -->
-                    <div class="flex md:flex-col gap-3 order-2 md:order-1">
-                        <img 
-                            src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=600&auto=format&fit=crop&q=80" 
-                            class="w-16 h-20 object-cover rounded-md border-2 border-myntra-pink cursor-pointer p-0.5"
-                            alt="Front Angle"
-                            onclick="setHeroImage(this.src)"
-                        >
-                        <img 
-                            src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&auto=format&fit=crop&q=80" 
-                            class="w-16 h-20 object-cover rounded-md border border-gray-200 hover:border-myntra-pink cursor-pointer p-0.5"
-                            alt="Side Angle"
-                            onclick="setHeroImage(this.src)"
-                        >
-                        <img 
-                            src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600&auto=format&fit=crop&q=80" 
-                            class="w-16 h-20 object-cover rounded-md border border-gray-200 hover:border-myntra-pink cursor-pointer p-0.5"
-                            alt="Fabric Detail"
-                            onclick="setHeroImage(this.src)"
-                        >
+            <!-- Shop by Category Grid -->
+            <div class="mb-12">
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <h3 class="text-xl font-black text-[#282C3F] tracking-wide uppercase">SHOP BY CATEGORY</h3>
+                        <p class="text-xs text-gray-500 font-medium mt-1">Explore trending coordinates crafted for your lifestyle</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div onclick="navigateTo('pdp')" class="group relative h-72 rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all">
+                        <img src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=600&auto=format&fit=crop&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-5 text-white">
+                            <h4 class="font-black text-base uppercase tracking-wide">MEN'S CASUALS</h4>
+                            <span class="text-xs text-gray-300 flex items-center gap-1 group-hover:text-myntra-pink transition-colors">Explore →</span>
+                        </div>
                     </div>
 
-                    <!-- Main Hero Image Box -->
-                    <div class="flex-1 order-1 md:order-2 relative rounded-xl overflow-hidden bg-stone-100 shadow-sm">
-                        <img 
-                            id="pdp-main-image"
-                            src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=1200&auto=format&fit=crop&q=80" 
-                            alt="MANGO MAN Rust Linen Blazer" 
-                            class="w-full h-[540px] object-cover object-top"
-                        >
-                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-md text-[11px] font-black text-myntra-pink tracking-wider shadow-sm">
-                            NEW SEASON
+                    <div onclick="openCategoryModal('Women\'s Wear', 'Dresses, Co-ords, and Linen Tops')" class="group relative h-72 rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all">
+                        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-5 text-white">
+                            <h4 class="font-black text-base uppercase tracking-wide">WOMEN'S WEAR</h4>
+                            <span class="text-xs text-gray-300 flex items-center gap-1 group-hover:text-myntra-pink transition-colors">Explore →</span>
+                        </div>
+                    </div>
+
+                    <div onclick="openCategoryModal('Beauty & Grooming', 'Fragrances and Skin Nourishment')" class="group relative h-72 rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all">
+                        <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&auto=format&fit=crop&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-5 text-white">
+                            <h4 class="font-black text-base uppercase tracking-wide">BEAUTY &amp; GROOMING</h4>
+                            <span class="text-xs text-gray-300 flex items-center gap-1 group-hover:text-myntra-pink transition-colors">Explore →</span>
+                        </div>
+                    </div>
+
+                    <div onclick="openCategoryModal('Home Living', 'Modern Bedroom Accents & Decor')" class="group relative h-72 rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all">
+                        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&auto=format&fit=crop&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-5 text-white">
+                            <h4 class="font-black text-base uppercase tracking-wide">HOME LIVING</h4>
+                            <span class="text-xs text-gray-300 flex items-center gap-1 group-hover:text-myntra-pink transition-colors">Explore →</span>
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <!-- Right: Product Details & StyleSync AI Hook -->
-                <div class="lg:col-span-5 flex flex-col">
-                    <h1 class="text-2xl font-black text-[#282C3F] tracking-tight">MANGO MAN</h1>
-                    <p class="text-base text-gray-500 font-medium mb-3">Men Rust Orange Solid Pure Linen Relaxed-Fit Blazer</p>
+        <!-- ========================================================================= -->
+        <!-- VIEW 2: PRODUCT DISPLAY PAGE (PDP) -->
+        <!-- ========================================================================= -->
+        <section id="view-pdp" class="page-view page-hidden">
+            <!-- Breadcrumbs -->
+            <div class="text-xs font-semibold text-gray-500 mb-6 flex items-center gap-2">
+                <span onclick="navigateTo('homepage')" class="cursor-pointer hover:text-myntra-pink">Home</span> / 
+                <span onclick="navigateTo('homepage')" class="cursor-pointer hover:text-myntra-pink">Men</span> / 
+                <span>Topwear</span> / 
+                <span>Blazers</span> / 
+                <span class="font-bold text-[#282C3F]">MANGO MAN Rust Linen Blazer</span>
+            </div>
 
-                    <!-- Rating Pill -->
-                    <div class="inline-flex items-center gap-1.5 border border-gray-200 rounded-md px-3 py-1 w-fit text-xs font-bold text-gray-700 mb-4 bg-gray-50">
-                        <span class="text-emerald-600 font-extrabold flex items-center gap-1">4.2 <i class="ph-fill ph-star text-emerald-500"></i></span>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <!-- Left Image Gallery -->
+                <div class="lg:col-span-6 flex flex-col-reverse sm:flex-row gap-4">
+                    <div class="flex sm:flex-col gap-3 justify-center sm:justify-start">
+                        <img onclick="setHeroImage('https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=800&auto=format&fit=crop&q=80')" src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=200&auto=format&fit=crop&q=80" class="w-16 h-20 object-cover rounded-lg border-2 border-myntra-pink cursor-pointer shadow-sm">
+                        <img onclick="setHeroImage('https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80')" src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=200&auto=format&fit=crop&q=80" class="w-16 h-20 object-cover rounded-lg border border-gray-200 hover:border-myntra-pink cursor-pointer shadow-sm">
+                        <img onclick="setHeroImage('https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&auto=format&fit=crop&q=80')" src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=200&auto=format&fit=crop&q=80" class="w-16 h-20 object-cover rounded-lg border border-gray-200 hover:border-myntra-pink cursor-pointer shadow-sm">
+                    </div>
+                    <div class="flex-1 bg-gray-50 rounded-2xl overflow-hidden border border-gray-200">
+                        <img id="pdp-main-image" src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=800&auto=format&fit=crop&q=80" alt="Rust Linen Blazer" class="w-full h-[480px] object-cover">
+                    </div>
+                </div>
+
+                <!-- Right Product Info -->
+                <div class="lg:col-span-6 flex flex-col justify-start">
+                    <span class="text-xs font-black text-myntra-pink uppercase tracking-widest mb-1">MANGO MAN</span>
+                    <h1 class="text-2xl lg:text-3xl font-black text-[#282C3F] mb-3">Rust Linen Relaxed-Fit Blazer</h1>
+
+                    <!-- Rating -->
+                    <div class="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg text-xs font-bold text-[#282C3F] w-max mb-4">
+                        <span class="text-emerald-600">★ 4.2</span>
                         <span class="text-gray-300">|</span>
-                        <span>124 Verified Customer Ratings</span>
+                        <span class="text-gray-600">124 Verified Ratings</span>
                     </div>
 
-                    <hr class="border-gray-100 mb-4">
-
-                    <!-- Pricing Box -->
+                    <!-- Price -->
                     <div class="flex items-baseline gap-3 mb-1">
                         <span class="text-3xl font-black text-[#282C3F]">₹3,499</span>
                         <span class="text-lg text-gray-400 line-through font-medium">₹4,999</span>
@@ -410,22 +456,13 @@
                     <div class="mb-6">
                         <div class="flex justify-between items-center mb-3">
                             <span class="text-xs font-black tracking-wider text-[#282C3F] uppercase">SELECT SIZE</span>
-                            <button class="text-xs font-bold text-myntra-pink hover:underline">SIZE CHART</button>
+                            <button onclick="toggleSizeChart(true)" class="text-xs font-bold text-myntra-pink hover:underline">SIZE CHART</button>
                         </div>
                         <div class="flex gap-3">
-                            <button onclick="selectSize(this, '38')" class="size-btn w-12 h-12 rounded-full border border-gray-300 text-sm font-extrabold text-[#282C3F] hover:border-myntra-pink flex flex-col items-center justify-center transition-all relative">
-                                38
-                            </button>
-                            <button onclick="selectSize(this, '40')" class="size-btn w-12 h-12 rounded-full border-2 border-myntra-pink bg-pink-50 text-sm font-extrabold text-myntra-pink flex flex-col items-center justify-center transition-all relative shadow-sm">
-                                40
-                                <span class="absolute -top-2 text-[8px] font-black bg-red-100 text-red-600 px-1.5 py-0.2 rounded">Only 2 Left</span>
-                            </button>
-                            <button onclick="selectSize(this, '42')" class="size-btn w-12 h-12 rounded-full border border-gray-300 text-sm font-extrabold text-[#282C3F] hover:border-myntra-pink flex flex-col items-center justify-center transition-all relative">
-                                42
-                            </button>
-                            <button onclick="selectSize(this, '44')" class="size-btn w-12 h-12 rounded-full border border-gray-300 text-sm font-extrabold text-[#282C3F] hover:border-myntra-pink flex flex-col items-center justify-center transition-all relative">
-                                44
-                            </button>
+                            <button onclick="selectSize(this, '38')" class="size-btn w-12 h-12 rounded-full border border-gray-300 text-sm font-extrabold text-[#282C3F] hover:border-myntra-pink flex flex-col items-center justify-center transition-all">38</button>
+                            <button onclick="selectSize(this, '40')" class="size-btn w-12 h-12 rounded-full border-2 border-myntra-pink bg-pink-50 text-sm font-extrabold text-myntra-pink flex flex-col items-center justify-center transition-all shadow-sm">40</button>
+                            <button onclick="selectSize(this, '42')" class="size-btn w-12 h-12 rounded-full border border-gray-300 text-sm font-extrabold text-[#282C3F] hover:border-myntra-pink flex flex-col items-center justify-center transition-all">42</button>
+                            <button onclick="selectSize(this, '44')" class="size-btn w-12 h-12 rounded-full border border-gray-300 text-sm font-extrabold text-[#282C3F] hover:border-myntra-pink flex flex-col items-center justify-center transition-all">44</button>
                         </div>
                     </div>
 
@@ -435,10 +472,20 @@
                             <i class="ph-bold ph-handbag text-lg"></i>
                             <span>ADD TO BAG</span>
                         </button>
-                        <button onclick="navigateTo('wishlist')" class="border-2 border-gray-300 hover:border-myntra-pink hover:text-myntra-pink font-extrabold py-3.5 px-6 rounded-lg flex items-center justify-center gap-2 text-[#282C3F] transition-all bg-white">
+                        <button onclick="addToWishlist()" class="border-2 border-gray-300 hover:border-myntra-pink hover:text-myntra-pink font-extrabold py-3.5 px-6 rounded-lg flex items-center justify-center gap-2 text-[#282C3F] transition-all bg-white">
                             <i class="ph-bold ph-heart text-lg"></i>
                             <span>WISHLIST</span>
                         </button>
+                    </div>
+
+                    <!-- Pincode Delivery Check -->
+                    <div class="mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <span class="text-xs font-bold text-[#282C3F] block mb-2">CHECK DELIVERY &amp; SERVICES</span>
+                        <div class="flex gap-2">
+                            <input type="text" id="pincode-input" placeholder="Enter 6-digit Pincode" class="flex-1 text-xs px-3 py-2 border rounded-lg outline-none bg-white">
+                            <button onclick="checkPincode()" class="bg-[#282C3F] text-white text-xs font-bold px-4 py-2 rounded-lg">Check ⚡</button>
+                        </div>
+                        <p id="pincode-result" class="text-xs text-emerald-600 font-semibold mt-2 hidden">⚡ Free Delivery by Tomorrow, 5 PM.</p>
                     </div>
 
                     <!-- StyleSync AI Hook Banner -->
@@ -448,15 +495,12 @@
                                 <i class="ph-fill ph-sparkle text-lg"></i>
                             </div>
                             <div class="flex-1">
-                                <div class="flex items-center gap-2">
-                                    <h4 class="font-black text-sm text-[#282C3F]">StyleSync™ Smart AI Wardrobe</h4>
-                                    <span class="text-[9px] font-black bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded">98% Match</span>
-                                </div>
-                                <p class="text-xs text-gray-600 mt-1 leading-relaxed">
-                                    Pairs seamlessly with your previously ordered <strong>Olive Linen Shirt</strong> and <strong>Black Tailored Trousers</strong>!
+                                <h4 class="font-extrabold text-sm text-[#282C3F] mb-1">StyleSync™ AI Wardrobe Match Found!</h4>
+                                <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+                                    We detected <b>3 items in your closet</b> (Zara Trousers, Olive Linen Shirt, Fossil Watch) that create complete modular looks with this blazer.
                                 </p>
-                                <button onclick="navigateTo('stylesync')" class="mt-3 text-xs font-black text-myntra-pink hover:text-[#C2185B] flex items-center gap-1.5 underline underline-offset-4">
-                                    <span>Preview Rule-of-3 Outfits &amp; Ask WhatsApp Poll</span>
+                                <button onclick="navigateTo('stylesync')" class="bg-white border border-pink-300 text-myntra-pink hover:bg-myntra-pink hover:text-white text-xs font-black px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm">
+                                    <span>View 3 Outfits &amp; WhatsApp Poll</span>
                                     <i class="ph-bold ph-arrow-right"></i>
                                 </button>
                             </div>
@@ -467,14 +511,14 @@
             </div>
         </section>
 
-        <!-- ===================================================================== -->
-        <!-- VIEW 3: WISHLIST ANCHOR & SMART CLOSET -->
-        <!-- ===================================================================== -->
+        <!-- ========================================================================= -->
+        <!-- VIEW 3: WISHLIST & SMART CLOSET ANCHOR -->
+        <!-- ========================================================================= -->
         <section id="view-wishlist" class="page-view page-hidden">
             <div class="flex justify-between items-center mb-6">
                 <div>
-                    <h1 class="text-2xl font-black text-[#282C3F] tracking-tight">MY WISHLIST</h1>
-                    <p class="text-xs text-gray-500 font-medium">1 Wishlisted Item Saved • StyleSync Active</p>
+                    <h1 class="text-2xl font-black text-[#282C3F] tracking-tight">MY WISHLIST &amp; SMART CLOSET</h1>
+                    <p class="text-xs text-gray-500 font-medium">1 Wishlisted Target Blazer • 6 Paired Wardrobe Pieces</p>
                 </div>
                 <button onclick="navigateTo('homepage')" class="text-xs font-bold text-myntra-pink hover:underline flex items-center gap-1">
                     <i class="ph-bold ph-arrow-left"></i>
@@ -484,11 +528,7 @@
 
             <!-- Wishlist Hero Anchor Card -->
             <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm mb-10 flex flex-col md:flex-row gap-6 items-center">
-                <img 
-                    src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=600&auto=format&fit=crop&q=80" 
-                    alt="Rust Linen Blazer" 
-                    class="w-48 h-64 object-cover rounded-xl shadow-sm"
-                >
+                <img src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=600&auto=format&fit=crop&q=80" alt="Rust Linen Blazer" class="w-48 h-64 object-cover rounded-xl shadow-sm">
                 <div class="flex-1 flex flex-col justify-center">
                     <span class="text-xs font-black text-myntra-pink uppercase tracking-wider mb-1">ANCHOR ITEM</span>
                     <h2 class="text-xl font-black text-[#282C3F]">MANGO MAN Rust Linen Relaxed-Fit Blazer</h2>
@@ -497,256 +537,243 @@
                         <span class="text-sm text-gray-400 line-through">₹4,999</span>
                         <span class="text-xs font-extrabold text-myntra-pink">(30% OFF)</span>
                     </div>
-
-                    <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg p-3 text-xs font-semibold mb-4 flex items-center gap-2">
-                        <i class="ph-fill ph-check-circle text-emerald-600 text-base"></i>
-                        <span>AI Match Confirmed: 2 Complementary items found in your past orders!</span>
-                    </div>
-
-                    <div class="flex flex-wrap gap-3">
-                        <button onclick="navigateTo('stylesync')" class="bg-gradient-to-r from-myntra-pink to-purple-600 hover:from-[#E0245E] hover:to-purple-700 text-white font-extrabold py-3 px-6 rounded-lg shadow-md flex items-center gap-2 text-sm transition-all">
-                            <i class="ph-fill ph-sparkle text-base"></i>
-                            <span>Style with My Closet (StyleSync AI)</span>
+                    <p class="text-xs text-gray-600 mb-4 max-w-lg">
+                        Unlocks <b>3 full modular outfits</b> using clothes you already own in your closet. Zero styling hesitation!
+                    </p>
+                    <div class="flex gap-4">
+                        <button onclick="navigateTo('stylesync')" class="bg-gradient-to-r from-myntra-pink to-purple-600 text-white font-extrabold text-xs px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2">
+                            <i class="ph-fill ph-sparkle"></i>
+                            <span>Style with My Closet (Run AI)</span>
                         </button>
-                        <button onclick="addToBag()" class="border border-gray-300 hover:border-myntra-pink text-[#282C3F] font-bold py-3 px-5 rounded-lg text-sm transition-colors">
+                        <button onclick="addToBag()" class="bg-[#282C3F] text-white font-bold text-xs px-5 py-3 rounded-lg hover:bg-black">
                             Move to Bag
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- More from your Wishlist Grid -->
-            <h3 class="text-lg font-black text-[#282C3F] mb-4 uppercase tracking-wider">Recommended Pairings From Closet</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="border border-gray-200 rounded-xl p-3 bg-gray-50">
-                    <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=400&auto=format&fit=crop&q=80" class="w-full h-44 object-cover rounded-lg mb-2" alt="Olive Shirt">
-                    <span class="text-[10px] font-black bg-gray-800 text-white px-2 py-0.5 rounded">In your closet</span>
-                    <h4 class="font-bold text-xs text-gray-800 mt-1">Olive Linen Shirt</h4>
-                    <span class="text-xs font-semibold text-gray-500">Ordered Oct 2024</span>
+            <!-- Wishlist Grid -->
+            <h3 class="text-base font-black text-[#282C3F] uppercase tracking-wide mb-4">YOUR CLOSET INVENTORY &amp; WISHLIST MATCHES</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                    <div class="relative h-44">
+                        <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&auto=format&fit=crop&q=80" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-[#282C3F] text-white text-[9px] font-bold px-2 py-0.5 rounded">In Closet</span>
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col justify-between">
+                        <h4 class="font-bold text-xs text-[#282C3F]">FOSSIL Watch</h4>
+                        <span class="text-xs font-black text-gray-800">₹6,495</span>
+                        <button onclick="addToBag()" class="mt-2 text-[11px] font-bold text-myntra-pink border border-pink-200 py-1 rounded hover:bg-pink-50">Move to Bag</button>
+                    </div>
                 </div>
-                <div class="border border-gray-200 rounded-xl p-3 bg-gray-50">
-                    <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=400&auto=format&fit=crop&q=80" class="w-full h-44 object-cover rounded-lg mb-2" alt="Black Trousers">
-                    <span class="text-[10px] font-black bg-gray-800 text-white px-2 py-0.5 rounded">In your closet</span>
-                    <h4 class="font-bold text-xs text-gray-800 mt-1">Tailored Black Trousers</h4>
-                    <span class="text-xs font-semibold text-gray-500">Ordered Nov 2024</span>
+
+                <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                    <div class="relative h-44">
+                        <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=400&auto=format&fit=crop&q=80" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-[#282C3F] text-white text-[9px] font-bold px-2 py-0.5 rounded">In Closet</span>
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col justify-between">
+                        <h4 class="font-bold text-xs text-[#282C3F]">H&amp;M Olive Shirt</h4>
+                        <span class="text-xs font-black text-gray-800">₹1,999</span>
+                        <button onclick="addToBag()" class="mt-2 text-[11px] font-bold text-myntra-pink border border-pink-200 py-1 rounded hover:bg-pink-50">Move to Bag</button>
+                    </div>
                 </div>
-                <div class="border border-gray-200 rounded-xl p-3 bg-white">
-                    <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&auto=format&fit=crop&q=80" class="w-full h-44 object-cover rounded-lg mb-2" alt="White Sneakers">
-                    <span class="text-[10px] font-black bg-pink-100 text-myntra-pink px-2 py-0.5 rounded">Suggested</span>
-                    <h4 class="font-bold text-xs text-gray-800 mt-1">Classic White Sneakers</h4>
-                    <span class="text-xs font-bold text-gray-800">₹2,199</span>
+
+                <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                    <div class="relative h-44">
+                        <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=400&auto=format&fit=crop&q=80" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-[#282C3F] text-white text-[9px] font-bold px-2 py-0.5 rounded">In Closet</span>
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col justify-between">
+                        <h4 class="font-bold text-xs text-[#282C3F]">ZARA Trousers</h4>
+                        <span class="text-xs font-black text-gray-800">₹2,990</span>
+                        <button onclick="addToBag()" class="mt-2 text-[11px] font-bold text-myntra-pink border border-pink-200 py-1 rounded hover:bg-pink-50">Move to Bag</button>
+                    </div>
                 </div>
-                <div class="border border-gray-200 rounded-xl p-3 bg-white">
-                    <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&auto=format&fit=crop&q=80" class="w-full h-44 object-cover rounded-lg mb-2" alt="Minimalist Watch">
-                    <span class="text-[10px] font-black bg-pink-100 text-myntra-pink px-2 py-0.5 rounded">Suggested</span>
-                    <h4 class="font-bold text-xs text-gray-800 mt-1">Minimalist Watch</h4>
-                    <span class="text-xs font-bold text-gray-800">₹1,899</span>
+
+                <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                    <div class="relative h-44">
+                        <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&auto=format&fit=crop&q=80" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-emerald-50 text-emerald-700 text-[9px] font-bold px-2 py-0.5 rounded border border-emerald-200">Suggested</span>
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col justify-between">
+                        <h4 class="font-bold text-xs text-[#282C3F]">PUMA Sneakers</h4>
+                        <span class="text-xs font-black text-gray-800">₹2,749</span>
+                        <button onclick="addToBag()" class="mt-2 text-[11px] font-bold text-myntra-pink border border-pink-200 py-1 rounded hover:bg-pink-50">Move to Bag</button>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                    <div class="relative h-44">
+                        <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&auto=format&fit=crop&q=80" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-emerald-50 text-emerald-700 text-[9px] font-bold px-2 py-0.5 rounded border border-emerald-200">Suggested</span>
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col justify-between">
+                        <h4 class="font-bold text-xs text-[#282C3F]">LEVI'S Denim</h4>
+                        <span class="text-xs font-black text-gray-800">₹3,199</span>
+                        <button onclick="addToBag()" class="mt-2 text-[11px] font-bold text-myntra-pink border border-pink-200 py-1 rounded hover:bg-pink-50">Move to Bag</button>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+                    <div class="relative h-44">
+                        <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&auto=format&fit=crop&q=80" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-emerald-50 text-emerald-700 text-[9px] font-bold px-2 py-0.5 rounded border border-emerald-200">Suggested</span>
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col justify-between">
+                        <h4 class="font-bold text-xs text-[#282C3F]">MANGO Tank</h4>
+                        <span class="text-xs font-black text-gray-800">₹1,290</span>
+                        <button onclick="addToBag()" class="mt-2 text-[11px] font-bold text-myntra-pink border border-pink-200 py-1 rounded hover:bg-pink-50">Move to Bag</button>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- ===================================================================== -->
-        <!-- VIEW 4: STYLESYNC AI STUDIO & WHATSAPP POLL -->
-        <!-- ===================================================================== -->
+        <!-- ========================================================================= -->
+        <!-- VIEW 4: STYLESYNC AI STUDIO & WHATSAPP SOCIAL POLL -->
+        <!-- ========================================================================= -->
         <section id="view-stylesync" class="page-view page-hidden">
             <div class="flex justify-between items-center mb-6">
                 <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="text-2xl font-black text-[#282C3F] tracking-tight">STYLESYNC™ AI STUDIO</h1>
-                        <span class="bg-gradient-to-r from-myntra-pink to-purple-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full">ACTIVE</span>
-                    </div>
-                    <p class="text-xs text-gray-500 font-medium">Rule-of-3 Multi-Outfit Generation from your Past Purchases</p>
+                    <h1 class="text-2xl font-black text-[#282C3F] tracking-tight flex items-center gap-2">
+                        <i class="ph-fill ph-sparkle text-myntra-pink"></i>
+                        <span>STYLESYNC™ AI WARDROBE STUDIO</span>
+                    </h1>
+                    <p class="text-xs text-gray-500 font-medium">3 Complete Outfits Formulated with Your Owned Wardrobe</p>
                 </div>
-                <button onclick="navigateTo('pdp')" class="text-xs font-bold text-myntra-pink hover:underline flex items-center gap-1">
-                    <i class="ph-bold ph-arrow-left"></i>
-                    <span>Back to Blazer PDP</span>
+                <button onclick="navigateTo('pdp')" class="text-xs font-bold text-myntra-pink hover:underline">
+                    Back to Product
                 </button>
             </div>
 
-            <!-- Outfits Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                
-                <!-- Outfit 1 -->
-                <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-black text-base text-[#282C3F]">Look 1: Smart Casual Friday</h3>
-                        <span class="text-xs font-black text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">98% Match</span>
-                    </div>
-                    <div class="flex gap-2 mb-3">
-                        <span class="text-[10px] font-black bg-[#282C3F] text-white px-2 py-0.5 rounded">2 Items from Closet</span>
-                        <span class="text-[10px] font-black bg-pink-100 text-myntra-pink px-2 py-0.5 rounded">Target Blazer</span>
-                    </div>
-
-                    <!-- 3-Piece Collage Box -->
-                    <div class="grid grid-cols-3 gap-2 h-56 bg-stone-100 p-2 rounded-xl mb-4">
-                        <img src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=500&auto=format&fit=crop&q=80" class="w-full h-full object-cover rounded-lg" alt="Blazer">
-                        <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=80" class="w-full h-full object-cover rounded-lg" alt="Olive Shirt">
-                        <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500&auto=format&fit=crop&q=80" class="w-full h-full object-cover rounded-lg" alt="Black Pants">
-                    </div>
-
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        Pair your target <strong>Mango Man Blazer</strong> with your previously owned <strong>Olive Linen Shirt</strong> and <strong>Tailored Black Pants</strong>.
-                    </p>
-                </div>
-
-                <!-- Outfit 2 -->
-                <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-black text-base text-[#282C3F]">Look 2: Weekend Brunch &amp; Gallery</h3>
-                        <span class="text-xs font-black text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">95% Match</span>
-                    </div>
-                    <div class="flex gap-2 mb-3">
-                        <span class="text-[10px] font-black bg-purple-100 text-purple-700 px-2 py-0.5 rounded">Suggested Pairings</span>
-                        <span class="text-[10px] font-black bg-pink-100 text-myntra-pink px-2 py-0.5 rounded">Target Blazer</span>
-                    </div>
-
-                    <!-- 3-Piece Collage Box -->
-                    <div class="grid grid-cols-3 gap-2 h-56 bg-stone-100 p-2 rounded-xl mb-4">
-                        <img src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=500&auto=format&fit=crop&q=80" class="w-full h-full object-cover rounded-lg" alt="Blazer">
-                        <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=500&auto=format&fit=crop&q=80" class="w-full h-full object-cover rounded-lg" alt="Light Denim">
-                        <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&auto=format&fit=crop&q=80" class="w-full h-full object-cover rounded-lg" alt="Sneakers">
-                    </div>
-
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        Dress it down with <strong>Light Wash Denim</strong> and <strong>Clean White Court Sneakers</strong> for an effortless weekend vibe.
-                    </p>
-                </div>
-            </div>
-
-            <!-- WhatsApp Peer Poll Card -->
-            <div class="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border border-emerald-200 rounded-2xl p-6 shadow-sm">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <!-- 3 Collages Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <!-- Look 1 -->
+                <div class="bg-white border-2 border-pink-200 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center gap-2 text-emerald-800 font-black text-lg">
-                            <i class="ph-fill ph-whatsapp-logo text-2xl text-emerald-600"></i>
-                            <span>Can't decide? Ask your friends on WhatsApp!</span>
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-black text-base text-[#282C3F]">Look 1: Sunset Linen</h3>
+                            <span class="text-xs font-bold bg-pink-100 text-myntra-pink px-2 py-0.5 rounded">98% Match</span>
                         </div>
-                        <p class="text-xs text-gray-600 mt-1 max-w-xl">
-                            Send an interactive 1-click poll with both Rule-of-3 outfit collages directly to your WhatsApp group before buying.
-                        </p>
+                        <p class="text-xs text-emerald-600 font-bold mb-4">✅ 100% Owned Pieces (Extra Cost: ₹0)</p>
+                        
+                        <div class="space-y-2 mb-4">
+                            <img src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=500&auto=format&fit=crop&q=80" class="w-full h-40 object-cover rounded-lg">
+                            <div class="grid grid-cols-2 gap-2">
+                                <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=300&auto=format&fit=crop&q=80" class="w-full h-24 object-cover rounded-lg">
+                                <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=300&auto=format&fit=crop&q=80" class="w-full h-24 object-cover rounded-lg">
+                            </div>
+                        </div>
                     </div>
+                    <div class="flex gap-2">
+                        <button onclick="openWhatsAppModal('Look 1: Sunset Linen', '98%')" class="flex-1 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-black text-xs py-2.5 rounded-lg flex items-center justify-center gap-1.5 shadow-sm">
+                            <i class="ph-bold ph-whatsapp-logo text-base"></i>
+                            <span>Poll Friends</span>
+                        </button>
+                        <button onclick="addToBag()" class="bg-[#282C3F] text-white text-xs font-bold px-3 py-2.5 rounded-lg">Add Look</button>
+                    </div>
+                </div>
 
-                    <button onclick="openWhatsAppModal()" class="bg-[#25D366] hover:bg-[#20bd5a] text-white font-extrabold py-3.5 px-8 rounded-xl shadow-lg flex items-center gap-2 text-sm transition-transform active:scale-95 whitespace-nowrap">
-                        <i class="ph-bold ph-paper-plane-tilt text-base"></i>
-                        <span>Create WhatsApp Poll</span>
-                    </button>
+                <!-- Look 2 -->
+                <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-black text-base text-[#282C3F]">Look 2: Urban Brunch</h3>
+                            <span class="text-xs font-bold bg-purple-100 text-purple-700 px-2 py-0.5 rounded">94% Match</span>
+                        </div>
+                        <p class="text-xs text-gray-500 font-bold mb-4">✨ 2 Closet + 1 Wishlist Match</p>
+                        
+                        <div class="space-y-2 mb-4">
+                            <img src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=500&auto=format&fit=crop&q=80" class="w-full h-40 object-cover rounded-lg">
+                            <div class="grid grid-cols-2 gap-2">
+                                <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300&auto=format&fit=crop&q=80" class="w-full h-24 object-cover rounded-lg">
+                                <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=300&auto=format&fit=crop&q=80" class="w-full h-24 object-cover rounded-lg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="openWhatsAppModal('Look 2: Urban Brunch', '94%')" class="flex-1 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-black text-xs py-2.5 rounded-lg flex items-center justify-center gap-1.5 shadow-sm">
+                            <i class="ph-bold ph-whatsapp-logo text-base"></i>
+                            <span>Poll Friends</span>
+                        </button>
+                        <button onclick="addToBag()" class="bg-[#282C3F] text-white text-xs font-bold px-3 py-2.5 rounded-lg">Add Look</button>
+                    </div>
+                </div>
+
+                <!-- Look 3 -->
+                <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-black text-base text-[#282C3F]">Look 3: Friday Business</h3>
+                            <span class="text-xs font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded">91% Match</span>
+                        </div>
+                        <p class="text-xs text-emerald-600 font-bold mb-4">✅ Formal Office Friday Ready</p>
+                        
+                        <div class="space-y-2 mb-4">
+                            <img src="https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=500&auto=format&fit=crop&q=80" class="w-full h-40 object-cover rounded-lg">
+                            <div class="grid grid-cols-2 gap-2">
+                                <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=300&auto=format&fit=crop&q=80" class="w-full h-24 object-cover rounded-lg">
+                                <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300&auto=format&fit=crop&q=80" class="w-full h-24 object-cover rounded-lg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="openWhatsAppModal('Look 3: Friday Business', '91%')" class="flex-1 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-black text-xs py-2.5 rounded-lg flex items-center justify-center gap-1.5 shadow-sm">
+                            <i class="ph-bold ph-whatsapp-logo text-base"></i>
+                            <span>Poll Friends</span>
+                        </button>
+                        <button onclick="addToBag()" class="bg-[#282C3F] text-white text-xs font-bold px-3 py-2.5 rounded-lg">Add Look</button>
+                    </div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- ========================================================================= -->
-    <!-- 3. FOOTER (Exact copy from screenshot) -->
-    <!-- ========================================================================= -->
-    <footer class="bg-myntra-footerBg border-t border-gray-200 pt-14 pb-10 mt-16 w-full">
-        <div class="max-w-[1360px] mx-auto px-4 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
-            
-            <!-- Column 1 -->
-            <div>
-                <h4 class="font-black text-[#E91E63] text-lg mb-4 tracking-wide">MYNTRA</h4>
-                <p class="text-gray-500 text-[13px] leading-relaxed pr-4 font-normal">
-                    Your ultimate destination for fashion and lifestyle, providing the best shopping experience.
-                </p>
-            </div>
-
-            <!-- Column 2 -->
-            <div>
-                <h4 class="font-bold text-[#282C3F] text-[12px] tracking-[0.1em] mb-4 uppercase">CUSTOMER POLICIES</h4>
-                <ul class="space-y-2.5">
-                    <li><a href="#" class="text-gray-500 hover:text-myntra-pink text-[13px] transition-colors">Contact Us</a></li>
-                    <li><a href="#" class="text-gray-500 hover:text-myntra-pink text-[13px] transition-colors">FAQ</a></li>
-                    <li><a href="#" class="text-gray-500 hover:text-myntra-pink text-[13px] transition-colors">T&amp;C</a></li>
-                    <li><a href="#" class="text-gray-500 hover:text-myntra-pink text-[13px] transition-colors">Terms Of Use</a></li>
-                </ul>
-            </div>
-
-            <!-- Column 3 -->
-            <div>
-                <h4 class="font-bold text-[#282C3F] text-[12px] tracking-[0.1em] mb-4 uppercase">SHOPPING INFO</h4>
-                <ul class="space-y-2.5">
-                    <li><a href="#" class="text-gray-500 hover:text-myntra-pink text-[13px] transition-colors">Track Orders</a></li>
-                    <li><a href="#" class="text-gray-500 hover:text-myntra-pink text-[13px] transition-colors">Shipping</a></li>
-                    <li><a href="#" class="text-gray-500 hover:text-myntra-pink text-[13px] transition-colors">Cancellation</a></li>
-                    <li><a href="#" class="text-gray-500 hover:text-myntra-pink text-[13px] transition-colors">Returns</a></li>
-                </ul>
-            </div>
-
-            <!-- Column 4 -->
-            <div>
-                <h4 class="font-bold text-[#282C3F] text-[12px] tracking-[0.1em] mb-4 uppercase">EXPERIENCE MYNTRA APP ON MOBILE</h4>
-                <div class="flex gap-3">
-                    <a href="#" class="bg-[#282C3F] text-white rounded-md px-3.5 py-2 flex items-center gap-2 hover:bg-black transition-colors min-w-[125px] justify-center shadow-sm">
-                        <i class="ph-fill ph-google-play-logo text-xl"></i>
-                        <div class="flex flex-col items-start">
-                            <span class="text-[7px] uppercase tracking-wider text-gray-300">GET IT ON</span>
-                            <span class="text-[11px] font-bold leading-none">Google Play</span>
-                        </div>
-                    </a>
-                    <a href="#" class="bg-[#282C3F] text-white rounded-md px-3.5 py-2 flex items-center gap-2 hover:bg-black transition-colors min-w-[125px] justify-center shadow-sm">
-                        <i class="ph-fill ph-apple-logo text-xl"></i>
-                        <div class="flex flex-col items-start">
-                            <span class="text-[7px] uppercase tracking-wider text-gray-300">Download on the</span>
-                            <span class="text-[11px] font-bold leading-none">App Store</span>
-                        </div>
-                    </a>
+    <!-- WhatsApp Modal Simulator -->
+    <div id="whatsapp-modal" class="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-[#EFEAE2] w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl border border-gray-300 flex flex-col">
+            <!-- Header -->
+            <div class="bg-[#075E54] text-white p-4 flex items-center gap-3">
+                <i class="ph-bold ph-arrow-left cursor-pointer" onclick="closeWhatsAppModal()"></i>
+                <div class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm">
+                    👗
                 </div>
-            </div>
-        </div>
-        
-        <div class="border-t border-gray-200 max-w-[1360px] mx-auto pt-6 px-4 flex justify-center items-center">
-            <span class="text-gray-400 text-xs font-medium">
-                © 2024 www.myntra.com. All rights reserved.
-            </span>
-        </div>
-    </footer>
-
-    <!-- ========================================================================= -->
-    <!-- 4. INTERACTIVE WHATSAPP MODAL & SIMULATOR -->
-    <!-- ========================================================================= -->
-    <div id="whatsapp-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl animate-scale">
-            <!-- WhatsApp Chat Header -->
-            <div class="bg-[#075E54] text-white p-4 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-emerald-700 flex items-center justify-center font-bold text-white shadow-inner">
-                        🛍️
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm leading-tight">Fashion Squad (4 Friends)</h4>
-                        <span class="text-[11px] text-emerald-200">Rahul, Tanya, Priya, Sneha</span>
-                    </div>
+                <div class="flex-1">
+                    <h4 class="font-bold text-sm leading-tight">Close Friends (Fashion Poll)</h4>
+                    <p class="text-[10px] text-emerald-200">5 members active</p>
                 </div>
-                <button onclick="closeWhatsAppModal()" class="text-white/80 hover:text-white text-2xl font-bold">×</button>
+                <button onclick="closeWhatsAppModal()" class="text-white hover:text-gray-200 font-bold">✕</button>
             </div>
 
-            <!-- WhatsApp Body -->
-            <div class="bg-[#EFEAE2] p-4 space-y-3 max-h-[380px] overflow-y-auto">
-                <div class="bg-white rounded-lg p-3 shadow-sm text-xs text-gray-800 space-y-2 border border-gray-100">
-                    <p class="font-bold text-[#075E54]">🗳️ Live Poll: "Should I buy this Mango Man Rust Linen Blazer?"</p>
-                    
-                    <div onclick="simulateVote('look1')" class="bg-gray-50 hover:bg-emerald-50 border border-gray-200 rounded p-2 cursor-pointer transition-colors flex justify-between items-center">
-                        <span>1️⃣ <strong>Look 1: Smart Casual</strong> (Olive Shirt + Black Chinos)</span>
-                        <span id="vote-look1" class="font-bold text-emerald-700">3 votes</span>
-                    </div>
-                    
-                    <div onclick="simulateVote('look2')" class="bg-gray-50 hover:bg-emerald-50 border border-gray-200 rounded p-2 cursor-pointer transition-colors flex justify-between items-center">
-                        <span>2️⃣ <strong>Look 2: Weekend Brunch</strong> (Denim + Sneakers)</span>
-                        <span id="vote-look2" class="font-bold text-emerald-700">1 vote</span>
-                    </div>
-
-                    <div onclick="simulateVote('drop')" class="bg-gray-50 hover:bg-red-50 border border-gray-200 rounded p-2 cursor-pointer transition-colors flex justify-between items-center">
-                        <span>❌ <strong>Drop It</strong> (Skip this item)</span>
-                        <span id="vote-drop" class="font-bold text-gray-500">0 votes</span>
+            <!-- Chat Content -->
+            <div class="p-4 space-y-3">
+                <div class="bg-white rounded-2xl p-3.5 shadow-sm text-xs text-[#282C3F]">
+                    <p class="font-bold mb-1">Kartikey created a poll:</p>
+                    <p class="text-gray-600 mb-3">"Hey guys! Thinking of buying this MANGO MAN Rust Linen Blazer. Styled it with my Zara trousers on Myntra StyleSync. Buy or Drop?"</p>
+                    <div class="space-y-2">
+                        <button onclick="simulateVote('look1')" class="w-full text-left p-2 rounded-lg bg-pink-50 hover:bg-pink-100 border border-pink-200 flex justify-between items-center transition-colors">
+                            <span class="font-bold text-myntra-pink">🔥 BUY IT (Sunset Linen Look)</span>
+                            <span id="vote-look1" class="font-bold text-[10px] text-gray-500">4 votes</span>
+                        </button>
+                        <button onclick="simulateVote('look2')" class="w-full text-left p-2 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 flex justify-between items-center transition-colors">
+                            <span class="font-bold text-gray-700">✨ BUY IT (Urban Brunch Look)</span>
+                            <span id="vote-look2" class="font-bold text-[10px] text-gray-500">1 vote</span>
+                        </button>
+                        <button onclick="simulateVote('drop')" class="w-full text-left p-2 rounded-lg bg-gray-50 hover:bg-gray-100 border border-gray-200 flex justify-between items-center transition-colors">
+                            <span class="font-bold text-gray-500">👎 DROP IT</span>
+                            <span id="vote-drop" class="font-bold text-[10px] text-gray-400">0 votes</span>
+                        </button>
                     </div>
                 </div>
 
-                <div id="chat-feedback" class="bg-[#DCF8C6] p-2.5 rounded-lg text-xs text-gray-800 shadow-sm ml-auto max-w-[85%]">
-                    <strong>Priya:</strong> "Look 1 is insane! You already have the matching linen shirt, totally get it 🔥"
+                <div id="chat-feedback" class="bg-emerald-50 text-emerald-800 p-2.5 rounded-xl text-[11px] border border-emerald-200">
+                    <strong>Rahul:</strong> "Look 1 is the winner hands down! Order it now 🔥"
                 </div>
             </div>
 
-            <div class="p-4 bg-white border-t border-gray-100 flex justify-between items-center">
+            <!-- Footer -->
+            <div class="bg-white p-3 flex justify-between items-center border-t border-gray-200">
                 <span class="text-xs text-gray-500">Tap options above to simulate friend votes</span>
                 <button onclick="closeWhatsAppModal()" class="bg-myntra-pink text-white text-xs font-bold px-4 py-2 rounded-md hover:bg-[#E0245E]">
                     Back to Store
@@ -755,11 +782,48 @@
         </div>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- 5. JAVASCRIPT APP STATE CONTROLLER -->
-    <!-- ========================================================================= -->
+    <!-- Footer -->
+    <footer class="bg-[#FAFBFC] border-t border-gray-200 mt-16 py-12">
+        <div class="max-w-[1360px] mx-auto px-4 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-xs text-gray-500 mb-8">
+            <div>
+                <h5 class="font-black text-[#282C3F] mb-3 uppercase tracking-wider">ONLINE SHOPPING</h5>
+                <ul class="space-y-1.5">
+                    <li><a href="#" onclick="navigateTo('pdp'); return false;" class="hover:text-myntra-pink">Men's Linen Collection</a></li>
+                    <li><a href="#" onclick="navigateTo('stylesync'); return false;" class="hover:text-myntra-pink">StyleSync™ AI Studio</a></li>
+                    <li><a href="#" onclick="navigateTo('wishlist'); return false;" class="hover:text-myntra-pink">Smart Closet Inventory</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-black text-[#282C3F] mb-3 uppercase tracking-wider">CUSTOMER POLICIES</h5>
+                <ul class="space-y-1.5">
+                    <li><a href="#" onclick="showToast('Contact Support: 1800-419-3500'); return false;" class="hover:text-myntra-pink">Contact Us</a></li>
+                    <li><a href="#" onclick="showToast('FAQ: All orders support 14-day free returns'); return false;" class="hover:text-myntra-pink">FAQ &amp; Returns</a></li>
+                    <li><a href="#" onclick="showToast('100% genuine products with authenticity tag'); return false;" class="hover:text-myntra-pink">Authenticity Guarantee</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-black text-[#282C3F] mb-3 uppercase tracking-wider">EXPERIENCE MYNTRA APP</h5>
+                <p class="mb-2">Get real-time StyleSync alerts on iOS and Android.</p>
+                <div class="flex gap-2">
+                    <button onclick="showToast('Redirecting to Google Play Store...')" class="bg-[#282C3F] text-white px-3 py-1.5 rounded text-[10px] font-bold">Google Play</button>
+                    <button onclick="showToast('Redirecting to Apple App Store...')" class="bg-[#282C3F] text-white px-3 py-1.5 rounded text-[10px] font-bold">App Store</button>
+                </div>
+            </div>
+            <div>
+                <h5 class="font-black text-[#282C3F] mb-3 uppercase tracking-wider">100% ORIGINAL</h5>
+                <p>Guarantee for all products on myntra.com. Free 14 days return and exchange.</p>
+            </div>
+        </div>
+        <div class="border-t border-gray-200 max-w-[1360px] mx-auto pt-6 text-center text-xs text-gray-400">
+            © 2026 www.myntra.com. All rights reserved. Myntra StyleSync™ Portfolio MVP.
+        </div>
+    </footer>
+
+    <!-- JavaScript Controller -->
     <script>
-        // Navigation Controller
+        let bagCount = 2;
+        let selectedSize = '40';
+
         function navigateTo(viewId) {
             const views = ['homepage', 'pdp', 'wishlist', 'stylesync'];
             views.forEach(v => {
@@ -777,58 +841,115 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Hero Image gallery selector
         function setHeroImage(src) {
             const hero = document.getElementById('pdp-main-image');
             if (hero) hero.src = src;
+            showToast('Angle preview updated!');
         }
 
-        // Size Selector
         function selectSize(btn, size) {
+            selectedSize = size;
             document.querySelectorAll('.size-btn').forEach(b => {
-                b.className = 'size-btn w-12 h-12 rounded-full border border-gray-300 text-sm font-extrabold text-[#282C3F] hover:border-myntra-pink flex flex-col items-center justify-center transition-all relative';
+                b.className = 'size-btn w-12 h-12 rounded-full border border-gray-300 text-sm font-extrabold text-[#282C3F] hover:border-myntra-pink flex flex-col items-center justify-center transition-all';
             });
-            btn.className = 'size-btn w-12 h-12 rounded-full border-2 border-myntra-pink bg-pink-50 text-sm font-extrabold text-myntra-pink flex flex-col items-center justify-center transition-all relative shadow-sm';
-            showToast(`Size ${size} selected`);
+            btn.className = 'size-btn w-12 h-12 rounded-full border-2 border-myntra-pink bg-pink-50 text-sm font-extrabold text-myntra-pink flex flex-col items-center justify-center transition-all shadow-sm';
+            
+            const sizeSpan = document.getElementById('drawer-item-size');
+            if (sizeSpan) sizeSpan.innerText = size;
+            showToast(`Size ${size} selected (Your tailored match)`);
         }
 
-        // Copy Coupon Toast
         function copyCouponCode() {
             navigator.clipboard.writeText('MYNTRASAVE');
-            showToast('Coupon code MYNTRASAVE copied to clipboard!');
+            showToast('🎟️ Coupon MYNTRASAVE copied! -25% applied at checkout.');
         }
 
-        // Add to Bag
-        let bagCount = 2;
         function addToBag() {
             bagCount++;
             const badge = document.getElementById('bag-count');
+            const drawerBadge = document.getElementById('drawer-bag-count');
             if (badge) badge.innerText = bagCount;
-            showToast('Rust Linen Blazer added to your Bag! 🛍️');
+            if (drawerBadge) drawerBadge.innerText = bagCount;
+            showToast(`🛍️ Added Rust Linen Blazer (Size ${selectedSize}) to Bag!`);
         }
 
-        // Toggle Bag Info
-        function toggleBagDrawer() {
-            showToast(`You have ${bagCount} items in your bag. Total: ₹6,498`);
+        function addToWishlist() {
+            const badge = document.getElementById('nav-wl-badge');
+            if (badge) badge.innerText = '2';
+            showToast('❤️ Added to Wishlist! Opening Smart Closet...');
+            setTimeout(() => navigateTo('wishlist'), 500);
         }
 
-        // Toast helper
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            const msgEl = document.getElementById('toast-message');
-            if (toast && msgEl) {
-                msgEl.innerText = msg;
-                toast.classList.remove('translate-y-[-100px]', 'opacity-0');
-                toast.classList.add('translate-y-0', 'opacity-100');
-                setTimeout(() => {
-                    toast.classList.add('translate-y-[-100px]', 'opacity-0');
-                    toast.classList.remove('translate-y-0', 'opacity-100');
-                }, 2800);
+        function checkPincode() {
+            const pin = document.getElementById('pincode-input').value;
+            const res = document.getElementById('pincode-result');
+            if (pin && pin.length >= 5) {
+                res.innerText = `⚡ Fast Delivery to ${pin} by Tomorrow, 5 PM! Free Shipping.`;
+                res.classList.remove('hidden');
+            } else {
+                showToast('Please enter a valid 6-digit Pincode');
             }
         }
 
-        // WhatsApp Modal
-        function openWhatsAppModal() {
+        function handleSearch(e) {
+            if (e.key === 'Enter') {
+                const q = e.target.value;
+                showToast(`🔍 Showing matches for "${q}"`);
+                navigateTo('pdp');
+            }
+        }
+
+        function toggleBagDrawer(show) {
+            const drawer = document.getElementById('bag-drawer');
+            if (drawer) {
+                if (show) drawer.classList.remove('hidden'), drawer.classList.add('flex');
+                else drawer.classList.add('hidden'), drawer.classList.remove('flex');
+            }
+        }
+
+        function toggleProfileModal(show) {
+            const modal = document.getElementById('profile-modal');
+            if (modal) {
+                if (show) modal.classList.remove('hidden'), modal.classList.add('flex');
+                else modal.classList.add('hidden'), modal.classList.remove('flex');
+            }
+        }
+
+        function toggleSizeChart(show) {
+            const modal = document.getElementById('size-chart-modal');
+            if (modal) {
+                if (show) modal.classList.remove('hidden'), modal.classList.add('flex');
+                else modal.classList.add('hidden'), modal.classList.remove('flex');
+            }
+        }
+
+        function openCategoryModal(title, desc) {
+            const modal = document.getElementById('category-modal');
+            document.getElementById('cat-modal-title').innerText = title;
+            document.getElementById('cat-modal-desc').innerText = desc;
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function toggleCategoryModal(show) {
+            const modal = document.getElementById('category-modal');
+            if (modal) {
+                if (show) modal.classList.remove('hidden'), modal.classList.add('flex');
+                else modal.classList.add('hidden'), modal.classList.remove('flex');
+            }
+        }
+
+        function proceedToCheckout() {
+            toggleBagDrawer(false);
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+            }
+            showToast('🎉 Order placed successfully! Tracking link sent to your SMS.');
+        }
+
+        function openWhatsAppModal(look, score) {
             const modal = document.getElementById('whatsapp-modal');
             if (modal) {
                 modal.classList.remove('hidden');
@@ -844,8 +965,7 @@
             }
         }
 
-        // Simulate Votes
-        let votes = { look1: 3, look2: 1, drop: 0 };
+        let votes = { look1: 4, look2: 1, drop: 0 };
         function simulateVote(option) {
             votes[option]++;
             document.getElementById('vote-look1').innerText = `${votes.look1} votes`;
@@ -858,9 +978,23 @@
             } else if (option === 'look2') {
                 feedback.innerHTML = '<strong>Tanya:</strong> "Look 2 with sneakers looks super fresh!"';
             } else {
-                feedback.innerHTML = '<strong>Sneha:</strong> "Maybe wait for the end-of-season sale!"';
+                feedback.innerHTML = '<strong>Sneha:</strong> "Maybe wait for end-of-season sale!"';
             }
             showToast(`Vote registered for ${option.toUpperCase()}!`);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-message');
+            if (toast && msgEl) {
+                msgEl.innerText = msg;
+                toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+                setTimeout(() => {
+                    toast.classList.add('translate-y-[-100px]', 'opacity-0');
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                }, 2800);
+            }
         }
     </script>
 </body>
