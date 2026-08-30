@@ -140,7 +140,34 @@ CUSTOM_CSS = """
         font-weight: 500;
     }
 
-    /* Product Grid Card */
+    /* Product Grid Card & Uniform Image Sizing */
+    [data-testid="stImage"] > img {
+        height: 220px !important;
+        max-height: 220px !important;
+        min-height: 220px !important;
+        width: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+        border-radius: 10px !important;
+        display: block !important;
+    }
+
+    .pdp-gallery-wrap [data-testid="stImage"] > img {
+        height: 480px !important;
+        max-height: 480px !important;
+        min-height: 480px !important;
+    }
+    .look-card-container [data-testid="stImage"] > img {
+        height: 160px !important;
+        max-height: 160px !important;
+        min-height: 160px !important;
+    }
+    .thumb-wrap [data-testid="stImage"] > img {
+        height: 90px !important;
+        max-height: 90px !important;
+        min-height: 90px !important;
+    }
+
     .catalog-item-card {
         background: #FFFFFF;
         border: 1px solid #ECEEF0;
@@ -218,6 +245,15 @@ CUSTOM_CSS = """
     div.stButton > button {
         border-radius: 8px !important;
         font-weight: 800 !important;
+        font-size: 0.8rem !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        max-height: 38px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 8px !important;
+    }
         letter-spacing: 0.3px !important;
         transition: all 0.15s ease-in-out !important;
     }
@@ -389,7 +425,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "rating": "4.7 ★",
         "is_stylesync_eligible": False,
         "tags": "jeans denim high rise wide leg washed pants mango bottomwear women apparel",
-        "img": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&auto=format&fit=crop&q=80"
+        "img": "https://images.unsplash.com/photo-1582552938357-32b906df40cb?w=800&auto=format&fit=crop&q=80"
     },
 
     # 3. Apparel - Kids & Infants
@@ -505,7 +541,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "rating": "4.8 ★",
         "is_stylesync_eligible": False,
         "tags": "running shoes sneakers sports ultraboost adidas men footwear gym trainers",
-        "img": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=800&auto=format&fit=crop&q=80"
+        "img": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&auto=format&fit=crop&q=80"
     },
     {
         "id": "foot_5",
@@ -577,7 +613,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "rating": "4.4 ★",
         "is_stylesync_eligible": False,
         "tags": "serum hyaluronic acid plumping skincare l'oreal loreal paris beauty anti aging hydration",
-        "img": "https://images.unsplash.com/photo-1608248597359-009139828456?w=800&auto=format&fit=crop&q=80"
+        "img": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&auto=format&fit=crop&q=80"
     },
 
     # 6. Accessories & Jewelry
@@ -593,7 +629,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "rating": "4.6 ★",
         "is_stylesync_eligible": False,
         "tags": "watch watches chronograph leather blue dial fossil accessories wrist watch analog",
-        "img": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80"
+        "img": "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=800&auto=format&fit=crop&q=80"
     },
     {
         "id": "acc_2",
@@ -1273,34 +1309,33 @@ def render_catalog_view() -> None:
             with cols[idx]:
                 st.image(item["img"], use_container_width=True)
                 
-                # StyleSync Tag Badge
+                # StyleSync / SubCategory Badge in fixed-height row
                 if item["is_stylesync_eligible"]:
-                    st.markdown(
-                        """
-                        <span style="font-size: 0.68rem; font-weight: 900; background: #FFF0F4; color: #FF3F6C; border: 1px solid #FFD8E4; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
-                            ✨ StyleSync Eligible
-                        </span>
-                        """,
-                        unsafe_allow_html=True
-                    )
+                    badge_html = """
+                    <span style="font-size: 0.68rem; font-weight: 900; background: #FFF0F4; color: #FF3F6C; border: 1px solid #FFD8E4; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
+                        ✨ StyleSync Eligible
+                    </span>
+                    """
                 else:
-                    st.markdown(
-                        f"""
-                        <span style="font-size: 0.68rem; font-weight: 700; background: #F5F5F6; color: #7E818C; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
-                            {item['sub_category']}
-                        </span>
-                        """,
-                        unsafe_allow_html=True
-                    )
+                    badge_html = f"""
+                    <span style="font-size: 0.68rem; font-weight: 700; background: #F5F5F6; color: #7E818C; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
+                        {item['sub_category']}
+                    </span>
+                    """
 
                 st.markdown(
                     f"""
-                    <div style="margin-top: 4px;">
-                        <div style="font-weight: 900; font-size: 0.82rem; color: #282C3F; text-transform: uppercase;">{item['brand']}</div>
-                        <div style="font-size: 0.8rem; color: #535766; font-weight: 500; height: 38px; overflow: hidden; text-overflow: ellipsis; line-height: 1.25; margin-top: 2px;">
+                    <div style="margin-top: 6px;">
+                        <div style="height: 24px; display: flex; align-items: center;">
+                            {badge_html}
+                        </div>
+                        <div style="font-weight: 900; font-size: 0.82rem; color: #282C3F; text-transform: uppercase; height: 18px; line-height: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px;">
+                            {item['brand']}
+                        </div>
+                        <div style="font-size: 0.8rem; color: #535766; font-weight: 500; height: 36px; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-top: 2px;">
                             {item['name']}
                         </div>
-                        <div style="display: flex; align-items: baseline; gap: 6px; margin: 4px 0 6px 0;">
+                        <div style="display: flex; align-items: baseline; gap: 6px; height: 22px; margin: 4px 0 8px 0;">
                             <span style="font-weight: 900; font-size: 0.92rem; color: #282C3F;">{item['price']}</span>
                             <span style="font-size: 0.75rem; color: #94969F; text-decoration: line-through;">{item['mrp']}</span>
                             <span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C;">{item['discount']}</span>
