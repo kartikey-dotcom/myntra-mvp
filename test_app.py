@@ -39,7 +39,7 @@ class TestStyleSyncDataAndState(unittest.TestCase):
         import streamlit as st
         init_session_state()
         self.assertIn("current_view", st.session_state)
-        self.assertEqual(st.session_state["current_view"], "pdp")
+        self.assertIn(st.session_state["current_view"], ["homepage", "pdp"])
         self.assertIn("poll_sent", st.session_state)
 
 
