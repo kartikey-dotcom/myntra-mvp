@@ -883,49 +883,49 @@ def view_product_pdp(item: CatalogItem) -> None:
 
 # Synonym & Keyword Matcher for High-Precision Search across ALL categories
 SYNONYMS = {
-    "jeans": ["jeans", "denim", "pants", "trousers", "bottomwear", "511", "501"],
-    "jean": ["jeans", "denim", "pants", "trousers", "bottomwear"],
-    "denim": ["denim", "jeans", "jacket", "pants"],
-    "shirt": ["shirt", "top", "kurta", "tee", "t-shirt", "mandarin", "linen"],
-    "tshirt": ["t-shirt", "tee", "top", "graphic", "crewneck"],
-    "tee": ["t-shirt", "tee", "top", "graphic", "crewneck"],
-    "blazer": ["blazer", "jacket", "suit", "formal", "coat", "linen", "mango"],
-    "jacket": ["jacket", "blazer", "coat", "trucker", "denim"],
-    "pants": ["trousers", "pants", "jeans", "chinos", "bottomwear"],
-    "trousers": ["trousers", "pants", "chinos", "formal"],
-    "shoes": ["shoes", "sneakers", "sneaker", "heels", "boots", "footwear", "running", "trainers"],
-    "sneaker": ["sneakers", "sneaker", "shoes", "court", "running", "air max", "caven", "nike", "puma", "adidas"],
-    "sneakers": ["sneakers", "sneaker", "shoes", "court", "running", "air max", "caven", "nike", "puma", "adidas"],
-    "running": ["running", "shoes", "sneakers", "sports", "ultraboost", "air max", "adidas", "nike"],
-    "heels": ["heels", "sandals", "block heeled", "footwear", "carlton london"],
-    "sandals": ["heels", "sandals", "block heeled", "footwear"],
-    "boots": ["boots", "chelsea", "high-top", "footwear", "roadster"],
-    "watch": ["watch", "watches", "chronograph", "fossil", "dial", "leather watch", "analog"],
-    "watches": ["watch", "watches", "chronograph", "fossil", "dial", "leather watch"],
-    "sunglasses": ["sunglasses", "aviator", "ray-ban", "rayban", "eyewear", "shades", "glasses"],
+    "jeans": ["jeans", "denim", "511", "501"],
+    "jean": ["jeans", "denim"],
+    "denim": ["denim", "jeans"],
+    "shirt": ["shirt", "mandarin collar", "formal shirt", "casual shirt"],
+    "tshirt": ["t-shirt", "tee", "graphic tee", "crewneck"],
+    "tee": ["t-shirt", "tee", "graphic tee"],
+    "blazer": ["blazer", "suit", "jacket", "coat", "mango man"],
+    "jacket": ["jacket", "blazer", "coat", "trucker"],
+    "trousers": ["trousers", "pleated trousers", "formal trousers", "chinos"],
+    "pants": ["trousers", "pants", "chinos"],
+    "shoes": ["shoes", "sneakers", "sneaker", "heels", "boots", "footwear", "running"],
+    "sneaker": ["sneakers", "sneaker", "air max", "caven", "court", "ultraboost"],
+    "sneakers": ["sneakers", "sneaker", "air max", "caven", "court", "ultraboost"],
+    "running": ["running shoes", "ultraboost", "air max"],
+    "heels": ["heels", "sandals", "block heeled", "carlton london"],
+    "sandals": ["heels", "sandals", "block heeled"],
+    "boots": ["boots", "chelsea", "high-top"],
+    "watch": ["watch", "watches", "chronograph", "fossil", "dial"],
+    "watches": ["watch", "watches", "chronograph", "fossil"],
+    "sunglasses": ["sunglasses", "aviator", "ray-ban", "rayban", "eyewear", "shades"],
     "shades": ["sunglasses", "aviator", "ray-ban", "eyewear", "shades"],
-    "perfume": ["perfume", "fragrance", "edp", "scent", "armaf", "cologne", "spray"],
+    "perfume": ["perfume", "fragrance", "edp", "scent", "armaf", "cologne"],
     "fragrance": ["fragrance", "perfume", "edp", "scent", "armaf", "cologne"],
-    "serum": ["serum", "niacinamide", "hyaluronic", "skincare", "minimalist", "l'oreal", "face"],
-    "skincare": ["serum", "niacinamide", "hyaluronic", "skincare", "minimalist", "l'oreal", "face"],
-    "lipstick": ["lipstick", "ruby woo", "matte", "mac", "makeup", "lips", "cosmetics"],
-    "makeup": ["lipstick", "ruby woo", "matte", "mac", "makeup", "cosmetics"],
-    "dress": ["dress", "frock", "kurti", "kurta", "maxi", "wrap", "anarkali", "gown"],
-    "kurti": ["kurti", "kurta", "ethnic", "anarkali", "silk", "biba", "libas", "traditional"],
-    "kurta": ["kurti", "kurta", "ethnic", "anarkali", "silk", "biba", "libas", "traditional"],
-    "onesie": ["onesie", "infant", "baby", "romper", "mothercare", "newborn"],
-    "baby": ["onesie", "infant", "baby", "romper", "mothercare", "carter's", "kids"],
-    "kids": ["kids", "boys", "girls", "infant", "baby", "tshirt", "frock", "onesie", "dungaree"],
-    "bedsheet": ["bed sheet", "bedsheet", "bedding", "cotton", "linen", "bombay dyeing", "mattress"],
-    "sheet": ["bed sheet", "bedsheet", "bedding", "cotton", "bombay dyeing"],
-    "bedding": ["bed sheet", "bedsheet", "bedding", "cotton", "bombay dyeing"],
-    "vase": ["vase", "ceramic", "fluted", "decor", "home centre", "pottery", "flower vase"],
+    "serum": ["serum", "niacinamide", "hyaluronic", "skincare", "clarifying"],
+    "skincare": ["serum", "niacinamide", "hyaluronic", "skincare"],
+    "lipstick": ["lipstick", "ruby woo", "matte lipstick", "lip color"],
+    "makeup": ["lipstick", "ruby woo", "makeup"],
+    "dress": ["dress", "frock", "maxi dress", "wrap dress", "gown"],
+    "kurti": ["kurti", "kurta", "anarkali", "ethnic", "biba", "libas"],
+    "kurta": ["kurti", "kurta", "anarkali", "ethnic", "biba", "libas"],
+    "onesie": ["onesie", "infant onesie", "baby romper", "mothercare"],
+    "baby": ["onesie", "infant", "baby romper", "mothercare", "carter's"],
+    "kids": ["kids", "boys", "girls", "infant", "onesie", "dungaree", "frock"],
+    "bedsheet": ["bed sheet", "bedsheet", "bedding", "bed cover", "bombay dyeing", "mattress cover"],
+    "sheet": ["bed sheet", "bedsheet", "bedding"],
+    "bedding": ["bed sheet", "bedsheet", "bedding"],
+    "vase": ["vase", "flower vase", "fluted vase", "ceramic vase", "home centre"],
     "decor": ["vase", "decor", "cushion", "diffuser", "home centre", "d'decor"],
-    "cushion": ["cushion", "cushion covers", "velvet", "furnishing", "d'decor", "pillow"],
-    "diffuser": ["diffuser", "aroma", "essential oil", "fragrance", "puresource"],
+    "cushion": ["cushion", "cushion covers", "pillow cover", "d'decor"],
+    "diffuser": ["diffuser", "aroma diffuser", "essential oil", "puresource"],
     "bag": ["bag", "handbag", "satchel", "purse", "tote", "caprese"],
     "handbag": ["bag", "handbag", "satchel", "purse", "tote", "caprese"],
-    "belt": ["belt", "leather belt", "reversible", "tommy hilfiger"]
+    "belt": ["belt", "leather belt", "reversible belt", "tommy hilfiger"]
 }
 
 def render_top_navbar() -> None:
@@ -1304,15 +1304,17 @@ def render_catalog_view() -> None:
         cols = st.columns(num_cols)
         for idx, item in enumerate(row_items):
             with cols[idx]:
-                st.image(item["img"], use_container_width=True)
-                
                 # StyleSync / SubCategory Badge in fixed-height row
                 if item["is_stylesync_eligible"]:
                     badge_html = '<span style="font-size: 0.68rem; font-weight: 900; background: #FFF0F4; color: #FF3F6C; border: 1px solid #FFD8E4; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">✨ StyleSync Eligible</span>'
                 else:
                     badge_html = f'<span style="font-size: 0.68rem; font-weight: 700; background: #F5F5F6; color: #7E818C; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">{item["sub_category"]}</span>'
 
+                img_html = f'<img src="{item["img"]}" style="width: 100%; height: 220px; max-height: 220px; min-height: 220px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />'
+
                 card_html = (
+                    f'<div>'
+                    f'{img_html}'
                     f'<div style="margin-top: 6px;">'
                     f'<div style="height: 24px; display: flex; align-items: center;">{badge_html}</div>'
                     f'<div style="font-weight: 900; font-size: 0.82rem; color: #282C3F; text-transform: uppercase; height: 18px; line-height: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px;">{item["brand"]}</div>'
@@ -1321,7 +1323,7 @@ def render_catalog_view() -> None:
                     f'<span style="font-weight: 900; font-size: 0.92rem; color: #282C3F;">{item["price"]}</span>'
                     f'<span style="font-size: 0.75rem; color: #94969F; text-decoration: line-through;">{item["mrp"]}</span>'
                     f'<span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C;">{item["discount"]}</span>'
-                    f'</div></div>'
+                    f'</div></div></div>'
                 )
                 st.markdown(card_html, unsafe_allow_html=True)
                 
