@@ -259,6 +259,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(30% OFF)",
         "rating": "4.4 ★",
         "is_stylesync_eligible": True,
+        "tags": "blazer jacket linen formal suit coat rust mango",
         "img": "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -272,6 +273,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(20% OFF)",
         "rating": "4.3 ★",
         "is_stylesync_eligible": False,
+        "tags": "shirt linen casual tops white cotton",
         "img": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -285,11 +287,12 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(25% OFF)",
         "rating": "4.5 ★",
         "is_stylesync_eligible": False,
+        "tags": "trousers pants formal tailored pleated black zara bottomwear",
         "img": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&auto=format&fit=crop&q=80"
     },
     {
         "id": "men_4",
-        "name": "511 Slim Fit Raw Indigo Denim",
+        "name": "511 Slim Fit Raw Indigo Denim Jeans",
         "brand": "LEVIS",
         "master_category": "Apparel",
         "sub_category": "Men",
@@ -298,6 +301,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(30% OFF)",
         "rating": "4.6 ★",
         "is_stylesync_eligible": False,
+        "tags": "jeans denim pants slim fit 511 levis indigo bottomwear",
         "img": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -311,6 +315,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(35% OFF)",
         "rating": "4.1 ★",
         "is_stylesync_eligible": False,
+        "tags": "shirt casual mandarin collar olive roadster",
         "img": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80"
     },
 
@@ -326,6 +331,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(40% OFF)",
         "rating": "4.6 ★",
         "is_stylesync_eligible": False,
+        "tags": "kurta kurti ethnic anarkali biba dress suit embroidery",
         "img": "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -339,6 +345,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(28% OFF)",
         "rating": "4.4 ★",
         "is_stylesync_eligible": False,
+        "tags": "dress maxi floral wrap h&m summer gown",
         "img": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -352,6 +359,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(40% OFF)",
         "rating": "4.5 ★",
         "is_stylesync_eligible": False,
+        "tags": "kurti kurta silk ethnic festive libas",
         "img": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -365,20 +373,22 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(30% OFF)",
         "rating": "4.3 ★",
         "is_stylesync_eligible": False,
+        "tags": "lounge loungewear co-ord set sleepwear marks & spencer",
         "img": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80"
     },
     {
         "id": "women_5",
-        "name": "Oversized Denim Trucker Jacket",
+        "name": "High-Rise Wide Leg Washed Denim Jeans",
         "brand": "MANGO",
         "master_category": "Apparel",
         "sub_category": "Women",
-        "price": "₹3,990",
-        "mrp": "₹5,990",
-        "discount": "(33% OFF)",
+        "price": "₹3,590",
+        "mrp": "₹4,990",
+        "discount": "(28% OFF)",
         "rating": "4.7 ★",
         "is_stylesync_eligible": False,
-        "img": "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80"
+        "tags": "jeans denim high rise wide leg washed pants mango bottomwear",
+        "img": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&auto=format&fit=crop&q=80"
     },
 
     # 3. Apparel - Kids & Infants
@@ -809,12 +819,42 @@ def view_product_pdp(item: CatalogItem) -> None:
 # 4. TOP BRAND NAVIGATION BAR
 # ==============================================================================
 
+# Synonym & Keyword Matcher for High-Precision Search
+SYNONYMS = {
+    "jeans": ["jeans", "denim", "pants", "trousers", "bottomwear", "511", "501"],
+    "jean": ["jeans", "denim", "pants", "trousers", "bottomwear"],
+    "denim": ["denim", "jeans", "jacket", "pants"],
+    "shirt": ["shirt", "top", "kurta", "tee", "t-shirt", "mandarin", "linen"],
+    "tshirt": ["t-shirt", "tee", "top", "graphic", "crewneck"],
+    "blazer": ["blazer", "jacket", "suit", "formal", "coat", "linen", "mango"],
+    "jacket": ["jacket", "blazer", "coat", "trucker", "denim"],
+    "shoes": ["shoes", "sneakers", "sneaker", "heels", "boots", "footwear", "running"],
+    "sneaker": ["sneakers", "sneaker", "shoes", "court", "running", "air max", "caven", "nike", "puma"],
+    "sneakers": ["sneakers", "sneaker", "shoes", "court", "running", "air max", "caven", "nike", "puma"],
+    "heels": ["heels", "sandals", "block heeled", "footwear"],
+    "boots": ["boots", "chelsea", "high-top", "footwear"],
+    "watch": ["watch", "chronograph", "fossil", "dial", "leather watch"],
+    "sunglasses": ["sunglasses", "aviator", "ray-ban", "eyewear"],
+    "perfume": ["perfume", "fragrance", "edp", "scent", "armaf"],
+    "fragrance": ["fragrance", "perfume", "edp", "scent", "armaf"],
+    "serum": ["serum", "niacinamide", "hyaluronic", "skincare", "minimalist", "l'oreal"],
+    "lipstick": ["lipstick", "ruby woo", "matte", "mac", "makeup"],
+    "dress": ["dress", "frock", "kurti", "kurta", "maxi", "wrap", "anarkali"],
+    "kurti": ["kurti", "kurta", "ethnic", "anarkali", "silk", "biba", "libas"],
+    "bedsheet": ["bed sheet", "bedsheet", "bedding", "cotton", "linen", "bombay dyeing"],
+    "sheet": ["bed sheet", "bedsheet", "bedding", "cotton", "bombay dyeing"],
+    "vase": ["vase", "ceramic", "fluted", "decor", "home centre"],
+    "cushion": ["cushion", "cushion covers", "velvet", "furnishing", "d'decor"],
+    "bag": ["bag", "handbag", "satchel", "purse", "tote", "caprese"],
+    "belt": ["belt", "leather belt", "reversible", "tommy hilfiger"]
+}
+
 def render_top_navbar() -> None:
     curr = st.session_state.get("current_view", "catalog")
     bag_num = st.session_state.get("bag_count", 2)
     wl_num = st.session_state.get("wishlist_count", 1)
 
-    nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([2.5, 4.5, 3, 2.5])
+    nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([2.2, 4.2, 3.4, 2.2])
     
     with nav_col1:
         st.markdown(
@@ -838,46 +878,55 @@ def render_top_navbar() -> None:
     with nav_col2:
         b1, b2, b3, b4, b5 = st.columns(5)
         with b1:
-            if st.button("CATALOG", key="nav_cat_tab_s", use_container_width=True):
+            if st.button("CATALOG", key="nav_cat_tab", use_container_width=True):
                 set_view("catalog")
         with b2:
-            if st.button("HOME", key="nav_home_s", use_container_width=True):
+            if st.button("HOME", key="nav_home", use_container_width=True):
                 set_view("homepage")
         with b3:
-            if st.button("STUDIO ✨", key="nav_studio_s", use_container_width=True):
+            if st.button("STUDIO ✨", key="nav_studio", use_container_width=True):
                 set_view("stylesync")
         with b4:
-            if st.button("WISHLIST", key="nav_wl_tab_s", use_container_width=True):
+            if st.button("WISHLIST", key="nav_wl_tab", use_container_width=True):
                 set_view("wishlist")
         with b5:
-            if st.button("BAG", key="nav_bag_tab_s", use_container_width=True):
+            if st.button("BAG", key="nav_bag_tab", use_container_width=True):
                 st.session_state["show_bag_drawer"] = not st.session_state["show_bag_drawer"]
                 st.rerun()
 
     with nav_col3:
-        quick_search = st.text_input(
-            "Quick Search",
-            value=st.session_state.get("search_query", ""),
-            placeholder="🔍 Search across fashion, beauty, home...",
-            label_visibility="collapsed",
-            key="top_quick_search_s"
-        )
+        sc1, sc2 = st.columns([3.5, 1])
+        with sc1:
+            quick_search = st.text_input(
+                "Quick Search",
+                value=st.session_state.get("search_query", ""),
+                placeholder="🔍 Search jeans, blazer, shoes...",
+                label_visibility="collapsed",
+                key="top_quick_search"
+            )
+        with sc2:
+            if st.button("Search", key="top_search_btn", type="primary", use_container_width=True):
+                st.session_state["search_query"] = quick_search
+                st.session_state["selected_category_filter"] = "All"
+                st.session_state["current_view"] = "catalog"
+                st.rerun()
         if quick_search != st.session_state.get("search_query", ""):
             st.session_state["search_query"] = quick_search
+            st.session_state["selected_category_filter"] = "All"
             st.session_state["current_view"] = "catalog"
             st.rerun()
 
     with nav_col4:
         ic1, ic2, ic3 = st.columns(3)
         with ic1:
-            if st.button("👤 Profile", key="top_prof_btn_s", use_container_width=True):
+            if st.button("👤 Profile", key="top_prof_btn", use_container_width=True):
                 st.session_state["show_profile_modal"] = not st.session_state["show_profile_modal"]
                 st.rerun()
         with ic2:
-            if st.button(f"❤️ ({wl_num})", key="top_wl_btn_s", use_container_width=True):
+            if st.button(f"❤️ ({wl_num})", key="top_wl_btn", use_container_width=True):
                 set_view("wishlist")
         with ic3:
-            if st.button(f"🛍️ ({bag_num})", key="top_bag_btn_s", use_container_width=True):
+            if st.button(f"🛍️ ({bag_num})", key="top_bag_btn", use_container_width=True):
                 st.session_state["show_bag_drawer"] = not st.session_state["show_bag_drawer"]
                 st.rerun()
 
@@ -885,19 +934,19 @@ def render_top_navbar() -> None:
     st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
     step1, step2, step3, step4, step5 = st.columns(5)
     with step1:
-        if st.button("🔍 1. Master Catalog & Search", key="step1_s", use_container_width=True, type="primary" if curr == "catalog" else "secondary"):
+        if st.button("🔍 1. Master Catalog & Search", use_container_width=True, type="primary" if curr == "catalog" else "secondary"):
             set_view("catalog")
     with step2:
-        if st.button("🏠 Storefront Hero", key="step2_s", use_container_width=True, type="primary" if curr == "homepage" else "secondary"):
+        if st.button("🏠 Storefront Hero", use_container_width=True, type="primary" if curr == "homepage" else "secondary"):
             set_view("homepage")
     with step3:
-        if st.button("🛍️ 2. Product Display (PDP)", key="step3_s", use_container_width=True, type="primary" if curr == "pdp" else "secondary"):
+        if st.button("🛍️ 2. Product Display (PDP)", use_container_width=True, type="primary" if curr == "pdp" else "secondary"):
             set_view("pdp")
     with step4:
-        if st.button("❤️ 3. Wishlist & Closet", key="step4_s", use_container_width=True, type="primary" if curr == "wishlist" else "secondary"):
+        if st.button("❤️ 3. Wishlist & Closet", use_container_width=True, type="primary" if curr == "wishlist" else "secondary"):
             set_view("wishlist")
     with step5:
-        if st.button("✨ 4. StyleSync Studio", key="step5_s", use_container_width=True, type="primary" if curr == "stylesync" else "secondary"):
+        if st.button("✨ 4. StyleSync Studio", use_container_width=True, type="primary" if curr == "stylesync" else "secondary"):
             set_view("stylesync")
     
     st.markdown("<hr style='margin: 0.8rem 0 1.2rem 0; border: none; border-top: 1px solid #ECEEF0;'>", unsafe_allow_html=True)
@@ -942,13 +991,13 @@ def render_drawers_and_modals() -> None:
         )
         b_c1, b_c2 = st.columns(2)
         with b_c1:
-            if st.button("💳 Proceed to Checkout Now", key="drawer_checkout_btn_s", type="primary", use_container_width=True):
+            if st.button("💳 Proceed to Checkout Now", key="drawer_checkout_btn", type="primary", use_container_width=True):
                 st.balloons()
                 st.toast("🎉 Order placed successfully! Delivery scheduled by tomorrow.")
                 st.session_state["show_bag_drawer"] = False
                 st.rerun()
         with b_c2:
-            if st.button("✖️ Close Bag", key="close_bag_btn_s", use_container_width=True):
+            if st.button("✖️ Close Bag", key="close_bag_btn", use_container_width=True):
                 st.session_state["show_bag_drawer"] = False
                 st.rerun()
 
@@ -977,7 +1026,7 @@ def render_drawers_and_modals() -> None:
             """,
             unsafe_allow_html=True
         )
-        if st.button("✖️ Close Profile", key="close_prof_btn_s", use_container_width=True):
+        if st.button("✖️ Close Profile", key="close_prof_btn", use_container_width=True):
             st.session_state["show_profile_modal"] = False
             st.rerun()
 
@@ -999,20 +1048,59 @@ def render_catalog_view() -> None:
         unsafe_allow_html=True
     )
 
-    # 1. Top Wide Free-Text Search Bar
-    search_input = st.text_input(
-        "Free-Text Catalog Search",
-        value=st.session_state.get("search_query", ""),
-        placeholder="🔍 Search across fashion, beauty, home, and more (e.g. linen blazer, sneakers, kurti, watch)...",
-        label_visibility="collapsed",
-        key="main_catalog_search_s"
-    )
+    # 1. Top Wide Free-Text Search Bar with Search and Clear Buttons
+    sb_col1, sb_col2, sb_col3 = st.columns([5, 1.2, 1])
+    with sb_col1:
+        search_input = st.text_input(
+            "Free-Text Catalog Search",
+            value=st.session_state.get("search_query", ""),
+            placeholder="🔍 Search across fashion, beauty, home (e.g. jeans, linen blazer, sneakers, kurti, watch)...",
+            label_visibility="collapsed",
+            key="main_catalog_search"
+        )
+    with sb_col2:
+        if st.button("🔍 Search", key="catalog_search_submit_btn", type="primary", use_container_width=True):
+            st.session_state["search_query"] = search_input
+            st.session_state["selected_category_filter"] = "All"
+            st.rerun()
+    with sb_col3:
+        if st.button("✖ Clear", key="catalog_search_clear_btn", use_container_width=True):
+            st.session_state["search_query"] = ""
+            st.session_state["selected_category_filter"] = "All"
+            st.rerun()
+
     if search_input != st.session_state.get("search_query", ""):
         st.session_state["search_query"] = search_input
         st.rerun()
 
+    # Trending Search Keywords Chips
+    st.markdown(
+        """
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.78rem; font-weight: 700; color: #7E818C; margin: 4px 0 8px 0;">
+            <span>🔥 Trending Searches:</span>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    t_c1, t_c2, t_c3, t_c4, t_c5, t_c6, t_c7 = st.columns(7)
+    trend_list = [
+        ("👖 Jeans", "jeans"),
+        ("🧥 Blazer", "blazer"),
+        ("👟 Sneakers", "sneakers"),
+        ("👗 Kurti", "kurti"),
+        ("⌚ Watch", "watch"),
+        ("🌸 Fragrance", "fragrance"),
+        ("🛏️ Bedsheet", "bedsheet"),
+    ]
+    for idx, (label, val) in enumerate(trend_list):
+        with [t_c1, t_c2, t_c3, t_c4, t_c5, t_c6, t_c7][idx]:
+            if st.button(label, key=f"trend_chip_{val}", use_container_width=True):
+                st.session_state["search_query"] = val
+                st.session_state["selected_category_filter"] = "All"
+                st.rerun()
+
     # 2. Horizontal Category Filter Chips
-    st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 6px;'></div>", unsafe_allow_html=True)
     categories = ["All", "Apparel", "Footwear", "Beauty", "Accessories", "Home"]
     current_cat = st.session_state.get("selected_category_filter", "All")
     
@@ -1022,7 +1110,7 @@ def render_catalog_view() -> None:
             is_active = (current_cat == cat_name)
             if st.button(
                 f"{'⭐ ' if cat_name == 'All' else ''}{cat_name}",
-                key=f"chip_s_{cat_name}",
+                key=f"chip_{cat_name}",
                 type="primary" if is_active else "secondary",
                 use_container_width=True
             ):
@@ -1031,21 +1119,41 @@ def render_catalog_view() -> None:
 
     st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
 
-    # 3. Filtering Engine
+    # 3. High-Precision Filtering Engine with Synonym Expansion
     query = st.session_state.get("search_query", "").strip().lower()
     selected_filter = st.session_state.get("selected_category_filter", "All")
 
-    filtered_items: List[CatalogItem] = []
-    for item in MICRO_CATALOG:
-        # Category check
-        if selected_filter != "All" and item["master_category"] != selected_filter:
-            continue
-        # Search text check
-        if query:
-            match_str = f"{item['name']} {item['brand']} {item['master_category']} {item['sub_category']}".lower()
-            if query not in match_str:
+    # Expand query terms with synonyms
+    search_terms = [query] if query else []
+    if query:
+        for syn_key, syn_vals in SYNONYMS.items():
+            if syn_key in query:
+                search_terms.extend(syn_vals)
+
+    def filter_catalog(target_filter: str) -> List[CatalogItem]:
+        results = []
+        for item in MICRO_CATALOG:
+            # Category filter check
+            if target_filter != "All" and item["master_category"] != target_filter:
                 continue
-        filtered_items.append(item)
+            # Search query check
+            if query:
+                item_text = f"{item['name']} {item['brand']} {item['master_category']} {item['sub_category']} {item.get('tags', '')}".lower()
+                if not any(term in item_text for term in search_terms):
+                    continue
+            results.append(item)
+        return results
+
+    filtered_items = filter_catalog(selected_filter)
+    
+    # Auto-fallback: if filtered category had 0 results but query exists in another category, search 'All'
+    if not filtered_items and query and selected_filter != "All":
+        fallback_items = filter_catalog("All")
+        if fallback_items:
+            filtered_items = fallback_items
+            st.session_state["selected_category_filter"] = "All"
+            selected_filter = "All"
+            st.toast(f"Switched category to 'All' to show {len(filtered_items)} matches for '{query}'!")
 
     # Results Header
     st.markdown(
@@ -1058,8 +1166,8 @@ def render_catalog_view() -> None:
     )
 
     if not filtered_items:
-        st.info("No matching products found. Try clearing your search query or selecting 'All' categories.")
-        if st.button("Reset Search Filters", key="reset_filters_btn_s"):
+        st.warning(f"No products found matching '{query}' in '{selected_filter}'. Try searching for 'jeans', 'linen blazer', 'sneakers', or 'watch'.")
+        if st.button("Reset Search Filters", key="reset_filters_btn"):
             st.session_state["search_query"] = ""
             st.session_state["selected_category_filter"] = "All"
             st.rerun()
@@ -1111,7 +1219,7 @@ def render_catalog_view() -> None:
                     """,
                     unsafe_allow_html=True
                 )
-                if st.button("👉 View Product", key=f"view_prod_s_{item['id']}", use_container_width=True):
+                if st.button("👉 View Product", key=f"view_prod_{item['id']}", use_container_width=True):
                     view_product_pdp(item)
 
 
@@ -1138,7 +1246,7 @@ def render_homepage_view() -> None:
             unsafe_allow_html=True
         )
     with t_col2:
-        if st.button("📋 Copy Code 'MYNTRASAVE'", key="copy_coupon_btn_h_s", use_container_width=True):
+        if st.button("📋 Copy Code 'MYNTRASAVE'", key="copy_coupon_btn_h", use_container_width=True):
             st.toast("🎟️ Coupon 'MYNTRASAVE' applied to your cart! 25% OFF active.")
 
     # 2. Linen Collection Hero Banner
@@ -1170,13 +1278,13 @@ def render_homepage_view() -> None:
         )
         c_btn1, c_btn2, c_btn3 = st.columns(3)
         with c_btn1:
-            if st.button("🔥 EXPLORE NOW", key="hero_explore_btn_h_s", type="primary", use_container_width=True):
+            if st.button("🔥 EXPLORE NOW", key="hero_explore_btn_h", type="primary", use_container_width=True):
                 view_product_pdp(MICRO_CATALOG[0])
         with c_btn2:
-            if st.button("✨ Style with Closet", key="hero_stylesync_btn_h_s", use_container_width=True):
+            if st.button("✨ Style with Closet", key="hero_stylesync_btn_h", use_container_width=True):
                 set_view("stylesync")
         with c_btn3:
-            if st.button("🔍 Search Catalog", key="hero_catalog_btn_s", use_container_width=True):
+            if st.button("🔍 Search Catalog", key="hero_catalog_btn", use_container_width=True):
                 set_view("catalog")
 
     # 3. Shop by Category Grid
@@ -1196,28 +1304,28 @@ def render_homepage_view() -> None:
     with cat1:
         st.image(IMAGE_MEN_CAT, use_container_width=True)
         st.markdown("<h4 style='margin: 6px 0 2px 0; font-weight: 800;'>MEN'S CASUALS</h4><p style='color: #7E818C; font-size: 0.8rem;'>Linens, Polos & Trousers</p>", unsafe_allow_html=True)
-        if st.button("Browse Apparel →", key="cat_men_btn_h_s", use_container_width=True):
+        if st.button("Browse Apparel →", key="cat_men_btn_h", use_container_width=True):
             st.session_state["selected_category_filter"] = "Apparel"
             set_view("catalog")
 
     with cat2:
         st.image(IMAGE_WOMEN_CAT, use_container_width=True)
         st.markdown("<h4 style='margin: 6px 0 2px 0; font-weight: 800;'>WOMEN'S WEAR</h4><p style='color: #7E818C; font-size: 0.8rem;'>Dresses, Tops & Coordinates</p>", unsafe_allow_html=True)
-        if st.button("Browse Women's →", key="cat_women_btn_h_s", use_container_width=True):
+        if st.button("Browse Women's →", key="cat_women_btn_h", use_container_width=True):
             st.session_state["selected_category_filter"] = "Apparel"
             set_view("catalog")
 
     with cat3:
         st.image(IMAGE_BEAUTY_CAT, use_container_width=True)
         st.markdown("<h4 style='margin: 6px 0 2px 0; font-weight: 800;'>BEAUTY & GROOMING</h4><p style='color: #7E818C; font-size: 0.8rem;'>Fragrance, Skincare & Grooming</p>", unsafe_allow_html=True)
-        if st.button("Browse Beauty →", key="cat_beauty_btn_h_s", use_container_width=True):
+        if st.button("Browse Beauty →", key="cat_beauty_btn_h", use_container_width=True):
             st.session_state["selected_category_filter"] = "Beauty"
             set_view("catalog")
 
     with cat4:
         st.image(IMAGE_HOME_CAT, use_container_width=True)
         st.markdown("<h4 style='margin: 6px 0 2px 0; font-weight: 800;'>HOME LIVING</h4><p style='color: #7E818C; font-size: 0.8rem;'>Modern Decor & Bedroom Accents</p>", unsafe_allow_html=True)
-        if st.button("Browse Home →", key="cat_home_btn_h_s", use_container_width=True):
+        if st.button("Browse Home →", key="cat_home_btn_h", use_container_width=True):
             st.session_state["selected_category_filter"] = "Home"
             set_view("catalog")
 
@@ -1232,7 +1340,7 @@ def render_pdp_view() -> None:
     # Header Back Button
     b_col1, b_col2 = st.columns([1.5, 4])
     with b_col1:
-        if st.button("← Back to Catalog", key="pdp_back_catalog_btn_s", use_container_width=True):
+        if st.button("← Back to Catalog", key="pdp_back_catalog_btn", use_container_width=True):
             set_view("catalog")
     with b_col2:
         st.markdown(
@@ -1307,7 +1415,7 @@ def render_pdp_view() -> None:
                 """,
                 unsafe_allow_html=True
             )
-            if st.button("✨ Launch StyleSync™ AI Studio & WhatsApp Poll →", key="pdp_stylesync_cta_btn_s", type="primary", use_container_width=True):
+            if st.button("✨ Launch StyleSync™ AI Studio & WhatsApp Poll →", key="pdp_stylesync_cta_btn", type="primary", use_container_width=True):
                 st.toast("Opening StyleSync Wardrobe Matcher...")
                 set_view("stylesync")
 
@@ -1319,31 +1427,31 @@ def render_pdp_view() -> None:
             s1, s2, s3, s4 = st.columns(4)
             curr_size = st.session_state.get("selected_size", "40")
             with s1:
-                if st.button("38 / S", key="p_sz_38_s", type="primary" if curr_size == "38" else "secondary", use_container_width=True):
+                if st.button("38 / S", key="p_sz_38", type="primary" if curr_size == "38" else "secondary", use_container_width=True):
                     st.session_state["selected_size"] = "38"
                     st.rerun()
             with s2:
-                if st.button("40 / M ⭐", key="p_sz_40_s", type="primary" if curr_size == "40" else "secondary", use_container_width=True):
+                if st.button("40 / M ⭐", key="p_sz_40", type="primary" if curr_size == "40" else "secondary", use_container_width=True):
                     st.session_state["selected_size"] = "40"
                     st.rerun()
             with s3:
-                if st.button("42 / L", key="p_sz_42_s", type="primary" if curr_size == "42" else "secondary", use_container_width=True):
+                if st.button("42 / L", key="p_sz_42", type="primary" if curr_size == "42" else "secondary", use_container_width=True):
                     st.session_state["selected_size"] = "42"
                     st.rerun()
             with s4:
-                if st.button("44 / XL", key="p_sz_44_s", type="primary" if curr_size == "44" else "secondary", use_container_width=True):
+                if st.button("44 / XL", key="p_sz_44", type="primary" if curr_size == "44" else "secondary", use_container_width=True):
                     st.session_state["selected_size"] = "44"
                     st.rerun()
 
         # Standard Action Buttons
         btn_bag, btn_wish = st.columns([1.2, 1])
         with btn_bag:
-            if st.button("🛍️ ADD TO BAG", key="pdp_add_bag_standard_s", type="primary" if not item.get("is_stylesync_eligible") else "secondary", use_container_width=True):
+            if st.button("🛍️ ADD TO BAG", key="pdp_add_bag_standard", type="primary" if not item.get("is_stylesync_eligible") else "secondary", use_container_width=True):
                 st.session_state["bag_count"] += 1
                 st.toast(f"✅ {item['brand']} {item['name']} added to shopping bag!")
                 st.rerun()
         with btn_wish:
-            if st.button("❤️ WISHLIST", key="pdp_add_wl_standard_s", use_container_width=True):
+            if st.button("❤️ WISHLIST", key="pdp_add_wl_standard", use_container_width=True):
                 st.session_state["wishlist_count"] += 1
                 st.toast(f"❤️ Added {item['name']} to Wishlist!")
                 st.rerun()
@@ -1388,7 +1496,7 @@ def render_wishlist_view() -> None:
             """,
             unsafe_allow_html=True
         )
-        if st.button("✨ Style with My Closet (Run StyleSync AI) →", key="wl_run_ai_btn_s", type="primary", use_container_width=True):
+        if st.button("✨ Style with My Closet (Run StyleSync AI) →", key="wl_run_ai_btn", type="primary", use_container_width=True):
             with st.spinner("✨ StyleSync AI analyzing your wardrobe purchase history & color harmonies..."):
                 time.sleep(0.6)
             st.toast("3 Outfits Assembled!")
@@ -1424,7 +1532,7 @@ def render_wishlist_view() -> None:
                 """,
                 unsafe_allow_html=True
             )
-            if st.button(f"🛍️ Move to Bag", key=f"wl_bag_s_{item['id']}", use_container_width=True):
+            if st.button(f"🛍️ Move to Bag", key=f"wl_bag_{item['id']}", use_container_width=True):
                 st.session_state["bag_count"] += 1
                 st.toast(f"Added {item['name']} to Bag!")
                 st.rerun()
@@ -1446,7 +1554,7 @@ def render_wishlist_view() -> None:
                 """,
                 unsafe_allow_html=True
             )
-            if st.button(f"🛍️ Move to Bag", key=f"wl_bag_s_{item['id']}", use_container_width=True):
+            if st.button(f"🛍️ Move to Bag", key=f"wl_bag_{item['id']}", use_container_width=True):
                 st.session_state["bag_count"] += 1
                 st.toast(f"Added {item['name']} to Bag!")
                 st.rerun()
@@ -1496,13 +1604,13 @@ def render_stylesync_view() -> None:
         
         b_p1, b_p2 = st.columns(2)
         with b_p1:
-            if st.button("💬 Poll Look 1", key="poll_look_1_btn_s", type="primary", use_container_width=True):
+            if st.button("💬 Poll Look 1", key="poll_look_1_btn", type="primary", use_container_width=True):
                 st.session_state["poll_sent"] = True
                 st.session_state["poll_look_title"] = "Look 1: Sunset Linen"
                 st.toast("💬 Look 1 shared to WhatsApp Poll!")
                 st.rerun()
         with b_p2:
-            if st.button("🛍️ Add Look 1", key="add_l1_btn_s", use_container_width=True):
+            if st.button("🛍️ Add Look 1", key="add_l1_btn", use_container_width=True):
                 st.session_state["bag_count"] += 1
                 st.toast("Added Look 1 Anchor Blazer to Bag!")
                 st.rerun()
@@ -1532,13 +1640,13 @@ def render_stylesync_view() -> None:
 
         b_p3, b_p4 = st.columns(2)
         with b_p3:
-            if st.button("💬 Poll Look 2", key="poll_look_2_btn_s", use_container_width=True):
+            if st.button("💬 Poll Look 2", key="poll_look_2_btn", use_container_width=True):
                 st.session_state["poll_sent"] = True
                 st.session_state["poll_look_title"] = "Look 2: Urban Brunch"
                 st.toast("💬 Look 2 shared to WhatsApp Poll!")
                 st.rerun()
         with b_p4:
-            if st.button("🛍️ Add Look 2", key="add_l2_btn_s", use_container_width=True):
+            if st.button("🛍️ Add Look 2", key="add_l2_btn", use_container_width=True):
                 st.session_state["bag_count"] += 2
                 st.toast("Added Look 2 Blazer + Tank to Bag!")
                 st.rerun()
@@ -1568,13 +1676,13 @@ def render_stylesync_view() -> None:
 
         b_p5, b_p6 = st.columns(2)
         with b_p5:
-            if st.button("💬 Poll Look 3", key="poll_look_3_btn_s", use_container_width=True):
+            if st.button("💬 Poll Look 3", key="poll_look_3_btn", use_container_width=True):
                 st.session_state["poll_sent"] = True
                 st.session_state["poll_look_title"] = "Look 3: Smart Business"
                 st.toast("💬 Look 3 shared to WhatsApp Poll!")
                 st.rerun()
         with b_p6:
-            if st.button("🛍️ Add Look 3", key="add_l3_btn_s", use_container_width=True):
+            if st.button("🛍️ Add Look 3", key="add_l3_btn", use_container_width=True):
                 st.session_state["bag_count"] += 1
                 st.toast("Added Look 3 to Bag!")
                 st.rerun()
@@ -1619,12 +1727,12 @@ def render_stylesync_view() -> None:
         st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
         v1, v2 = st.columns(2)
         with v1:
-            if st.button("🔥 BUY IT! (84% Votes)", key="vote_buy_btn_s", type="primary", use_container_width=True):
+            if st.button("🔥 BUY IT! (84% Votes)", key="vote_buy_btn", type="primary", use_container_width=True):
                 st.session_state["vote_feedback"] = "buy"
                 st.toast("🎉 5 Friends voted 'BUY IT'! High peer confidence score.")
                 st.rerun()
         with v2:
-            if st.button("👎 DROP IT (16% Votes)", key="vote_drop_btn_s", use_container_width=True):
+            if st.button("👎 DROP IT (16% Votes)", key="vote_drop_btn", use_container_width=True):
                 st.session_state["vote_feedback"] = "drop"
                 st.toast("Peer feedback registered.")
                 st.rerun()
@@ -1633,7 +1741,7 @@ def render_stylesync_view() -> None:
         feedback = st.session_state.get("vote_feedback", None)
         if feedback == "buy":
             st.success("🌟 **Peer Confidence Verified!** 5 of 6 friends recommend buying. Ready to complete order with 1-click checkout.")
-            if st.button("🛍️ PROCEED TO CHECKOUT (₹3,499)", key="wa_checkout_btn_s", type="primary", use_container_width=True):
+            if st.button("🛍️ PROCEED TO CHECKOUT (₹3,499)", key="wa_checkout_btn", type="primary", use_container_width=True):
                 st.balloons()
                 st.toast("🎉 Order placed successfully with StyleSync savings!")
         elif feedback == "drop":

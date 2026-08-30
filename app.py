@@ -259,6 +259,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(30% OFF)",
         "rating": "4.4 ★",
         "is_stylesync_eligible": True,
+        "tags": "blazer jacket linen formal suit coat rust mango",
         "img": "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -272,6 +273,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(20% OFF)",
         "rating": "4.3 ★",
         "is_stylesync_eligible": False,
+        "tags": "shirt linen casual tops white cotton",
         "img": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -285,11 +287,12 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(25% OFF)",
         "rating": "4.5 ★",
         "is_stylesync_eligible": False,
+        "tags": "trousers pants formal tailored pleated black zara bottomwear",
         "img": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&auto=format&fit=crop&q=80"
     },
     {
         "id": "men_4",
-        "name": "511 Slim Fit Raw Indigo Denim",
+        "name": "511 Slim Fit Raw Indigo Denim Jeans",
         "brand": "LEVIS",
         "master_category": "Apparel",
         "sub_category": "Men",
@@ -298,6 +301,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(30% OFF)",
         "rating": "4.6 ★",
         "is_stylesync_eligible": False,
+        "tags": "jeans denim pants slim fit 511 levis indigo bottomwear",
         "img": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -311,6 +315,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(35% OFF)",
         "rating": "4.1 ★",
         "is_stylesync_eligible": False,
+        "tags": "shirt casual mandarin collar olive roadster",
         "img": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80"
     },
 
@@ -326,6 +331,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(40% OFF)",
         "rating": "4.6 ★",
         "is_stylesync_eligible": False,
+        "tags": "kurta kurti ethnic anarkali biba dress suit embroidery",
         "img": "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -339,6 +345,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(28% OFF)",
         "rating": "4.4 ★",
         "is_stylesync_eligible": False,
+        "tags": "dress maxi floral wrap h&m summer gown",
         "img": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -352,6 +359,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(40% OFF)",
         "rating": "4.5 ★",
         "is_stylesync_eligible": False,
+        "tags": "kurti kurta silk ethnic festive libas",
         "img": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -365,20 +373,22 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(30% OFF)",
         "rating": "4.3 ★",
         "is_stylesync_eligible": False,
+        "tags": "lounge loungewear co-ord set sleepwear marks & spencer",
         "img": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80"
     },
     {
         "id": "women_5",
-        "name": "Oversized Denim Trucker Jacket",
+        "name": "High-Rise Wide Leg Washed Denim Jeans",
         "brand": "MANGO",
         "master_category": "Apparel",
         "sub_category": "Women",
-        "price": "₹3,990",
-        "mrp": "₹5,990",
-        "discount": "(33% OFF)",
+        "price": "₹3,590",
+        "mrp": "₹4,990",
+        "discount": "(28% OFF)",
         "rating": "4.7 ★",
         "is_stylesync_eligible": False,
-        "img": "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80"
+        "tags": "jeans denim high rise wide leg washed pants mango bottomwear",
+        "img": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&auto=format&fit=crop&q=80"
     },
 
     # 3. Apparel - Kids & Infants
@@ -809,12 +819,42 @@ def view_product_pdp(item: CatalogItem) -> None:
 # 4. TOP BRAND NAVIGATION BAR
 # ==============================================================================
 
+# Synonym & Keyword Matcher for High-Precision Search
+SYNONYMS = {
+    "jeans": ["jeans", "denim", "pants", "trousers", "bottomwear", "511", "501"],
+    "jean": ["jeans", "denim", "pants", "trousers", "bottomwear"],
+    "denim": ["denim", "jeans", "jacket", "pants"],
+    "shirt": ["shirt", "top", "kurta", "tee", "t-shirt", "mandarin", "linen"],
+    "tshirt": ["t-shirt", "tee", "top", "graphic", "crewneck"],
+    "blazer": ["blazer", "jacket", "suit", "formal", "coat", "linen", "mango"],
+    "jacket": ["jacket", "blazer", "coat", "trucker", "denim"],
+    "shoes": ["shoes", "sneakers", "sneaker", "heels", "boots", "footwear", "running"],
+    "sneaker": ["sneakers", "sneaker", "shoes", "court", "running", "air max", "caven", "nike", "puma"],
+    "sneakers": ["sneakers", "sneaker", "shoes", "court", "running", "air max", "caven", "nike", "puma"],
+    "heels": ["heels", "sandals", "block heeled", "footwear"],
+    "boots": ["boots", "chelsea", "high-top", "footwear"],
+    "watch": ["watch", "chronograph", "fossil", "dial", "leather watch"],
+    "sunglasses": ["sunglasses", "aviator", "ray-ban", "eyewear"],
+    "perfume": ["perfume", "fragrance", "edp", "scent", "armaf"],
+    "fragrance": ["fragrance", "perfume", "edp", "scent", "armaf"],
+    "serum": ["serum", "niacinamide", "hyaluronic", "skincare", "minimalist", "l'oreal"],
+    "lipstick": ["lipstick", "ruby woo", "matte", "mac", "makeup"],
+    "dress": ["dress", "frock", "kurti", "kurta", "maxi", "wrap", "anarkali"],
+    "kurti": ["kurti", "kurta", "ethnic", "anarkali", "silk", "biba", "libas"],
+    "bedsheet": ["bed sheet", "bedsheet", "bedding", "cotton", "linen", "bombay dyeing"],
+    "sheet": ["bed sheet", "bedsheet", "bedding", "cotton", "bombay dyeing"],
+    "vase": ["vase", "ceramic", "fluted", "decor", "home centre"],
+    "cushion": ["cushion", "cushion covers", "velvet", "furnishing", "d'decor"],
+    "bag": ["bag", "handbag", "satchel", "purse", "tote", "caprese"],
+    "belt": ["belt", "leather belt", "reversible", "tommy hilfiger"]
+}
+
 def render_top_navbar() -> None:
     curr = st.session_state.get("current_view", "catalog")
     bag_num = st.session_state.get("bag_count", 2)
     wl_num = st.session_state.get("wishlist_count", 1)
 
-    nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([2.5, 4.5, 3, 2.5])
+    nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([2.2, 4.2, 3.4, 2.2])
     
     with nav_col1:
         st.markdown(
@@ -855,15 +895,24 @@ def render_top_navbar() -> None:
                 st.rerun()
 
     with nav_col3:
-        quick_search = st.text_input(
-            "Quick Search",
-            value=st.session_state.get("search_query", ""),
-            placeholder="🔍 Search across fashion, beauty, home...",
-            label_visibility="collapsed",
-            key="top_quick_search"
-        )
+        sc1, sc2 = st.columns([3.5, 1])
+        with sc1:
+            quick_search = st.text_input(
+                "Quick Search",
+                value=st.session_state.get("search_query", ""),
+                placeholder="🔍 Search jeans, blazer, shoes...",
+                label_visibility="collapsed",
+                key="top_quick_search"
+            )
+        with sc2:
+            if st.button("Search", key="top_search_btn", type="primary", use_container_width=True):
+                st.session_state["search_query"] = quick_search
+                st.session_state["selected_category_filter"] = "All"
+                st.session_state["current_view"] = "catalog"
+                st.rerun()
         if quick_search != st.session_state.get("search_query", ""):
             st.session_state["search_query"] = quick_search
+            st.session_state["selected_category_filter"] = "All"
             st.session_state["current_view"] = "catalog"
             st.rerun()
 
@@ -999,20 +1048,59 @@ def render_catalog_view() -> None:
         unsafe_allow_html=True
     )
 
-    # 1. Top Wide Free-Text Search Bar
-    search_input = st.text_input(
-        "Free-Text Catalog Search",
-        value=st.session_state.get("search_query", ""),
-        placeholder="🔍 Search across fashion, beauty, home, and more (e.g. linen blazer, sneakers, kurti, watch)...",
-        label_visibility="collapsed",
-        key="main_catalog_search"
-    )
+    # 1. Top Wide Free-Text Search Bar with Search and Clear Buttons
+    sb_col1, sb_col2, sb_col3 = st.columns([5, 1.2, 1])
+    with sb_col1:
+        search_input = st.text_input(
+            "Free-Text Catalog Search",
+            value=st.session_state.get("search_query", ""),
+            placeholder="🔍 Search across fashion, beauty, home (e.g. jeans, linen blazer, sneakers, kurti, watch)...",
+            label_visibility="collapsed",
+            key="main_catalog_search"
+        )
+    with sb_col2:
+        if st.button("🔍 Search", key="catalog_search_submit_btn", type="primary", use_container_width=True):
+            st.session_state["search_query"] = search_input
+            st.session_state["selected_category_filter"] = "All"
+            st.rerun()
+    with sb_col3:
+        if st.button("✖ Clear", key="catalog_search_clear_btn", use_container_width=True):
+            st.session_state["search_query"] = ""
+            st.session_state["selected_category_filter"] = "All"
+            st.rerun()
+
     if search_input != st.session_state.get("search_query", ""):
         st.session_state["search_query"] = search_input
         st.rerun()
 
+    # Trending Search Keywords Chips
+    st.markdown(
+        """
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.78rem; font-weight: 700; color: #7E818C; margin: 4px 0 8px 0;">
+            <span>🔥 Trending Searches:</span>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    t_c1, t_c2, t_c3, t_c4, t_c5, t_c6, t_c7 = st.columns(7)
+    trend_list = [
+        ("👖 Jeans", "jeans"),
+        ("🧥 Blazer", "blazer"),
+        ("👟 Sneakers", "sneakers"),
+        ("👗 Kurti", "kurti"),
+        ("⌚ Watch", "watch"),
+        ("🌸 Fragrance", "fragrance"),
+        ("🛏️ Bedsheet", "bedsheet"),
+    ]
+    for idx, (label, val) in enumerate(trend_list):
+        with [t_c1, t_c2, t_c3, t_c4, t_c5, t_c6, t_c7][idx]:
+            if st.button(label, key=f"trend_chip_{val}", use_container_width=True):
+                st.session_state["search_query"] = val
+                st.session_state["selected_category_filter"] = "All"
+                st.rerun()
+
     # 2. Horizontal Category Filter Chips
-    st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 6px;'></div>", unsafe_allow_html=True)
     categories = ["All", "Apparel", "Footwear", "Beauty", "Accessories", "Home"]
     current_cat = st.session_state.get("selected_category_filter", "All")
     
@@ -1031,21 +1119,41 @@ def render_catalog_view() -> None:
 
     st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
 
-    # 3. Filtering Engine
+    # 3. High-Precision Filtering Engine with Synonym Expansion
     query = st.session_state.get("search_query", "").strip().lower()
     selected_filter = st.session_state.get("selected_category_filter", "All")
 
-    filtered_items: List[CatalogItem] = []
-    for item in MICRO_CATALOG:
-        # Category check
-        if selected_filter != "All" and item["master_category"] != selected_filter:
-            continue
-        # Search text check
-        if query:
-            match_str = f"{item['name']} {item['brand']} {item['master_category']} {item['sub_category']}".lower()
-            if query not in match_str:
+    # Expand query terms with synonyms
+    search_terms = [query] if query else []
+    if query:
+        for syn_key, syn_vals in SYNONYMS.items():
+            if syn_key in query:
+                search_terms.extend(syn_vals)
+
+    def filter_catalog(target_filter: str) -> List[CatalogItem]:
+        results = []
+        for item in MICRO_CATALOG:
+            # Category filter check
+            if target_filter != "All" and item["master_category"] != target_filter:
                 continue
-        filtered_items.append(item)
+            # Search query check
+            if query:
+                item_text = f"{item['name']} {item['brand']} {item['master_category']} {item['sub_category']} {item.get('tags', '')}".lower()
+                if not any(term in item_text for term in search_terms):
+                    continue
+            results.append(item)
+        return results
+
+    filtered_items = filter_catalog(selected_filter)
+    
+    # Auto-fallback: if filtered category had 0 results but query exists in another category, search 'All'
+    if not filtered_items and query and selected_filter != "All":
+        fallback_items = filter_catalog("All")
+        if fallback_items:
+            filtered_items = fallback_items
+            st.session_state["selected_category_filter"] = "All"
+            selected_filter = "All"
+            st.toast(f"Switched category to 'All' to show {len(filtered_items)} matches for '{query}'!")
 
     # Results Header
     st.markdown(
@@ -1058,7 +1166,7 @@ def render_catalog_view() -> None:
     )
 
     if not filtered_items:
-        st.info("No matching products found. Try clearing your search query or selecting 'All' categories.")
+        st.warning(f"No products found matching '{query}' in '{selected_filter}'. Try searching for 'jeans', 'linen blazer', 'sneakers', or 'watch'.")
         if st.button("Reset Search Filters", key="reset_filters_btn"):
             st.session_state["search_query"] = ""
             st.session_state["selected_category_filter"] = "All"
