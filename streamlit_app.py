@@ -296,21 +296,21 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(30% OFF)",
         "rating": "4.4 ★",
         "is_stylesync_eligible": True,
-        "tags": "blazer jacket linen formal suit coat rust mango men apparel outfit",
+        "tags": "blazer jacket linen formal coat rust mango men apparel outfit",
         "img": "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=800&auto=format&fit=crop&q=80"
     },
     {
         "id": "men_2",
         "name": "Classic Pure Linen White Shirt",
         "brand": "H&M",
-        "master_category": "Apparel",
-        "sub_category": "Men",
+        "master_category": "Shirts",
+        "sub_category": "Casual Shirts",
         "price": "₹1,999",
         "mrp": "₹2,499",
         "discount": "(20% OFF)",
         "rating": "4.3 ★",
         "is_stylesync_eligible": False,
-        "tags": "shirt linen casual tops white cotton hm h&m men apparel",
+        "tags": "shirt shirts linen casual tops white hm h&m men apparel",
         "img": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -345,15 +345,89 @@ MICRO_CATALOG: List[CatalogItem] = [
         "id": "men_5",
         "name": "Olive Mandarin Collar Casual Shirt",
         "brand": "Roadster",
-        "master_category": "Apparel",
-        "sub_category": "Men",
+        "master_category": "Shirts",
+        "sub_category": "Casual Shirts",
         "price": "₹1,299",
         "mrp": "₹1,999",
         "discount": "(35% OFF)",
         "rating": "4.1 ★",
         "is_stylesync_eligible": False,
-        "tags": "shirt casual mandarin collar olive roadster top men apparel",
+        "tags": "shirt shirts casual mandarin collar olive roadster top men apparel",
         "img": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80"
+    },
+
+    # Dedicated Shirts Category Products
+    {
+        "id": "shirt_1",
+        "name": "Slim Fit Oxford Cotton Formal Shirt",
+        "brand": "Tommy Hilfiger",
+        "master_category": "Shirts",
+        "sub_category": "Formal Shirts",
+        "price": "₹3,999",
+        "mrp": "₹5,999",
+        "discount": "(33% OFF)",
+        "rating": "4.7 ★",
+        "is_stylesync_eligible": False,
+        "tags": "shirt shirts oxford formal button down tommy hilfiger men apparel",
+        "img": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "shirt_2",
+        "name": "Checkered Cotton Twill Casual Shirt",
+        "brand": "Levi's",
+        "master_category": "Shirts",
+        "sub_category": "Casual Shirts",
+        "price": "₹2,299",
+        "mrp": "₹3,499",
+        "discount": "(34% OFF)",
+        "rating": "4.6 ★",
+        "is_stylesync_eligible": False,
+        "tags": "shirt shirts checkered plaid flannel levis levi's men apparel casual",
+        "img": "https://images.unsplash.com/photo-1603252109303-2751441dd157?w=800&auto=format&fit=crop&q=80"
+    },
+
+    # Dedicated T-Shirts Category Products
+    {
+        "id": "tshirt_1",
+        "name": "Adicolor Trefoil Classic Cotton T-Shirt",
+        "brand": "Adidas",
+        "master_category": "T-Shirts",
+        "sub_category": "Graphic Tees",
+        "price": "₹1,699",
+        "mrp": "₹2,499",
+        "discount": "(32% OFF)",
+        "rating": "4.8 ★",
+        "is_stylesync_eligible": False,
+        "tags": "tshirt t-shirt tee graphic trefoil adidas sportswear men apparel",
+        "img": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "tshirt_2",
+        "name": "Heavyweight Oversized Streetwear T-Shirt",
+        "brand": "Jack & Jones",
+        "master_category": "T-Shirts",
+        "sub_category": "Oversized Tees",
+        "price": "₹1,299",
+        "mrp": "₹2,199",
+        "discount": "(41% OFF)",
+        "rating": "4.5 ★",
+        "is_stylesync_eligible": False,
+        "tags": "tshirt t-shirt tee oversized streetwear jack & jones men apparel black",
+        "img": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "tshirt_3",
+        "name": "Solid Pima Cotton Crewneck Slim T-Shirt",
+        "brand": "Puma",
+        "master_category": "T-Shirts",
+        "sub_category": "Crewneck Tees",
+        "price": "₹999",
+        "mrp": "₹1,799",
+        "discount": "(44% OFF)",
+        "rating": "4.3 ★",
+        "is_stylesync_eligible": False,
+        "tags": "tshirt t-shirt tee crewneck solid basic pima cotton puma men apparel",
+        "img": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80"
     },
 
     # 2. Apparel - Women
@@ -1205,9 +1279,11 @@ def render_catalog_view() -> None:
         """,
         unsafe_allow_html=True
     )
-    t_c1, t_c2, t_c3, t_c4, t_c5, t_c6, t_c7 = st.columns(7)
+    t_cols = st.columns(9)
     trend_list = [
         ("👖 Jeans", "jeans"),
+        ("👔 Shirts", "shirt"),
+        ("👕 T-Shirts", "tshirt"),
         ("🧥 Blazer", "blazer"),
         ("👟 Sneakers", "sneakers"),
         ("👗 Kurti", "kurti"),
@@ -1216,7 +1292,7 @@ def render_catalog_view() -> None:
         ("🛏️ Bedsheet", "bedsheet"),
     ]
     for idx, (label, val) in enumerate(trend_list):
-        with [t_c1, t_c2, t_c3, t_c4, t_c5, t_c6, t_c7][idx]:
+        with t_cols[idx]:
             if st.button(label, key=f"trend_chip_{val}", use_container_width=True):
                 st.session_state["search_query"] = val
                 st.session_state["selected_category_filter"] = "All"
@@ -1224,7 +1300,7 @@ def render_catalog_view() -> None:
 
     # 2. Horizontal Category Filter Chips
     st.markdown("<div style='height: 6px;'></div>", unsafe_allow_html=True)
-    categories = ["All", "Apparel", "Footwear", "Beauty", "Accessories", "Home"]
+    categories = ["All", "Apparel", "Shirts", "T-Shirts", "Footwear", "Beauty", "Accessories", "Home"]
     current_cat = st.session_state.get("selected_category_filter", "All")
     
     chip_cols = st.columns(len(categories))
@@ -1258,8 +1334,20 @@ def render_catalog_view() -> None:
         results = []
         for item in MICRO_CATALOG:
             # Category filter check
-            if target_filter != "All" and item["master_category"] != target_filter:
+            if target_filter == "All":
+                pass
+            elif target_filter == "Apparel":
+                if item["master_category"] not in ["Apparel", "Shirts", "T-Shirts"]:
+                    continue
+            elif target_filter == "Shirts":
+                if item["master_category"] != "Shirts":
+                    continue
+            elif target_filter == "T-Shirts":
+                if item["master_category"] != "T-Shirts":
+                    continue
+            elif item["master_category"] != target_filter:
                 continue
+
             # Search query check
             if query:
                 item_text = f"{item['name']} {item['brand']} {item['master_category']} {item['sub_category']} {item.get('tags', '')}".lower()
