@@ -974,26 +974,23 @@ def render_top_navbar() -> None:
                 st.rerun()
 
     with nav_col3:
-        sc1, sc2 = st.columns([3.5, 1])
-        with sc1:
-            quick_search = st.text_input(
-                "Quick Search",
-                value=st.session_state.get("search_query", ""),
-                placeholder="🔍 Search jeans, shoes, kurti, watch...",
-                label_visibility="collapsed",
-                key="top_quick_search"
-            )
-        with sc2:
-            if st.button("Search", key="top_search_btn", type="primary", use_container_width=True):
+        with st.form("top_navbar_search_form", clear_on_submit=False):
+            sc1, sc2 = st.columns([3.5, 1])
+            with sc1:
+                quick_search = st.text_input(
+                    "Quick Search",
+                    value=st.session_state.get("search_query", ""),
+                    placeholder="🔍 Search jeans, shoes, kurti...",
+                    label_visibility="collapsed",
+                    key="top_nav_search_text"
+                )
+            with sc2:
+                top_searched = st.form_submit_button("Search", type="primary", use_container_width=True)
+            if top_searched:
                 st.session_state["search_query"] = quick_search
                 st.session_state["selected_category_filter"] = "All"
                 st.session_state["current_view"] = "catalog"
                 st.rerun()
-        if quick_search != st.session_state.get("search_query", ""):
-            st.session_state["search_query"] = quick_search
-            st.session_state["selected_category_filter"] = "All"
-            st.session_state["current_view"] = "catalog"
-            st.rerun()
 
     with nav_col4:
         ic1, ic2, ic3 = st.columns(3)
@@ -1174,30 +1171,30 @@ def render_catalog_view() -> None:
         unsafe_allow_html=True
     )
 
-    # 1. Top Wide Free-Text Search Bar with Search and Clear Buttons
-    sb_col1, sb_col2, sb_col3 = st.columns([5, 1.2, 1])
-    with sb_col1:
-        search_input = st.text_input(
-            "Free-Text Catalog Search",
-            value=st.session_state.get("search_query", ""),
-            placeholder="🔍 Search across fashion, beauty, home (e.g. jeans, linen blazer, sneakers, kurti, watch)...",
-            label_visibility="collapsed",
-            key="main_catalog_search"
-        )
-    with sb_col2:
-        if st.button("🔍 Search", key="catalog_search_submit_btn", type="primary", use_container_width=True):
+    # 1. Top Wide Free-Text Search Bar Form
+    with st.form("catalog_main_search_form", clear_on_submit=False):
+        sb_col1, sb_col2, sb_col3 = st.columns([5, 1.2, 1])
+        with sb_col1:
+            search_input = st.text_input(
+                "Free-Text Catalog Search",
+                value=st.session_state.get("search_query", ""),
+                placeholder="🔍 Search across fashion, beauty, home (e.g. jeans, linen blazer, sneakers, kurti, watch)...",
+                label_visibility="collapsed",
+                key="catalog_search_box_input"
+            )
+        with sb_col2:
+            search_submitted = st.form_submit_button("🔍 Search", type="primary", use_container_width=True)
+        with sb_col3:
+            clear_submitted = st.form_submit_button("✖ Clear", use_container_width=True)
+        
+        if search_submitted:
             st.session_state["search_query"] = search_input
             st.session_state["selected_category_filter"] = "All"
             st.rerun()
-    with sb_col3:
-        if st.button("✖ Clear", key="catalog_search_clear_btn", use_container_width=True):
+        elif clear_submitted:
             st.session_state["search_query"] = ""
             st.session_state["selected_category_filter"] = "All"
             st.rerun()
-
-    if search_input != st.session_state.get("search_query", ""):
-        st.session_state["search_query"] = search_input
-        st.rerun()
 
     # Trending Search Keywords Chips
     st.markdown(
