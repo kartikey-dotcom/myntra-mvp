@@ -244,6 +244,7 @@ class CatalogItem(TypedDict):
     discount: str
     rating: str
     is_stylesync_eligible: bool
+    tags: str
     img: str
 
 MICRO_CATALOG: List[CatalogItem] = [
@@ -259,7 +260,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(30% OFF)",
         "rating": "4.4 ★",
         "is_stylesync_eligible": True,
-        "tags": "blazer jacket linen formal suit coat rust mango",
+        "tags": "blazer jacket linen formal suit coat rust mango men apparel outfit",
         "img": "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -273,7 +274,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(20% OFF)",
         "rating": "4.3 ★",
         "is_stylesync_eligible": False,
-        "tags": "shirt linen casual tops white cotton",
+        "tags": "shirt linen casual tops white cotton hm h&m men apparel",
         "img": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -287,7 +288,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(25% OFF)",
         "rating": "4.5 ★",
         "is_stylesync_eligible": False,
-        "tags": "trousers pants formal tailored pleated black zara bottomwear",
+        "tags": "trousers pants formal tailored pleated black zara bottomwear men apparel chinos",
         "img": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -301,7 +302,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(30% OFF)",
         "rating": "4.6 ★",
         "is_stylesync_eligible": False,
-        "tags": "jeans denim pants slim fit 511 levis indigo bottomwear",
+        "tags": "jeans denim pants slim fit 511 levis levi's indigo bottomwear men apparel",
         "img": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -315,7 +316,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(35% OFF)",
         "rating": "4.1 ★",
         "is_stylesync_eligible": False,
-        "tags": "shirt casual mandarin collar olive roadster",
+        "tags": "shirt casual mandarin collar olive roadster top men apparel",
         "img": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop&q=80"
     },
 
@@ -331,7 +332,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(40% OFF)",
         "rating": "4.6 ★",
         "is_stylesync_eligible": False,
-        "tags": "kurta kurti ethnic anarkali biba dress suit embroidery",
+        "tags": "kurti kurta ethnic anarkali biba dress suit embroidery traditional women apparel",
         "img": "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -345,7 +346,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(28% OFF)",
         "rating": "4.4 ★",
         "is_stylesync_eligible": False,
-        "tags": "dress maxi floral wrap h&m summer gown",
+        "tags": "dress maxi floral wrap h&m hm summer gown western women apparel",
         "img": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -359,7 +360,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(40% OFF)",
         "rating": "4.5 ★",
         "is_stylesync_eligible": False,
-        "tags": "kurti kurta silk ethnic festive libas",
+        "tags": "kurti kurta silk ethnic festive libas traditional party women apparel",
         "img": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -373,7 +374,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(30% OFF)",
         "rating": "4.3 ★",
         "is_stylesync_eligible": False,
-        "tags": "lounge loungewear co-ord set sleepwear marks & spencer",
+        "tags": "lounge loungewear co-ord coord set sleepwear marks & spencer m&s women apparel",
         "img": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -387,7 +388,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(28% OFF)",
         "rating": "4.7 ★",
         "is_stylesync_eligible": False,
-        "tags": "jeans denim high rise wide leg washed pants mango bottomwear",
+        "tags": "jeans denim high rise wide leg washed pants mango bottomwear women apparel",
         "img": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&auto=format&fit=crop&q=80"
     },
 
@@ -403,6 +404,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(31% OFF)",
         "rating": "4.8 ★",
         "is_stylesync_eligible": False,
+        "tags": "onesie infant baby romper organic cotton mothercare newborn kids clothes",
         "img": "https://images.unsplash.com/photo-1522771930-78848d9293e8?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -416,6 +418,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(41% OFF)",
         "rating": "4.2 ★",
         "is_stylesync_eligible": False,
+        "tags": "tshirt tee graphic crewneck cotton gini & jony boys kids apparel top",
         "img": "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -429,6 +432,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(40% OFF)",
         "rating": "4.5 ★",
         "is_stylesync_eligible": False,
+        "tags": "frock dress party wear tulle tiered cutecumber girls kids birthday gown",
         "img": "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -442,6 +446,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(24% OFF)",
         "rating": "4.7 ★",
         "is_stylesync_eligible": False,
+        "tags": "dungaree set knit tee carters carter's infant kids baby toddler apparel",
         "img": "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=800&auto=format&fit=crop&q=80"
     },
 
@@ -457,6 +462,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(20% OFF)",
         "rating": "4.7 ★",
         "is_stylesync_eligible": False,
+        "tags": "sneakers shoes running retro leather air max nike men sports footwear shoes trainers",
         "img": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -470,6 +476,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(45% OFF)",
         "rating": "4.3 ★",
         "is_stylesync_eligible": False,
+        "tags": "sneakers shoes court low top caven puma men casual footwear white shoes trainers",
         "img": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -483,6 +490,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(45% OFF)",
         "rating": "4.4 ★",
         "is_stylesync_eligible": False,
+        "tags": "heels sandals block heeled strappy evening carlton london women footwear party shoes",
         "img": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -496,6 +504,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(40% OFF)",
         "rating": "4.8 ★",
         "is_stylesync_eligible": False,
+        "tags": "running shoes sneakers sports ultraboost adidas men footwear gym trainers",
         "img": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -509,6 +518,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(41% OFF)",
         "rating": "4.2 ★",
         "is_stylesync_eligible": False,
+        "tags": "boots chelsea high top suede roadster men shoes footwear winter brown",
         "img": "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=800&auto=format&fit=crop&q=80"
     },
 
@@ -524,6 +534,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(14% OFF)",
         "rating": "4.6 ★",
         "is_stylesync_eligible": False,
+        "tags": "serum niacinamide skincare face clarifying minimalist beauty skin glow acne",
         "img": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -537,6 +548,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(15% OFF)",
         "rating": "4.8 ★",
         "is_stylesync_eligible": False,
+        "tags": "lipstick ruby woo matte red longwear mac cosmetics makeup beauty lips",
         "img": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -550,6 +562,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(29% OFF)",
         "rating": "4.7 ★",
         "is_stylesync_eligible": False,
+        "tags": "perfume fragrance edp scent luxury armaf beauty club de nuit cologne scent spray",
         "img": "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -563,6 +576,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(25% OFF)",
         "rating": "4.4 ★",
         "is_stylesync_eligible": False,
+        "tags": "serum hyaluronic acid plumping skincare l'oreal loreal paris beauty anti aging hydration",
         "img": "https://images.unsplash.com/photo-1608248597359-009139828456?w=800&auto=format&fit=crop&q=80"
     },
 
@@ -578,6 +592,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(36% OFF)",
         "rating": "4.6 ★",
         "is_stylesync_eligible": False,
+        "tags": "watch watches chronograph leather blue dial fossil accessories wrist watch analog",
         "img": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -591,6 +606,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(20% OFF)",
         "rating": "4.8 ★",
         "is_stylesync_eligible": False,
+        "tags": "sunglasses aviator polarized green ray-ban rayban accessories eyewear shades glasses",
         "img": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -604,6 +620,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(50% OFF)",
         "rating": "4.3 ★",
         "is_stylesync_eligible": False,
+        "tags": "handbag satchel faux leather structured caprese accessories bag purse tote women",
         "img": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -617,6 +634,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(36% OFF)",
         "rating": "4.5 ★",
         "is_stylesync_eligible": False,
+        "tags": "belt leather belt reversible tommy hilfiger accessories formal brown black buckle",
         "img": "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=800&auto=format&fit=crop&q=80"
     },
 
@@ -632,6 +650,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(42% OFF)",
         "rating": "4.5 ★",
         "is_stylesync_eligible": False,
+        "tags": "bedsheet bed sheet king size cotton 300tc floral bombay dyeing home bedding linen mattress cover",
         "img": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -645,6 +664,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(40% OFF)",
         "rating": "4.6 ★",
         "is_stylesync_eligible": False,
+        "tags": "vase fluted flower vase ceramic nordic home centre home decor aesthetic pottery plant",
         "img": "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -658,6 +678,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(45% OFF)",
         "rating": "4.4 ★",
         "is_stylesync_eligible": False,
+        "tags": "cushion cushion covers velvet textured set of 5 d'decor ddecor home furnishing sofa pillow",
         "img": "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -671,6 +692,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(35% OFF)",
         "rating": "4.7 ★",
         "is_stylesync_eligible": False,
+        "tags": "diffuser aroma essential oil lavender puresource home living fragrance air freshener",
         "img": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800&auto=format&fit=crop&q=80"
     }
 ]
@@ -800,6 +822,10 @@ def init_session_state() -> None:
         st.session_state["show_profile_modal"] = False
     if "show_size_chart" not in st.session_state:
         st.session_state["show_size_chart"] = False
+    if "show_order_modal" not in st.session_state:
+        st.session_state["show_order_modal"] = False
+    if "ordered_item" not in st.session_state:
+        st.session_state["ordered_item"] = None
 
 init_session_state()
 
@@ -819,33 +845,50 @@ def view_product_pdp(item: CatalogItem) -> None:
 # 4. TOP BRAND NAVIGATION BAR
 # ==============================================================================
 
-# Synonym & Keyword Matcher for High-Precision Search
+# Synonym & Keyword Matcher for High-Precision Search across ALL categories
 SYNONYMS = {
     "jeans": ["jeans", "denim", "pants", "trousers", "bottomwear", "511", "501"],
     "jean": ["jeans", "denim", "pants", "trousers", "bottomwear"],
     "denim": ["denim", "jeans", "jacket", "pants"],
     "shirt": ["shirt", "top", "kurta", "tee", "t-shirt", "mandarin", "linen"],
     "tshirt": ["t-shirt", "tee", "top", "graphic", "crewneck"],
+    "tee": ["t-shirt", "tee", "top", "graphic", "crewneck"],
     "blazer": ["blazer", "jacket", "suit", "formal", "coat", "linen", "mango"],
     "jacket": ["jacket", "blazer", "coat", "trucker", "denim"],
-    "shoes": ["shoes", "sneakers", "sneaker", "heels", "boots", "footwear", "running"],
-    "sneaker": ["sneakers", "sneaker", "shoes", "court", "running", "air max", "caven", "nike", "puma"],
-    "sneakers": ["sneakers", "sneaker", "shoes", "court", "running", "air max", "caven", "nike", "puma"],
-    "heels": ["heels", "sandals", "block heeled", "footwear"],
-    "boots": ["boots", "chelsea", "high-top", "footwear"],
-    "watch": ["watch", "chronograph", "fossil", "dial", "leather watch"],
-    "sunglasses": ["sunglasses", "aviator", "ray-ban", "eyewear"],
-    "perfume": ["perfume", "fragrance", "edp", "scent", "armaf"],
-    "fragrance": ["fragrance", "perfume", "edp", "scent", "armaf"],
-    "serum": ["serum", "niacinamide", "hyaluronic", "skincare", "minimalist", "l'oreal"],
-    "lipstick": ["lipstick", "ruby woo", "matte", "mac", "makeup"],
-    "dress": ["dress", "frock", "kurti", "kurta", "maxi", "wrap", "anarkali"],
-    "kurti": ["kurti", "kurta", "ethnic", "anarkali", "silk", "biba", "libas"],
-    "bedsheet": ["bed sheet", "bedsheet", "bedding", "cotton", "linen", "bombay dyeing"],
+    "pants": ["trousers", "pants", "jeans", "chinos", "bottomwear"],
+    "trousers": ["trousers", "pants", "chinos", "formal"],
+    "shoes": ["shoes", "sneakers", "sneaker", "heels", "boots", "footwear", "running", "trainers"],
+    "sneaker": ["sneakers", "sneaker", "shoes", "court", "running", "air max", "caven", "nike", "puma", "adidas"],
+    "sneakers": ["sneakers", "sneaker", "shoes", "court", "running", "air max", "caven", "nike", "puma", "adidas"],
+    "running": ["running", "shoes", "sneakers", "sports", "ultraboost", "air max", "adidas", "nike"],
+    "heels": ["heels", "sandals", "block heeled", "footwear", "carlton london"],
+    "sandals": ["heels", "sandals", "block heeled", "footwear"],
+    "boots": ["boots", "chelsea", "high-top", "footwear", "roadster"],
+    "watch": ["watch", "watches", "chronograph", "fossil", "dial", "leather watch", "analog"],
+    "watches": ["watch", "watches", "chronograph", "fossil", "dial", "leather watch"],
+    "sunglasses": ["sunglasses", "aviator", "ray-ban", "rayban", "eyewear", "shades", "glasses"],
+    "shades": ["sunglasses", "aviator", "ray-ban", "eyewear", "shades"],
+    "perfume": ["perfume", "fragrance", "edp", "scent", "armaf", "cologne", "spray"],
+    "fragrance": ["fragrance", "perfume", "edp", "scent", "armaf", "cologne"],
+    "serum": ["serum", "niacinamide", "hyaluronic", "skincare", "minimalist", "l'oreal", "face"],
+    "skincare": ["serum", "niacinamide", "hyaluronic", "skincare", "minimalist", "l'oreal", "face"],
+    "lipstick": ["lipstick", "ruby woo", "matte", "mac", "makeup", "lips", "cosmetics"],
+    "makeup": ["lipstick", "ruby woo", "matte", "mac", "makeup", "cosmetics"],
+    "dress": ["dress", "frock", "kurti", "kurta", "maxi", "wrap", "anarkali", "gown"],
+    "kurti": ["kurti", "kurta", "ethnic", "anarkali", "silk", "biba", "libas", "traditional"],
+    "kurta": ["kurti", "kurta", "ethnic", "anarkali", "silk", "biba", "libas", "traditional"],
+    "onesie": ["onesie", "infant", "baby", "romper", "mothercare", "newborn"],
+    "baby": ["onesie", "infant", "baby", "romper", "mothercare", "carter's", "kids"],
+    "kids": ["kids", "boys", "girls", "infant", "baby", "tshirt", "frock", "onesie", "dungaree"],
+    "bedsheet": ["bed sheet", "bedsheet", "bedding", "cotton", "linen", "bombay dyeing", "mattress"],
     "sheet": ["bed sheet", "bedsheet", "bedding", "cotton", "bombay dyeing"],
-    "vase": ["vase", "ceramic", "fluted", "decor", "home centre"],
-    "cushion": ["cushion", "cushion covers", "velvet", "furnishing", "d'decor"],
+    "bedding": ["bed sheet", "bedsheet", "bedding", "cotton", "bombay dyeing"],
+    "vase": ["vase", "ceramic", "fluted", "decor", "home centre", "pottery", "flower vase"],
+    "decor": ["vase", "decor", "cushion", "diffuser", "home centre", "d'decor"],
+    "cushion": ["cushion", "cushion covers", "velvet", "furnishing", "d'decor", "pillow"],
+    "diffuser": ["diffuser", "aroma", "essential oil", "fragrance", "puresource"],
     "bag": ["bag", "handbag", "satchel", "purse", "tote", "caprese"],
+    "handbag": ["bag", "handbag", "satchel", "purse", "tote", "caprese"],
     "belt": ["belt", "leather belt", "reversible", "tommy hilfiger"]
 }
 
@@ -900,7 +943,7 @@ def render_top_navbar() -> None:
             quick_search = st.text_input(
                 "Quick Search",
                 value=st.session_state.get("search_query", ""),
-                placeholder="🔍 Search jeans, blazer, shoes...",
+                placeholder="🔍 Search jeans, shoes, kurti, watch...",
                 label_visibility="collapsed",
                 key="top_quick_search"
             )
@@ -959,6 +1002,52 @@ def render_top_navbar() -> None:
 # ==============================================================================
 
 def render_drawers_and_modals() -> None:
+    # 1-Click Order Placed Celebration Modal
+    if st.session_state.get("show_order_modal", False) and st.session_state.get("ordered_item"):
+        ord_item = st.session_state["ordered_item"]
+        st.markdown(
+            f"""
+            <div class="modal-banner" style="border: 2px solid #03A685; box-shadow: 0 10px 30px rgba(3, 166, 133, 0.15); animation: fadeIn 0.3s ease-in-out;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div style="font-size: 1.3rem; font-weight: 900; color: #282C3F;">
+                        🎉 ORDER CONFIRMED & READY TO DISPATCH!
+                    </div>
+                    <span style="font-size: 0.8rem; font-weight: 800; color: #03A685; background: #E8F8F5; padding: 4px 10px; border-radius: 6px;">
+                        Order #MYN-{int(time.time()) % 1000000}
+                    </span>
+                </div>
+                <div style="display: flex; gap: 1.2rem; align-items: center; background: #F9FAFB; padding: 14px; border-radius: 10px; margin-bottom: 1rem; border: 1px solid #ECEEF0;">
+                    <img src="{ord_item['img']}" style="width: 80px; height: 100px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                    <div style="flex: 1;">
+                        <span style="font-size: 0.75rem; font-weight: 800; color: #FF3F6C; text-transform: uppercase;">{ord_item['brand']}</span>
+                        <h4 style="font-size: 1.05rem; font-weight: 900; color: #282C3F; margin: 2px 0;">{ord_item['name']}</h4>
+                        <div style="display: flex; align-items: baseline; gap: 8px; margin: 4px 0;">
+                            <span style="font-size: 1.1rem; font-weight: 900; color: #282C3F;">{ord_item['price']}</span>
+                            <span style="font-size: 0.85rem; color: #94969F; text-decoration: line-through;">{ord_item['mrp']}</span>
+                            <span style="font-size: 0.75rem; font-weight: 800; color: #FF3F6C;">{ord_item['discount']}</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: #03A685; font-weight: 700;">
+                            ⚡ Fast Express Delivery: <b>Tomorrow by 5:00 PM</b> • 100% Genuine • Free Returns
+                        </div>
+                    </div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        oc1, oc2 = st.columns(2)
+        with oc1:
+            if st.button("🛍️ View in Shopping Bag", key="order_view_bag_btn", type="primary", use_container_width=True):
+                st.session_state["show_order_modal"] = False
+                st.session_state["show_bag_drawer"] = True
+                st.rerun()
+        with oc2:
+            if st.button("✖️ Continue Shopping", key="order_close_modal_btn", use_container_width=True):
+                st.session_state["show_order_modal"] = False
+                st.session_state["ordered_item"] = None
+                st.rerun()
+
+    # Shopping Bag Drawer
     if st.session_state.get("show_bag_drawer", False):
         bag_count = st.session_state.get("bag_count", 2)
         st.markdown(
@@ -1001,6 +1090,7 @@ def render_drawers_and_modals() -> None:
                 st.session_state["show_bag_drawer"] = False
                 st.rerun()
 
+    # User Profile Modal
     if st.session_state.get("show_profile_modal", False):
         st.markdown(
             """
@@ -1119,16 +1209,16 @@ def render_catalog_view() -> None:
 
     st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
 
-    # 3. High-Precision Filtering Engine with Synonym Expansion
+    # 3. High-Precision Tokenized Filtering Engine with Synonym Expansion
     query = st.session_state.get("search_query", "").strip().lower()
     selected_filter = st.session_state.get("selected_category_filter", "All")
 
-    # Expand query terms with synonyms
-    search_terms = [query] if query else []
-    if query:
+    query_tokens = [q for q in query.split() if len(q) > 0]
+    search_tokens = set(query_tokens)
+    for q_tok in query_tokens:
         for syn_key, syn_vals in SYNONYMS.items():
-            if syn_key in query:
-                search_terms.extend(syn_vals)
+            if syn_key in q_tok or q_tok in syn_key:
+                search_tokens.update(syn_vals)
 
     def filter_catalog(target_filter: str) -> List[CatalogItem]:
         results = []
@@ -1139,7 +1229,7 @@ def render_catalog_view() -> None:
             # Search query check
             if query:
                 item_text = f"{item['name']} {item['brand']} {item['master_category']} {item['sub_category']} {item.get('tags', '')}".lower()
-                if not any(term in item_text for term in search_terms):
+                if not (query in item_text or any(token in item_text for token in search_tokens)):
                     continue
             results.append(item)
         return results
@@ -1166,14 +1256,14 @@ def render_catalog_view() -> None:
     )
 
     if not filtered_items:
-        st.warning(f"No products found matching '{query}' in '{selected_filter}'. Try searching for 'jeans', 'linen blazer', 'sneakers', or 'watch'.")
+        st.warning(f"No products found matching '{query}' in '{selected_filter}'. Try searching for 'jeans', 'linen blazer', 'sneakers', 'watch', or 'serum'.")
         if st.button("Reset Search Filters", key="reset_filters_btn"):
             st.session_state["search_query"] = ""
             st.session_state["selected_category_filter"] = "All"
             st.rerun()
         return
 
-    # 4. Grid Display (4-Column Layout)
+    # 4. Grid Display (4-Column Layout with Direct Action Buttons)
     num_cols = 4
     rows = [filtered_items[i:i + num_cols] for i in range(0, len(filtered_items), num_cols)]
 
@@ -1210,7 +1300,7 @@ def render_catalog_view() -> None:
                         <div style="font-size: 0.8rem; color: #535766; font-weight: 500; height: 38px; overflow: hidden; text-overflow: ellipsis; line-height: 1.25; margin-top: 2px;">
                             {item['name']}
                         </div>
-                        <div style="display: flex; align-items: baseline; gap: 6px; margin: 4px 0 8px 0;">
+                        <div style="display: flex; align-items: baseline; gap: 6px; margin: 4px 0 6px 0;">
                             <span style="font-weight: 900; font-size: 0.92rem; color: #282C3F;">{item['price']}</span>
                             <span style="font-size: 0.75rem; color: #94969F; text-decoration: line-through;">{item['mrp']}</span>
                             <span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C;">{item['discount']}</span>
@@ -1219,8 +1309,30 @@ def render_catalog_view() -> None:
                     """,
                     unsafe_allow_html=True
                 )
-                if st.button("👉 View Product", key=f"view_prod_{item['id']}", use_container_width=True):
+                
+                # Direct Action Buttons for Every Product Card
+                if st.button("👉 View Details", key=f"view_prod_{item['id']}", use_container_width=True):
                     view_product_pdp(item)
+
+                qb1, qb2 = st.columns(2)
+                with qb1:
+                    if st.button("🛍️ +Bag", key=f"quick_bag_{item['id']}", use_container_width=True):
+                        st.session_state["bag_count"] += 1
+                        st.toast(f"✅ Added {item['brand']} {item['name']} to Bag!")
+                        st.rerun()
+                with qb2:
+                    if st.button("❤️ Save", key=f"quick_wl_{item['id']}", use_container_width=True):
+                        st.session_state["wishlist_count"] += 1
+                        st.toast(f"❤️ Added {item['name']} to Wishlist!")
+                        st.rerun()
+
+                if st.button("⚡ 1-Click Order", key=f"quick_order_{item['id']}", type="primary", use_container_width=True):
+                    st.session_state["ordered_item"] = item
+                    st.session_state["show_order_modal"] = True
+                    st.toast(f"🎉 Order placed for {item['brand']} {item['name']}!")
+                    st.rerun()
+
+    st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
 
 # ==============================================================================
@@ -1444,9 +1556,9 @@ def render_pdp_view() -> None:
                     st.rerun()
 
         # Standard Action Buttons
-        btn_bag, btn_wish = st.columns([1.2, 1])
+        btn_bag, btn_wish, btn_order = st.columns([1, 1, 1.2])
         with btn_bag:
-            if st.button("🛍️ ADD TO BAG", key="pdp_add_bag_standard", type="primary" if not item.get("is_stylesync_eligible") else "secondary", use_container_width=True):
+            if st.button("🛍️ ADD TO BAG", key="pdp_add_bag_standard", type="secondary", use_container_width=True):
                 st.session_state["bag_count"] += 1
                 st.toast(f"✅ {item['brand']} {item['name']} added to shopping bag!")
                 st.rerun()
@@ -1454,6 +1566,13 @@ def render_pdp_view() -> None:
             if st.button("❤️ WISHLIST", key="pdp_add_wl_standard", use_container_width=True):
                 st.session_state["wishlist_count"] += 1
                 st.toast(f"❤️ Added {item['name']} to Wishlist!")
+                st.rerun()
+        with btn_order:
+            if st.button("⚡ BUY NOW (1-CLICK)", key="pdp_buy_now_btn", type="primary", use_container_width=True):
+                st.session_state["ordered_item"] = item
+                st.session_state["show_order_modal"] = True
+                st.balloons()
+                st.toast(f"🎉 Order placed for {item['brand']} {item['name']}!")
                 st.rerun()
 
 
