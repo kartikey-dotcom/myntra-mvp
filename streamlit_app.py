@@ -1308,39 +1308,22 @@ def render_catalog_view() -> None:
                 
                 # StyleSync / SubCategory Badge in fixed-height row
                 if item["is_stylesync_eligible"]:
-                    badge_html = """
-                    <span style="font-size: 0.68rem; font-weight: 900; background: #FFF0F4; color: #FF3F6C; border: 1px solid #FFD8E4; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
-                        ✨ StyleSync Eligible
-                    </span>
-                    """
+                    badge_html = '<span style="font-size: 0.68rem; font-weight: 900; background: #FFF0F4; color: #FF3F6C; border: 1px solid #FFD8E4; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">✨ StyleSync Eligible</span>'
                 else:
-                    badge_html = f"""
-                    <span style="font-size: 0.68rem; font-weight: 700; background: #F5F5F6; color: #7E818C; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
-                        {item['sub_category']}
-                    </span>
-                    """
+                    badge_html = f'<span style="font-size: 0.68rem; font-weight: 700; background: #F5F5F6; color: #7E818C; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">{item["sub_category"]}</span>'
 
-                st.markdown(
-                    f"""
-                    <div style="margin-top: 6px;">
-                        <div style="height: 24px; display: flex; align-items: center;">
-                            {badge_html}
-                        </div>
-                        <div style="font-weight: 900; font-size: 0.82rem; color: #282C3F; text-transform: uppercase; height: 18px; line-height: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px;">
-                            {item['brand']}
-                        </div>
-                        <div style="font-size: 0.8rem; color: #535766; font-weight: 500; height: 36px; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-top: 2px;">
-                            {item['name']}
-                        </div>
-                        <div style="display: flex; align-items: baseline; gap: 6px; height: 22px; margin: 4px 0 8px 0;">
-                            <span style="font-weight: 900; font-size: 0.92rem; color: #282C3F;">{item['price']}</span>
-                            <span style="font-size: 0.75rem; color: #94969F; text-decoration: line-through;">{item['mrp']}</span>
-                            <span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C;">{item['discount']}</span>
-                        </div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
+                card_html = (
+                    f'<div style="margin-top: 6px;">'
+                    f'<div style="height: 24px; display: flex; align-items: center;">{badge_html}</div>'
+                    f'<div style="font-weight: 900; font-size: 0.82rem; color: #282C3F; text-transform: uppercase; height: 18px; line-height: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px;">{item["brand"]}</div>'
+                    f'<div style="font-size: 0.8rem; color: #535766; font-weight: 500; height: 36px; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-top: 2px;">{item["name"]}</div>'
+                    f'<div style="display: flex; align-items: baseline; gap: 6px; height: 22px; margin: 4px 0 8px 0;">'
+                    f'<span style="font-weight: 900; font-size: 0.92rem; color: #282C3F;">{item["price"]}</span>'
+                    f'<span style="font-size: 0.75rem; color: #94969F; text-decoration: line-through;">{item["mrp"]}</span>'
+                    f'<span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C;">{item["discount"]}</span>'
+                    f'</div></div>'
                 )
+                st.markdown(card_html, unsafe_allow_html=True)
                 
                 # Direct Action Buttons for Every Product Card
                 if st.button("👉 View Details", key=f"view_prod_{item['id']}", use_container_width=True):
