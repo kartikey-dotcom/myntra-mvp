@@ -1198,7 +1198,6 @@ def render_drawers_and_modals() -> None:
         b_c1, b_c2 = st.columns(2)
         with b_c1:
             if st.button("💳 Proceed to Checkout Now", key="drawer_checkout_btn", type="primary", use_container_width=True):
-                st.balloons()
                 st.toast("🎉 Order placed successfully! Delivery scheduled by tomorrow.")
                 st.session_state["show_bag_drawer"] = False
                 st.rerun()
@@ -1663,7 +1662,18 @@ def render_pdp_view() -> None:
                 unsafe_allow_html=True
             )
             if st.button("✨ Launch StyleSync™ AI Studio & WhatsApp Poll →", key="pdp_stylesync_cta_btn", type="primary", use_container_width=True):
-                st.toast("Opening StyleSync Wardrobe Matcher...")
+                pdp_status = st.empty()
+                pdp_prog = st.progress(0)
+                pdp_status.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🔍 Scanning your past Myntra purchases & closet inventory...</div></div>', unsafe_allow_html=True)
+                pdp_prog.progress(33)
+                time.sleep(0.65)
+                pdp_status.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🎨 Computing color harmonies & Rule-of-3 modular versatility...</div></div>', unsafe_allow_html=True)
+                pdp_prog.progress(68)
+                time.sleep(0.65)
+                pdp_status.markdown('<div style="background: #E8F8F5; border: 1.5px solid #A3E6D8; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #03A685; font-size: 0.88rem;">✨ Assembling 3 complete styled outfits from owned pieces!</div></div>', unsafe_allow_html=True)
+                pdp_prog.progress(100)
+                time.sleep(0.6)
+                st.toast("✨ 3 Outfits Assembled by StyleSync AI!")
                 set_view("stylesync")
 
             st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
@@ -1706,7 +1716,6 @@ def render_pdp_view() -> None:
             if st.button("⚡ BUY NOW (1-CLICK)", key="pdp_buy_now_btn", type="primary", use_container_width=True):
                 st.session_state["ordered_item"] = item
                 st.session_state["show_order_modal"] = True
-                st.balloons()
                 st.toast(f"🎉 Order placed for {item['brand']} {item['name']}!")
                 st.rerun()
 
@@ -1757,9 +1766,18 @@ def render_wishlist_view() -> None:
             unsafe_allow_html=True
         )
         if st.button("✨ Style with My Closet (Run StyleSync AI) →", key="wl_run_ai_btn", type="primary", use_container_width=True):
-            with st.spinner("✨ StyleSync AI analyzing your wardrobe purchase history & color harmonies..."):
-                time.sleep(0.6)
-            st.toast("3 Outfits Assembled for Active Anchor!")
+            status_box = st.empty()
+            prog_bar = st.progress(0)
+            status_box.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🔍 Step 1/3: Scanning your past Myntra purchases & closet inventory...</div></div>', unsafe_allow_html=True)
+            prog_bar.progress(33)
+            time.sleep(0.65)
+            status_box.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🎨 Step 2/3: Computing color harmonies, silhouettes & Rule-of-3 modular versatility...</div></div>', unsafe_allow_html=True)
+            prog_bar.progress(68)
+            time.sleep(0.65)
+            status_box.markdown('<div style="background: #E8F8F5; border: 1.5px solid #A3E6D8; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #03A685; font-size: 0.88rem;">✨ Step 3/3: Assembling 3 complete styled outfits from owned pieces!</div></div>', unsafe_allow_html=True)
+            prog_bar.progress(100)
+            time.sleep(0.6)
+            st.toast("✨ 3 Outfits Assembled by StyleSync AI!")
             set_view("stylesync")
 
     # 2. Curated Wardrobe & Wishlist Grid
@@ -1884,27 +1902,28 @@ def render_stylesync_view() -> None:
                     <span style="font-size: 1.05rem; font-weight: 900; color: #282C3F;">Look 1: Sunset Linen</span>
                     <span style="font-size: 0.72rem; font-weight: 900; background: #E8F8F5; color: #03A685; padding: 2px 8px; border-radius: 9999px;">98% MATCH</span>
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px; background: #FFF5F7; border: 1px solid #FFE0E6; border-radius: 8px; padding: 5px 8px; margin-bottom: 8px;">
-                    <span style="font-size: 0.65rem; font-weight: 900; color: #FF3F6C; background: #FFF; padding: 1px 5px; border-radius: 4px;">ANCHOR</span>
-                    <span style="font-size: 0.72rem; font-weight: 800; color: #282C3F;">MANGO MAN Linen Blazer (₹3,499)</span>
+                <div style="display: flex; align-items: center; gap: 8px; background: #FFF5F7; border: 1.5px solid #FFD8E4; border-radius: 8px; padding: 5px 8px; margin-bottom: 8px;">
+                    <span style="font-size: 0.65rem; font-weight: 900; color: #FFF; background: #FF3F6C; padding: 2px 6px; border-radius: 4px;">ANCHOR</span>
+                    <span style="font-size: 0.72rem; font-weight: 800; color: #282C3F;">MANGO MAN Linen Blazer</span>
+                    <span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C; margin-left: auto;">₹3,499</span>
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
         st.markdown(
-            '<img src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 210px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
+            '<img src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 180px; object-fit: cover; object-position: center; border-radius: 8px; display: block;" />',
             unsafe_allow_html=True
         )
         st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Smart Casual Ensemble</div><div style='font-size: 0.72rem; color: #7E818C; margin-bottom: 4px;'>Blazer + Linen Shirt + Tailored Trousers</div>", unsafe_allow_html=True)
         
         img_sub1, img_sub2 = st.columns(2)
         with img_sub1:
-            st.markdown(f'<img src="{IMAGE_OLIVE_SHIRT}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown(f'<img src="{IMAGE_OLIVE_SHIRT}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
             st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
             st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>H&M Shirt</div>", unsafe_allow_html=True)
         with img_sub2:
-            st.markdown(f'<img src="{IMAGE_BLACK_TROUSERS}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown(f'<img src="{IMAGE_BLACK_TROUSERS}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
             st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
             st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>Zara Pants</div>", unsafe_allow_html=True)
         
@@ -1930,27 +1949,28 @@ def render_stylesync_view() -> None:
                     <span style="font-size: 1.05rem; font-weight: 900; color: #282C3F;">Look 2: Urban Brunch</span>
                     <span style="font-size: 0.72rem; font-weight: 900; background: #FFF0F4; color: #FF3F6C; padding: 2px 8px; border-radius: 9999px;">94% MATCH</span>
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px; background: #FFF5F7; border: 1px solid #FFE0E6; border-radius: 8px; padding: 5px 8px; margin-bottom: 8px;">
-                    <span style="font-size: 0.65rem; font-weight: 900; color: #FF3F6C; background: #FFF; padding: 1px 5px; border-radius: 4px;">ANCHOR</span>
-                    <span style="font-size: 0.72rem; font-weight: 800; color: #282C3F;">MANGO MAN Linen Blazer (₹3,499)</span>
+                <div style="display: flex; align-items: center; gap: 8px; background: #FFF5F7; border: 1.5px solid #FFD8E4; border-radius: 8px; padding: 5px 8px; margin-bottom: 8px;">
+                    <span style="font-size: 0.65rem; font-weight: 900; color: #FFF; background: #FF3F6C; padding: 2px 6px; border-radius: 4px;">ANCHOR</span>
+                    <span style="font-size: 0.72rem; font-weight: 800; color: #282C3F;">MANGO MAN Linen Blazer</span>
+                    <span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C; margin-left: auto;">₹3,499</span>
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
         st.markdown(
-            '<img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 210px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
+            '<img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 180px; object-fit: cover; object-position: center; border-radius: 8px; display: block;" />',
             unsafe_allow_html=True
         )
         st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Relaxed Weekend Layering</div><div style='font-size: 0.72rem; color: #7E818C; margin-bottom: 4px;'>Blazer + White Crewneck Tee + Retro Sneakers</div>", unsafe_allow_html=True)
 
         img_sub3, img_sub4 = st.columns(2)
         with img_sub3:
-            st.markdown(f'<img src="{IMAGE_WHITE_TANK}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown(f'<img src="{IMAGE_WHITE_TANK}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
             st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
             st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>White Tee</div>", unsafe_allow_html=True)
         with img_sub4:
-            st.markdown(f'<img src="{IMAGE_PUMA_SNEAKERS}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown(f'<img src="{IMAGE_PUMA_SNEAKERS}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
             st.markdown("<div class='ui-badge-wishlist' style='margin-top: 3px;'>Add-on (₹2,749)</div>", unsafe_allow_html=True)
             st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>Puma Court</div>", unsafe_allow_html=True)
 
@@ -1976,27 +1996,28 @@ def render_stylesync_view() -> None:
                     <span style="font-size: 1.05rem; font-weight: 900; color: #282C3F;">Look 3: Smart Business</span>
                     <span style="font-size: 0.72rem; font-weight: 900; background: #E8F8F5; color: #03A685; padding: 2px 8px; border-radius: 9999px;">91% MATCH</span>
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px; background: #FFF5F7; border: 1px solid #FFE0E6; border-radius: 8px; padding: 5px 8px; margin-bottom: 8px;">
-                    <span style="font-size: 0.65rem; font-weight: 900; color: #FF3F6C; background: #FFF; padding: 1px 5px; border-radius: 4px;">ANCHOR</span>
-                    <span style="font-size: 0.72rem; font-weight: 800; color: #282C3F;">MANGO MAN Linen Blazer (₹3,499)</span>
+                <div style="display: flex; align-items: center; gap: 8px; background: #FFF5F7; border: 1.5px solid #FFD8E4; border-radius: 8px; padding: 5px 8px; margin-bottom: 8px;">
+                    <span style="font-size: 0.65rem; font-weight: 900; color: #FFF; background: #FF3F6C; padding: 2px 6px; border-radius: 4px;">ANCHOR</span>
+                    <span style="font-size: 0.72rem; font-weight: 800; color: #282C3F;">MANGO MAN Linen Blazer</span>
+                    <span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C; margin-left: auto;">₹3,499</span>
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
         st.markdown(
-            '<img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 210px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
+            '<img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 180px; object-fit: cover; object-position: center; border-radius: 8px; display: block;" />',
             unsafe_allow_html=True
         )
         st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Tailored Executive Sharp</div><div style='font-size: 0.72rem; color: #7E818C; margin-bottom: 4px;'>Blazer + Chrono Watch + Raw Indigo Denim</div>", unsafe_allow_html=True)
 
         img_sub5, img_sub6 = st.columns(2)
         with img_sub5:
-            st.markdown(f'<img src="{IMAGE_FOSSIL_WATCH}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown(f'<img src="{IMAGE_FOSSIL_WATCH}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
             st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
             st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>Fossil Watch</div>", unsafe_allow_html=True)
         with img_sub6:
-            st.markdown(f'<img src="{IMAGE_LIGHT_DENIM}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown(f'<img src="{IMAGE_LIGHT_DENIM}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
             st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
             st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>Levi's 511</div>", unsafe_allow_html=True)
 
@@ -2021,7 +2042,7 @@ def render_stylesync_view() -> None:
         <div class="section-header-wrap" style="margin-top: 2rem;">
             <div>
                 <div class="section-title">📱 WHATSAPP SOCIAL VALIDATION LOOP ("BUY OR DROP")</div>
-                <div class="section-subtitle">Prevent off-platform styling hesitation • Real-time peer feedback directly on your curated outfit</div>
+                <div class="section-subtitle">Eliminate hesitation by letting trusted friends vote in 1 tap directly in their chat</div>
             </div>
         </div>
         """,
@@ -2038,20 +2059,24 @@ def render_stylesync_view() -> None:
             f"""
             <div class="wa-chat-container">
                 <div class="wa-chat-header">
-                    <div style="width: 34px; height: 34px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #FFF;">👥</div>
+                    <div style="width: 34px; height: 34px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #FFF;">👗</div>
                     <div>
-                        <div style="font-weight: 800; font-size: 0.92rem; color: #FFF; line-height: 1.2;">Fashion Inner Circle (5 Members)</div>
-                        <div style="font-size: 0.72rem; color: #D1E7DD; font-weight: 500;">Online • Live Style Poll Active</div>
+                        <div style="font-weight: 800; font-size: 0.92rem; color: #FFF; line-height: 1.2;">Style Circle (5 Members)</div>
+                        <div style="font-size: 0.72rem; color: #D1E7DD; font-weight: 500;">Online • Style Poll Active</div>
                     </div>
                 </div>
                 <div class="wa-chat-body">
                     <div class="wa-chat-bubble">
                         <div style="font-weight: 800; font-size: 0.88rem; color: #111B21; margin-bottom: 6px; line-height: 1.4;">
-                            "Hey everyone! 👋 Thinking of ordering this <b>MANGO MAN Rust Linen Blazer</b>. StyleSync generated this outfit with my Zara trousers. <b>Buy or Drop?</b>"
+                            "Hey guys! Thinking of buying this <b>Rust Linen Blazer</b>. StyleSync paired it with my old Zara trousers. <b>Buy or Drop?</b> 🔥"
                         </div>
-                        <div style="background: #FFFFFF; border-radius: 8px; padding: 8px; margin: 8px 0; border: 1px solid #D9FDD3;">
-                            <div style="font-size: 0.76rem; font-weight: 800; color: #FF3F6C;">✨ {look_name}</div>
-                            <div style="font-size: 0.72rem; color: #54656F;">Anchor Blazer (₹3,499) + 2 Owned Closet Pieces</div>
+                        <div style="background: #FFFFFF; border-radius: 8px; padding: 10px; margin: 8px 0; border: 1px solid #D9FDD3; display: flex; align-items: center; gap: 10px;">
+                            <img src="{TARGET_ITEM['image_url']}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;" />
+                            <div style="flex: 1;">
+                                <div style="font-size: 0.76rem; font-weight: 800; color: #FF3F6C;">✨ {look_name}</div>
+                                <div style="font-size: 0.72rem; color: #54656F;">Anchor Blazer (₹3,499) + 2 Owned Closet Pieces</div>
+                            </div>
+                            <span style="font-size: 0.7rem; font-weight: 900; background: #E8F8F5; color: #03A685; padding: 2px 6px; border-radius: 4px;">98% MATCH</span>
                         </div>
                         <div style="text-align: right; font-size: 0.65rem; color: #667781; font-weight: 600;">10:42 AM ✓✓</div>
                     </div>
@@ -2061,17 +2086,17 @@ def render_stylesync_view() -> None:
             unsafe_allow_html=True
         )
 
-        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
         v1, v2 = st.columns(2)
         with v1:
-            if st.button("🔥 BUY IT! (84% Votes)", key="vote_buy_btn", type="primary", use_container_width=True):
+            if st.button("💬 Send 'Buy or Drop' Poll to WhatsApp Group", key="send_wa_poll_btn", type="primary", use_container_width=True):
                 st.session_state["vote_feedback"] = "buy"
-                st.toast("🎉 5 Friends voted 'BUY IT'! High peer confidence score.")
+                st.toast("💬 Live Poll sent to WhatsApp Group! 5 friends voted 'BUY IT'.")
                 st.rerun()
         with v2:
-            if st.button("👎 DROP IT (16% Votes)", key="vote_drop_btn", type="secondary", use_container_width=True):
-                st.session_state["vote_feedback"] = "drop"
-                st.toast("Peer feedback registered.")
+            if st.button("🗳️ Simulate Friends' Peer Feedback", key="sim_wa_votes_btn", type="secondary", use_container_width=True):
+                st.session_state["vote_feedback"] = "buy"
+                st.toast("📊 Feedback received: 84% voted BUY IT!")
                 st.rerun()
 
     with wa_col2:
@@ -2080,14 +2105,22 @@ def render_stylesync_view() -> None:
             st.markdown(
                 """
                 <div style="background: #E8F8F5; border: 1.5px solid #03A685; border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem;">
-                    <div style="font-weight: 900; font-size: 0.95rem; color: #03A685; margin-bottom: 4px;">🌟 Peer Confidence Verified (5/6 Votes)</div>
-                    <p style="font-size: 0.82rem; color: #282C3F; margin-bottom: 0;">Your circle voted <b>BUY IT</b>. Zero purchase hesitation — ready for 1-click checkout.</p>
+                    <div style="font-weight: 900; font-size: 0.95rem; color: #03A685; margin-bottom: 6px;">🌟 High Peer Confidence Verified (5/6 Votes)</div>
+                    <div style="font-size: 0.82rem; color: #282C3F; margin-bottom: 10px;">
+                        <b>84% of friends voted BUY IT</b> • Styling hesitation eliminated!
+                    </div>
+                    <div style="background: #C3E6CB; border-radius: 6px; height: 10px; width: 100%; overflow: hidden; margin-bottom: 8px;">
+                        <div style="background: #03A685; width: 84%; height: 100%;"></div>
+                    </div>
+                    <div style="font-size: 0.72rem; color: #535766; display: flex; justify-content: space-between;">
+                        <span>🔥 5 Voted 'Buy' (84%)</span>
+                        <span>1 Voted 'Drop' (16%)</span>
+                    </div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
             if st.button("🛍️ PROCEED TO 1-CLICK CHECKOUT (₹3,499)", key="wa_checkout_btn", type="primary", use_container_width=True):
-                st.balloons()
                 st.session_state["bag_count"] += 1
                 st.toast("🎉 Order placed successfully with StyleSync savings!")
         elif feedback == "drop":
