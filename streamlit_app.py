@@ -387,24 +387,24 @@ MICRO_CATALOG: List[CatalogItem] = [
         "img": "https://images.unsplash.com/photo-1603252109303-2751441dd157?w=800&auto=format&fit=crop&q=80"
     },
 
-    # Dedicated T-Shirts Category Products
+    # Dedicated T-Shirts Category Products (Pure T-Shirts Only)
     {
         "id": "tshirt_1",
-        "name": "Adicolor Trefoil Classic Cotton T-Shirt",
-        "brand": "Adidas",
+        "name": "Nike Sportswear Club Crewneck Graphic T-Shirt",
+        "brand": "Nike",
         "master_category": "T-Shirts",
         "sub_category": "Graphic Tees",
-        "price": "₹1,699",
-        "mrp": "₹2,499",
-        "discount": "(32% OFF)",
+        "price": "₹1,495",
+        "mrp": "₹1,995",
+        "discount": "(25% OFF)",
         "rating": "4.8 ★",
         "is_stylesync_eligible": False,
-        "tags": "tshirt t-shirt tee graphic trefoil adidas sportswear men apparel",
+        "tags": "tshirt t-shirt tee graphic nike sportswear white",
         "img": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80"
     },
     {
         "id": "tshirt_2",
-        "name": "Heavyweight Oversized Streetwear T-Shirt",
+        "name": "Heavyweight Oversized Streetwear Graphic T-Shirt",
         "brand": "Jack & Jones",
         "master_category": "T-Shirts",
         "sub_category": "Oversized Tees",
@@ -413,22 +413,64 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(41% OFF)",
         "rating": "4.5 ★",
         "is_stylesync_eligible": False,
-        "tags": "tshirt t-shirt tee oversized streetwear jack & jones men apparel black",
+        "tags": "tshirt t-shirt tee oversized streetwear jack & jones black",
         "img": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80"
     },
     {
         "id": "tshirt_3",
-        "name": "Solid Pima Cotton Crewneck Slim T-Shirt",
+        "name": "Pure Cotton Crewneck Slim-Fit T-Shirt",
         "brand": "Puma",
         "master_category": "T-Shirts",
         "sub_category": "Crewneck Tees",
         "price": "₹999",
         "mrp": "₹1,799",
         "discount": "(44% OFF)",
-        "rating": "4.3 ★",
+        "rating": "4.4 ★",
         "is_stylesync_eligible": False,
-        "tags": "tshirt t-shirt tee crewneck solid basic pima cotton puma men apparel",
+        "tags": "tshirt t-shirt tee crewneck solid basic pima cotton puma",
+        "img": "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "tshirt_4",
+        "name": "Trefoil Essentials Heritage Graphic T-Shirt",
+        "brand": "Adidas Originals",
+        "master_category": "T-Shirts",
+        "sub_category": "Graphic Tees",
+        "price": "₹1,799",
+        "mrp": "₹2,499",
+        "discount": "(28% OFF)",
+        "rating": "4.7 ★",
+        "is_stylesync_eligible": False,
+        "tags": "tshirt t-shirt tee graphic trefoil adidas sportswear",
         "img": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "tshirt_5",
+        "name": "Vintage Mineral Wash Relaxed Fit T-Shirt",
+        "brand": "H&M",
+        "master_category": "T-Shirts",
+        "sub_category": "Relaxed Tees",
+        "price": "₹1,199",
+        "mrp": "₹1,999",
+        "discount": "(40% OFF)",
+        "rating": "4.6 ★",
+        "is_stylesync_eligible": False,
+        "tags": "tshirt t-shirt tee vintage mineral wash h&m hm relaxed",
+        "img": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+        "id": "tshirt_6",
+        "name": "Signature Embroidered Crest Crewneck T-Shirt",
+        "brand": "Tommy Hilfiger",
+        "master_category": "T-Shirts",
+        "sub_category": "Crewneck Tees",
+        "price": "₹2,299",
+        "mrp": "₹3,499",
+        "discount": "(34% OFF)",
+        "rating": "4.8 ★",
+        "is_stylesync_eligible": False,
+        "tags": "tshirt t-shirt tee embroidered tommy hilfiger black crewneck",
+        "img": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80"
     },
 
     # 2. Apparel - Women
@@ -520,7 +562,7 @@ MICRO_CATALOG: List[CatalogItem] = [
     },
     {
         "id": "kids_2",
-        "name": "Boys Graphic Crewneck Cotton T-Shirt",
+        "name": "Boys Graphic Crewneck Cotton Top",
         "brand": "Gini & Jony",
         "master_category": "Apparel",
         "sub_category": "Kids",
@@ -529,7 +571,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(41% OFF)",
         "rating": "4.2 ★",
         "is_stylesync_eligible": False,
-        "tags": "tshirt tee graphic crewneck cotton gini & jony boys kids apparel top",
+        "tags": "graphic crewneck cotton gini & jony boys kids apparel boys_top",
         "img": "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=800&auto=format&fit=crop&q=80"
     },
     {
@@ -548,7 +590,7 @@ MICRO_CATALOG: List[CatalogItem] = [
     },
     {
         "id": "kids_4",
-        "name": "Infant Knit Dungaree & Tee Set",
+        "name": "Infant Knit Dungaree Set",
         "brand": "Carter's",
         "master_category": "Apparel",
         "sub_category": "Kids",
@@ -557,7 +599,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "discount": "(24% OFF)",
         "rating": "4.7 ★",
         "is_stylesync_eligible": False,
-        "tags": "dungaree set knit tee carters carter's infant kids baby toddler apparel",
+        "tags": "dungaree set knit carters carter's infant kids baby toddler apparel romper",
         "img": "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=800&auto=format&fit=crop&q=80"
     },
 
