@@ -1048,54 +1048,36 @@ def render_top_navbar() -> None:
     bag_num = st.session_state.get("bag_count", 2)
     wl_num = st.session_state.get("wishlist_count", 1)
 
-    nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([2.2, 4.2, 3.4, 2.2])
+    # 1. Main Header Row (Brand | Search | Profile & Bag)
+    top_col1, top_col2, top_col3 = st.columns([3, 4.5, 3.5], gap="medium")
     
-    with nav_col1:
+    with top_col1:
         st.markdown(
             """
             <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
-                <svg width="38" height="34" viewBox="0 0 45 42" fill="none">
+                <svg width="42" height="36" viewBox="0 0 45 42" fill="none">
                     <path d="M7 32L17.5 11H21.5L30 32H25.5L20.5 19.5L15.5 32H7Z" fill="#F48946"/>
                     <path d="M20.5 19.5L25.5 32H30L21.5 11H17.5L20.5 19.5Z" fill="#FF3F6C"/>
                     <path d="M17.5 11H21.5L19.5 15.5L17.5 11Z" fill="#E65A2C"/>
                     <path d="M15.5 32L24.5 11H28.5L38 32H33.5L28 19.5L23.5 32H15.5Z" fill="#FF3F6C" opacity="0.9"/>
                 </svg>
                 <div>
-                    <span style="font-weight: 900; font-size: 1.3rem; color: #282C3F; letter-spacing: -0.5px;">myntra</span>
-                    <span style="font-size: 0.65rem; font-weight: 800; background: #FFF0F4; color: #FF3F6C; border: 1px solid #FFD8E4; padding: 1px 5px; border-radius: 4px; margin-left: 4px;">STYLESYNC™</span>
+                    <span style="font-weight: 900; font-size: 1.45rem; color: #282C3F; letter-spacing: -0.5px;">myntra</span>
+                    <span style="font-size: 0.68rem; font-weight: 800; background: #FFF0F4; color: #FF3F6C; border: 1px solid #FFD8E4; padding: 2px 7px; border-radius: 4px; margin-left: 6px;">STYLESYNC™</span>
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
 
-    with nav_col2:
-        b1, b2, b3, b4, b5 = st.columns(5)
-        with b1:
-            if st.button("CATALOG", key="nav_cat_tab", use_container_width=True):
-                set_view("catalog")
-        with b2:
-            if st.button("HOME", key="nav_home", use_container_width=True):
-                set_view("homepage")
-        with b3:
-            if st.button("STUDIO ✨", key="nav_studio", use_container_width=True):
-                set_view("stylesync")
-        with b4:
-            if st.button("WISHLIST", key="nav_wl_tab", use_container_width=True):
-                set_view("wishlist")
-        with b5:
-            if st.button("BAG", key="nav_bag_tab", use_container_width=True):
-                st.session_state["show_bag_drawer"] = not st.session_state["show_bag_drawer"]
-                st.rerun()
-
-    with nav_col3:
-        with st.form("top_navbar_search_form", clear_on_submit=False):
-            sc1, sc2 = st.columns([3.5, 1])
+    with top_col2:
+        with st.form("top_header_search_form", clear_on_submit=False):
+            sc1, sc2 = st.columns([3.8, 1.2])
             with sc1:
                 quick_search = st.text_input(
-                    "Quick Search",
+                    "Search Input",
                     value=st.session_state.get("search_query", ""),
-                    placeholder="🔍 Search jeans, shoes, kurti...",
+                    placeholder="🔍 Search blazer, jeans, shirts, kurti...",
                     label_visibility="collapsed",
                     key="top_nav_search_text"
                 )
@@ -1107,39 +1089,36 @@ def render_top_navbar() -> None:
                 st.session_state["current_view"] = "catalog"
                 st.rerun()
 
-    with nav_col4:
+    with top_col3:
         ic1, ic2, ic3 = st.columns(3)
         with ic1:
             if st.button("👤 Profile", key="top_prof_btn", use_container_width=True):
                 st.session_state["show_profile_modal"] = not st.session_state["show_profile_modal"]
                 st.rerun()
         with ic2:
-            if st.button(f"❤️ ({wl_num})", key="top_wl_btn", use_container_width=True):
+            if st.button(f"❤️ Wishlist ({wl_num})", key="top_wl_btn", use_container_width=True):
                 set_view("wishlist")
         with ic3:
-            if st.button(f"🛍️ ({bag_num})", key="top_bag_btn", use_container_width=True):
+            if st.button(f"🛍️ Bag ({bag_num})", key="top_bag_btn", type="primary", use_container_width=True):
                 st.session_state["show_bag_drawer"] = not st.session_state["show_bag_drawer"]
                 st.rerun()
 
-    # Journey Stepper Quick Navigator Bar
-    st.markdown("<div style='height: 4px;'></div>", unsafe_allow_html=True)
-    step1, step2, step3, step4, step5 = st.columns(5)
-    with step1:
-        if st.button("🔍 1. Master Catalog & Search", use_container_width=True, type="primary" if curr == "catalog" else "secondary"):
+    # 2. Main Navigation Bar (Clean, spacious tabs)
+    st.markdown("<div style='height: 6px;'></div>", unsafe_allow_html=True)
+    n1, n2, n3, n4 = st.columns(4, gap="small")
+    with n1:
+        if st.button("🛍️ Catalog & Search", key="nav_main_cat", use_container_width=True, type="primary" if curr == "catalog" else "secondary"):
             set_view("catalog")
-    with step2:
-        if st.button("🏠 Storefront Hero", use_container_width=True, type="primary" if curr == "homepage" else "secondary"):
-            set_view("homepage")
-    with step3:
-        if st.button("🛍️ 2. Product Display (PDP)", use_container_width=True, type="primary" if curr == "pdp" else "secondary"):
-            set_view("pdp")
-    with step4:
-        if st.button("❤️ 3. Wishlist & Closet", use_container_width=True, type="primary" if curr == "wishlist" else "secondary"):
-            set_view("wishlist")
-    with step5:
-        if st.button("✨ 4. StyleSync Studio", use_container_width=True, type="primary" if curr == "stylesync" else "secondary"):
+    with n2:
+        if st.button("✨ StyleSync AI Studio", key="nav_main_studio", use_container_width=True, type="primary" if curr == "stylesync" else "secondary"):
             set_view("stylesync")
-    
+    with n3:
+        if st.button("❤️ Wardrobe & Wishlist", key="nav_main_wl", use_container_width=True, type="primary" if curr == "wishlist" else "secondary"):
+            set_view("wishlist")
+    with n4:
+        if st.button("🏠 Storefront Spotlight", key="nav_main_home", use_container_width=True, type="primary" if curr == "homepage" else "secondary"):
+            set_view("homepage")
+
     st.markdown("<hr style='margin: 0.8rem 0 1.2rem 0; border: none; border-top: 1px solid #ECEEF0;'>", unsafe_allow_html=True)
 
     render_drawers_and_modals()
