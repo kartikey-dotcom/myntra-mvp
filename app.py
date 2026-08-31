@@ -29,20 +29,19 @@ CUSTOM_CSS = """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-    /* Global Reset */
-    html, body, [class*="css"] {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        color: #282C3F;
-        background-color: #FAFBFC;
+    /* Global Reset & Typography */
+    html, body, [class*="css"], [data-testid="stAppViewContainer"] {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        color: #282C3F !important;
+        background-color: #F8F9FA !important;
     }
 
-    header[data-testid="stHeader"] {
-        background: transparent !important;
-        height: 1.5rem !important;
-        z-index: 1 !important;
-    }
+    /* Hide Streamlit Chrome */
+    header[data-testid="stHeader"] { visibility: hidden !important; height: 0 !important; }
     #MainMenu { visibility: hidden !important; }
     footer { visibility: hidden !important; }
+    [data-testid="stToolbar"] { visibility: hidden !important; }
+    [data-testid="stDecoration"] { visibility: hidden !important; }
     
     .block-container {
         max-width: 1240px !important;
@@ -53,37 +52,46 @@ CUSTOM_CSS = """
         margin: auto !important;
     }
 
-    /* Modal / Alert Card Overlay */
-    .modal-banner {
-        background: #FFFFFF;
-        border: 2px solid #FF3F6C;
-        border-radius: 14px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 10px 30px rgba(255, 63, 108, 0.12);
-        animation: fadeIn 0.3s ease-in-out;
+    /* Section Headings */
+    .section-header-wrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin: 1.5rem 0 1rem 0;
+    }
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 900;
+        color: #282C3F;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+    .section-subtitle {
+        font-size: 0.82rem;
+        color: #7E818C;
+        font-weight: 500;
     }
 
     /* Promo Ticket Box */
     .promo-ticket-box {
         background: linear-gradient(90deg, #FFF0F3 0%, #FFE8EE 50%, #FFF0F3 100%);
         border: 1.5px dashed #FFCCD7;
-        border-radius: 14px;
-        padding: 1.1rem 2rem;
+        border-radius: 12px;
+        padding: 1rem 1.8rem;
         margin-bottom: 1.5rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        box-shadow: 0 2px 10px rgba(255, 63, 108, 0.06);
+        box-shadow: 0 2px 10px rgba(255, 63, 108, 0.05);
     }
     .ticket-heading {
-        font-size: 1.35rem;
+        font-size: 1.25rem;
         font-weight: 900;
         color: #D2691E;
         line-height: 1.2;
     }
     .ticket-sub {
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         font-weight: 600;
         color: #535766;
     }
@@ -99,153 +107,121 @@ CUSTOM_CSS = """
         border: 1px solid #EAE6DC;
     }
     .hero-super-title {
-        font-size: 0.82rem;
+        font-size: 0.78rem;
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 2px;
         color: #FF3F6C;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.4rem;
     }
     .hero-main-title {
-        font-size: 2.2rem;
+        font-size: 2.1rem;
         font-weight: 900;
         color: #282C3F;
         line-height: 1.15;
         letter-spacing: -0.5px;
-        margin-bottom: 0.8rem;
+        margin-bottom: 0.6rem;
     }
     .hero-description {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         color: #535766;
         line-height: 1.5;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.2rem;
     }
 
-    /* Section Headings */
-    .section-header-wrap {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        margin: 1.5rem 0 1rem 0;
-    }
-    .section-title {
-        font-size: 1.35rem;
-        font-weight: 900;
-        color: #282C3F;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-    }
-    .section-subtitle {
-        font-size: 0.85rem;
-        color: #7E818C;
-        font-weight: 500;
-    }
-
-    /* Product Grid Card & Uniform Image Sizing */
-    [data-testid="stImage"] > img {
-        height: 220px !important;
-        max-height: 220px !important;
-        min-height: 220px !important;
-        width: 100% !important;
-        object-fit: cover !important;
-        object-position: center !important;
-        border-radius: 10px !important;
-        display: block !important;
-    }
-
-    .pdp-gallery-wrap [data-testid="stImage"] > img {
-        height: 480px !important;
-        max-height: 480px !important;
-        min-height: 480px !important;
-    }
-    .look-card-container [data-testid="stImage"] > img {
-        height: 160px !important;
-        max-height: 160px !important;
-        min-height: 160px !important;
-    }
-    .thumb-wrap [data-testid="stImage"] > img {
-        height: 90px !important;
-        max-height: 90px !important;
-        min-height: 90px !important;
-    }
-
-    .catalog-item-card {
+    /* Product Cards */
+    .catalog-card-wrap {
         background: #FFFFFF;
         border: 1px solid #ECEEF0;
         border-radius: 12px;
-        overflow: hidden;
+        padding: 10px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-        margin-bottom: 1rem;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
+        margin-bottom: 0.8rem;
         transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
-    .catalog-item-card:hover {
+    .catalog-card-wrap:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
     }
-    .catalog-item-info {
-        padding: 10px 12px;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+
+    /* StyleSync Interceptor Container */
+    .stylesync-interceptor-box {
+        background: linear-gradient(135deg, #FFF0F4 0%, #FFFFFF 100%);
+        border: 1.5px solid #FFD8E4;
+        border-radius: 14px;
+        padding: 1.3rem;
+        margin: 1.2rem 0;
+        box-shadow: 0 4px 18px rgba(255, 63, 108, 0.08);
+        position: relative;
     }
 
     /* StyleSync Studio Collage Card */
-    .look-card-container {
+    .look-card-box {
         background: #FFFFFF;
         border: 1.5px solid #EAEAEA;
-        border-radius: 16px;
-        padding: 1.2rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
+        border-radius: 14px;
+        padding: 1.1rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        margin-bottom: 1rem;
     }
-    .look-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.8rem;
+
+    /* UI Pill Badges */
+    .ui-badge-owned {
+        font-size: 0.68rem;
+        font-weight: 800;
+        background: #E8F8F5;
+        color: #03A685;
+        padding: 3px 8px;
+        border-radius: 9999px;
+        display: inline-block;
+        text-transform: uppercase;
     }
-    .look-card-title {
-        font-size: 1.1rem;
-        font-weight: 900;
-        color: #282C3F;
-    }
-    .look-score-badge {
-        font-size: 0.75rem;
+    .ui-badge-wishlist {
+        font-size: 0.68rem;
         font-weight: 800;
         background: #FFF0F4;
         color: #FF3F6C;
         padding: 3px 8px;
-        border-radius: 12px;
-        border: 1px solid #FFCCD7;
+        border-radius: 9999px;
+        display: inline-block;
+        text-transform: uppercase;
     }
 
-    /* WhatsApp Social Poll Card */
-    .whatsapp-preview-box {
+    /* WhatsApp Simulated UI */
+    .wa-chat-container {
         background: #EFEAE2;
         border-radius: 16px;
-        padding: 1.2rem;
+        overflow: hidden;
         border: 1px solid #E0D8CC;
         box-shadow: 0 4px 20px rgba(0,0,0,0.06);
     }
-    .whatsapp-bubble {
-        background: #FFFFFF;
-        border-radius: 12px;
-        padding: 1rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        margin-bottom: 1rem;
+    .wa-chat-header {
+        background: #075E54;
+        color: #FFFFFF;
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        font-size: 0.92rem;
+    }
+    .wa-chat-body {
+        padding: 16px;
+    }
+    .wa-chat-bubble {
+        background: #DCF8C6;
+        border-radius: 8px 8px 8px 0;
+        padding: 12px 14px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+        max-width: 90%;
+        margin-bottom: 12px;
         position: relative;
     }
 
-    /* Streamlit Button Custom Styler */
+    /* Streamlit Button Universal Overrides */
     div.stButton > button {
         border-radius: 8px !important;
-        font-weight: 800 !important;
+        font-weight: 700 !important;
         font-size: 0.8rem !important;
         height: 38px !important;
         min-height: 38px !important;
@@ -253,13 +229,27 @@ CUSTOM_CSS = """
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        padding: 0 8px !important;
-    }
-        letter-spacing: 0.3px !important;
+        padding: 0 10px !important;
+        letter-spacing: 0.2px !important;
         transition: all 0.15s ease-in-out !important;
     }
     div.stButton > button:hover {
         transform: translateY(-1px);
+    }
+    div.stButton > button[kind="primary"] {
+        background: #FF3F6C !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        box-shadow: 0 4px 12px rgba(255, 63, 108, 0.25) !important;
+    }
+    div.stButton > button[kind="secondary"] {
+        background: #FFFFFF !important;
+        color: #282C3F !important;
+        border: 1px solid #D4D5D9 !important;
+    }
+    div.stButton > button[kind="secondary"]:hover {
+        border-color: #282C3F !important;
+        background: #FAFAFA !important;
     }
 </style>
 """
@@ -1462,13 +1452,13 @@ def render_catalog_view() -> None:
                 img_html = f'<img src="{item["img"]}" style="width: 100%; height: 220px; max-height: 220px; min-height: 220px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />'
 
                 card_html = (
-                    f'<div>'
+                    f'<div class="catalog-card-wrap">'
                     f'{img_html}'
                     f'<div style="margin-top: 6px;">'
                     f'<div style="height: 24px; display: flex; align-items: center;">{badge_html}</div>'
                     f'<div style="font-weight: 900; font-size: 0.82rem; color: #282C3F; text-transform: uppercase; height: 18px; line-height: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px;">{item["brand"]}</div>'
                     f'<div style="font-size: 0.8rem; color: #535766; font-weight: 500; height: 36px; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-top: 2px;">{item["name"]}</div>'
-                    f'<div style="display: flex; align-items: baseline; gap: 6px; height: 22px; margin: 4px 0 8px 0;">'
+                    f'<div style="display: flex; align-items: baseline; gap: 6px; height: 22px; margin: 4px 0 2px 0;">'
                     f'<span style="font-weight: 900; font-size: 0.92rem; color: #282C3F;">{item["price"]}</span>'
                     f'<span style="font-size: 0.75rem; color: #94969F; text-decoration: line-through;">{item["mrp"]}</span>'
                     f'<span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C;">{item["discount"]}</span>'
@@ -1690,13 +1680,14 @@ def render_pdp_view() -> None:
         if item.get("is_stylesync_eligible", False):
             st.markdown(
                 """
-                <div style="background: linear-gradient(135deg, #FFF0F4 0%, #F5F0FF 100%); border: 2px solid #FF3F6C; border-radius: 14px; padding: 1.2rem; margin-bottom: 1.5rem; box-shadow: 0 4px 16px rgba(255, 63, 108, 0.08);">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                        <span style="font-size: 1.4rem;">✨</span>
-                        <span style="font-size: 1rem; font-weight: 900; color: #FF3F6C;">StyleSync™ Smart Match Found!</span>
+                <div class="stylesync-interceptor-box">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 0.72rem; font-weight: 900; background: #FF3F6C; color: #FFF; padding: 3px 8px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.5px;">✨ StyleSync™ AI Match Found</span>
+                        <span style="font-size: 0.75rem; font-weight: 800; color: #03A685;">3 Matched Outfits</span>
                     </div>
-                    <p style="font-size: 0.85rem; color: #282C3F; font-weight: 600; margin-bottom: 0.8rem; line-height: 1.4;">
-                        We detected <b>3 items in your purchase history</b> (Zara Trousers, Olive Linen Shirt, Fossil Watch) that create full modular outfits with this item.
+                    <h3 style="font-size: 1.05rem; font-weight: 900; color: #282C3F; margin: 4px 0 6px 0;">Solve Styling Hesitation in 1 Tap</h3>
+                    <p style="font-size: 0.84rem; color: #535766; line-height: 1.45; margin-bottom: 0.8rem;">
+                        We automatically matched this <b>Mango Man Blazer</b> with 3 items already in your closet (Zara Trousers, H&M Shirt, Fossil Watch). Unlock the Rule-of-3 modular look book!
                     </p>
                 </div>
                 """,
@@ -1919,31 +1910,34 @@ def render_stylesync_view() -> None:
     with l_col1:
         st.markdown(
             """
-            <div class="look-card-container">
-                <div class="look-card-header">
-                    <span class="look-card-title">Look 1: Sunset Linen</span>
-                    <span class="look-score-badge">98% Match</span>
+            <div class="look-card-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="font-size: 1.05rem; font-weight: 900; color: #282C3F;">Look 1: Sunset Linen</span>
+                    <span style="font-size: 0.72rem; font-weight: 900; background: #E8F8F5; color: #03A685; padding: 2px 8px; border-radius: 9999px;">98% MATCH</span>
                 </div>
-                <div style="font-size: 0.75rem; font-weight: 700; color: #03A685; margin-bottom: 8px;">
-                    ✅ 100% Owned Pieces (Extra Cost: ₹0)
+                <div style="display: flex; align-items: center; gap: 8px; background: #FFF5F7; border: 1px solid #FFE0E6; border-radius: 8px; padding: 5px 8px; margin-bottom: 8px;">
+                    <span style="font-size: 0.65rem; font-weight: 900; color: #FF3F6C; background: #FFF; padding: 1px 5px; border-radius: 4px;">ANCHOR</span>
+                    <span style="font-size: 0.72rem; font-weight: 800; color: #282C3F;">MANGO MAN Linen Blazer (₹3,499)</span>
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
         st.markdown(
-            '<img src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 220px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
+            '<img src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 210px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
             unsafe_allow_html=True
         )
-        st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Smart Casual Ensemble</div><div style='font-size: 0.72rem; color: #7E818C;'>Blazer + Linen Shirt + Tailored Trousers</div>", unsafe_allow_html=True)
+        st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Smart Casual Ensemble</div><div style='font-size: 0.72rem; color: #7E818C; margin-bottom: 4px;'>Blazer + Linen Shirt + Tailored Trousers</div>", unsafe_allow_html=True)
         
         img_sub1, img_sub2 = st.columns(2)
         with img_sub1:
-            st.markdown(f'<img src="{IMAGE_OLIVE_SHIRT}" style="width: 100%; height: 85px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
-            st.markdown("<div style='font-size: 0.68rem; font-weight: 700; color: #03A685;'>H&M Shirt (In Closet)</div>", unsafe_allow_html=True)
+            st.markdown(f'<img src="{IMAGE_OLIVE_SHIRT}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>H&M Shirt</div>", unsafe_allow_html=True)
         with img_sub2:
-            st.markdown(f'<img src="{IMAGE_BLACK_TROUSERS}" style="width: 100%; height: 85px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
-            st.markdown("<div style='font-size: 0.68rem; font-weight: 700; color: #03A685;'>Zara Pants (In Closet)</div>", unsafe_allow_html=True)
+            st.markdown(f'<img src="{IMAGE_BLACK_TROUSERS}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>Zara Pants</div>", unsafe_allow_html=True)
         
         b_p1, b_p2 = st.columns(2)
         with b_p1:
@@ -1962,31 +1956,34 @@ def render_stylesync_view() -> None:
     with l_col2:
         st.markdown(
             """
-            <div class="look-card-container">
-                <div class="look-card-header">
-                    <span class="look-card-title">Look 2: Urban Brunch</span>
-                    <span class="look-score-badge">94% Match</span>
+            <div class="look-card-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="font-size: 1.05rem; font-weight: 900; color: #282C3F;">Look 2: Urban Brunch</span>
+                    <span style="font-size: 0.72rem; font-weight: 900; background: #FFF0F4; color: #FF3F6C; padding: 2px 8px; border-radius: 9999px;">94% MATCH</span>
                 </div>
-                <div style="font-size: 0.75rem; font-weight: 700; color: #FF3F6C; margin-bottom: 8px;">
-                    ✨ 2 Closet + 1 Wishlist Add-on
+                <div style="display: flex; align-items: center; gap: 8px; background: #FFF5F7; border: 1px solid #FFE0E6; border-radius: 8px; padding: 5px 8px; margin-bottom: 8px;">
+                    <span style="font-size: 0.65rem; font-weight: 900; color: #FF3F6C; background: #FFF; padding: 1px 5px; border-radius: 4px;">ANCHOR</span>
+                    <span style="font-size: 0.72rem; font-weight: 800; color: #282C3F;">MANGO MAN Linen Blazer (₹3,499)</span>
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
         st.markdown(
-            '<img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 220px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
+            '<img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 210px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
             unsafe_allow_html=True
         )
-        st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Relaxed Weekend Layering</div><div style='font-size: 0.72rem; color: #7E818C;'>Blazer + White Crewneck Tee + Retro Sneakers</div>", unsafe_allow_html=True)
+        st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Relaxed Weekend Layering</div><div style='font-size: 0.72rem; color: #7E818C; margin-bottom: 4px;'>Blazer + White Crewneck Tee + Retro Sneakers</div>", unsafe_allow_html=True)
 
         img_sub3, img_sub4 = st.columns(2)
         with img_sub3:
-            st.markdown(f'<img src="{IMAGE_WHITE_TANK}" style="width: 100%; height: 85px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
-            st.markdown("<div style='font-size: 0.68rem; font-weight: 700; color: #03A685;'>White Tee (In Closet)</div>", unsafe_allow_html=True)
+            st.markdown(f'<img src="{IMAGE_WHITE_TANK}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>White Tee</div>", unsafe_allow_html=True)
         with img_sub4:
-            st.markdown(f'<img src="{IMAGE_PUMA_SNEAKERS}" style="width: 100%; height: 85px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
-            st.markdown("<div style='font-size: 0.68rem; font-weight: 700; color: #FF3F6C;'>Puma Sneakers (₹2,749)</div>", unsafe_allow_html=True)
+            st.markdown(f'<img src="{IMAGE_PUMA_SNEAKERS}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown("<div class='ui-badge-wishlist' style='margin-top: 3px;'>Add-on (₹2,749)</div>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>Puma Court</div>", unsafe_allow_html=True)
 
         b_p3, b_p4 = st.columns(2)
         with b_p3:
@@ -2005,31 +2002,34 @@ def render_stylesync_view() -> None:
     with l_col3:
         st.markdown(
             """
-            <div class="look-card-container">
-                <div class="look-card-header">
-                    <span class="look-card-title">Look 3: Smart Business</span>
-                    <span class="look-score-badge">91% Match</span>
+            <div class="look-card-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="font-size: 1.05rem; font-weight: 900; color: #282C3F;">Look 3: Smart Business</span>
+                    <span style="font-size: 0.72rem; font-weight: 900; background: #E8F8F5; color: #03A685; padding: 2px 8px; border-radius: 9999px;">91% MATCH</span>
                 </div>
-                <div style="font-size: 0.75rem; font-weight: 700; color: #03A685; margin-bottom: 8px;">
-                    ✅ Evening Gallery & Office Ready
+                <div style="display: flex; align-items: center; gap: 8px; background: #FFF5F7; border: 1px solid #FFE0E6; border-radius: 8px; padding: 5px 8px; margin-bottom: 8px;">
+                    <span style="font-size: 0.65rem; font-weight: 900; color: #FF3F6C; background: #FFF; padding: 1px 5px; border-radius: 4px;">ANCHOR</span>
+                    <span style="font-size: 0.72rem; font-weight: 800; color: #282C3F;">MANGO MAN Linen Blazer (₹3,499)</span>
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
         st.markdown(
-            '<img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 220px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
+            '<img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 210px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
             unsafe_allow_html=True
         )
-        st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Tailored Executive Sharp</div><div style='font-size: 0.72rem; color: #7E818C;'>Blazer + Chrono Watch + Raw Indigo Denim</div>", unsafe_allow_html=True)
+        st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Tailored Executive Sharp</div><div style='font-size: 0.72rem; color: #7E818C; margin-bottom: 4px;'>Blazer + Chrono Watch + Raw Indigo Denim</div>", unsafe_allow_html=True)
 
         img_sub5, img_sub6 = st.columns(2)
         with img_sub5:
-            st.markdown(f'<img src="{IMAGE_FOSSIL_WATCH}" style="width: 100%; height: 85px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
-            st.markdown("<div style='font-size: 0.68rem; font-weight: 700; color: #03A685;'>Fossil Watch (In Closet)</div>", unsafe_allow_html=True)
+            st.markdown(f'<img src="{IMAGE_FOSSIL_WATCH}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>Fossil Watch</div>", unsafe_allow_html=True)
         with img_sub6:
-            st.markdown(f'<img src="{IMAGE_LIGHT_DENIM}" style="width: 100%; height: 85px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
-            st.markdown("<div style='font-size: 0.68rem; font-weight: 700; color: #03A685;'>Levi's Denim (In Closet)</div>", unsafe_allow_html=True)
+            st.markdown(f'<img src="{IMAGE_LIGHT_DENIM}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>Levi's 511</div>", unsafe_allow_html=True)
 
         b_p5, b_p6 = st.columns(2)
         with b_p5:
@@ -2049,32 +2049,43 @@ def render_stylesync_view() -> None:
     # WhatsApp Social Loop Simulator Section
     st.markdown(
         """
-        <div class="section-header-wrap">
+        <div class="section-header-wrap" style="margin-top: 2rem;">
             <div>
                 <div class="section-title">📱 WHATSAPP SOCIAL VALIDATION LOOP ("BUY OR DROP")</div>
-                <div class="section-subtitle">Prevent off-platform leakage: Let trusted friends vote directly on your curated outfit</div>
+                <div class="section-subtitle">Prevent off-platform styling hesitation • Real-time peer feedback directly on your curated outfit</div>
             </div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    wa_col1, wa_col2 = st.columns([1.2, 1])
+    wa_col1, wa_col2 = st.columns([1.3, 1], gap="large")
 
     with wa_col1:
-        look_name = st.session_state.get("poll_look_title", "Look 1: Sunset Linen")
+        look_name = st.session_state.get("poll_look_title", "Look 1: Sunset Linen (Smart Casual)")
+        
+        # WhatsApp Chat UI Container
         st.markdown(
             f"""
-            <div class="whatsapp-preview-box">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                    <span style="font-size: 1.4rem;">💬</span>
-                    <span style="font-weight: 900; color: #075E54; font-size: 1rem;">WhatsApp Style Group • Live Peer Poll</span>
-                </div>
-                <div class="whatsapp-bubble">
-                    <div style="font-weight: 800; font-size: 0.95rem; color: #282C3F; margin-bottom: 4px;">
-                        "Hey guys! Thinking of buying this MANGO MAN Rust Linen Blazer. Styled it with my Zara trousers on Myntra StyleSync. Buy or Drop?"
+            <div class="wa-chat-container">
+                <div class="wa-chat-header">
+                    <div style="width: 34px; height: 34px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #FFF;">👥</div>
+                    <div>
+                        <div style="font-weight: 800; font-size: 0.92rem; color: #FFF; line-height: 1.2;">Fashion Inner Circle (5 Members)</div>
+                        <div style="font-size: 0.72rem; color: #D1E7DD; font-weight: 500;">Online • Live Style Poll Active</div>
                     </div>
-                    <div style="font-size: 0.75rem; color: #878B94; margin-bottom: 8px;"><b>{look_name}</b> • Match Rating 98%</div>
+                </div>
+                <div class="wa-chat-body">
+                    <div class="wa-chat-bubble">
+                        <div style="font-weight: 800; font-size: 0.88rem; color: #111B21; margin-bottom: 6px; line-height: 1.4;">
+                            "Hey everyone! 👋 Thinking of ordering this <b>MANGO MAN Rust Linen Blazer</b>. StyleSync generated this outfit with my Zara trousers. <b>Buy or Drop?</b>"
+                        </div>
+                        <div style="background: #FFFFFF; border-radius: 8px; padding: 8px; margin: 8px 0; border: 1px solid #D9FDD3;">
+                            <div style="font-size: 0.76rem; font-weight: 800; color: #FF3F6C;">✨ {look_name}</div>
+                            <div style="font-size: 0.72rem; color: #54656F;">Anchor Blazer (₹3,499) + 2 Owned Closet Pieces</div>
+                        </div>
+                        <div style="text-align: right; font-size: 0.65rem; color: #667781; font-weight: 600;">10:42 AM ✓✓</div>
+                    </div>
                 </div>
             </div>
             """,
@@ -2089,7 +2100,7 @@ def render_stylesync_view() -> None:
                 st.toast("🎉 5 Friends voted 'BUY IT'! High peer confidence score.")
                 st.rerun()
         with v2:
-            if st.button("👎 DROP IT (16% Votes)", key="vote_drop_btn", use_container_width=True):
+            if st.button("👎 DROP IT (16% Votes)", key="vote_drop_btn", type="secondary", use_container_width=True):
                 st.session_state["vote_feedback"] = "drop"
                 st.toast("Peer feedback registered.")
                 st.rerun()
@@ -2097,21 +2108,38 @@ def render_stylesync_view() -> None:
     with wa_col2:
         feedback = st.session_state.get("vote_feedback", None)
         if feedback == "buy":
-            st.success("🌟 **Peer Confidence Verified!** 5 of 6 friends recommend buying. Ready to complete order with 1-click checkout.")
-            if st.button("🛍️ PROCEED TO CHECKOUT (₹3,499)", key="wa_checkout_btn", type="primary", use_container_width=True):
+            st.markdown(
+                """
+                <div style="background: #E8F8F5; border: 1.5px solid #03A685; border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem;">
+                    <div style="font-weight: 900; font-size: 0.95rem; color: #03A685; margin-bottom: 4px;">🌟 Peer Confidence Verified (5/6 Votes)</div>
+                    <p style="font-size: 0.82rem; color: #282C3F; margin-bottom: 0;">Your circle voted <b>BUY IT</b>. Zero purchase hesitation — ready for 1-click checkout.</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            if st.button("🛍️ PROCEED TO 1-CLICK CHECKOUT (₹3,499)", key="wa_checkout_btn", type="primary", use_container_width=True):
                 st.balloons()
+                st.session_state["bag_count"] += 1
                 st.toast("🎉 Order placed successfully with StyleSync savings!")
         elif feedback == "drop":
-            st.info("💡 Friends suggested checking out alternative colors or exploring other casual jackets.")
+            st.markdown(
+                """
+                <div style="background: #FFF5F5; border: 1.5px solid #FF4B4B; border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem;">
+                    <div style="font-weight: 900; font-size: 0.95rem; color: #FF4B4B; margin-bottom: 4px;">💡 Peer Feedback Noted</div>
+                    <p style="font-size: 0.82rem; color: #282C3F; margin-bottom: 0;">2 friends suggested checking out olive blazers or lightweight shirts instead.</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
         else:
             st.markdown(
                 """
                 <div style="background: #FFFFFF; border: 1px solid #ECEEF0; border-radius: 12px; padding: 1.2rem;">
-                    <div style="font-weight: 800; color: #282C3F; margin-bottom: 6px;">How the WhatsApp Loop Works:</div>
-                    <ul style="font-size: 0.82rem; color: #535766; padding-left: 1.2rem; line-height: 1.6;">
+                    <div style="font-weight: 900; font-size: 0.92rem; color: #282C3F; margin-bottom: 8px;">How the WhatsApp Loop Works:</div>
+                    <ul style="font-size: 0.82rem; color: #535766; padding-left: 1.2rem; line-height: 1.6; margin-bottom: 0;">
                         <li>Generates a clean visual card pairing your wishlisted item + owned pieces.</li>
                         <li>Friends vote with one tap without leaving their chat app.</li>
-                        <li>Live results stream back directly to Myntra checkout.</li>
+                        <li>Live confidence scores stream back directly to Myntra checkout.</li>
                     </ul>
                 </div>
                 """,
