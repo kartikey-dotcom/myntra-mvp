@@ -1244,7 +1244,7 @@ def render_drawers_and_modals() -> None:
             f'</div>'
             f'<div style="background: #F9FAFB; border: 1px solid #ECEEF0; border-radius: 10px; padding: 10px 14px; margin-bottom: 1.2rem; font-size: 0.8rem; color: #535766; display: flex; justify-content: space-between; align-items: center; text-align: left;">'
             f'<div><b>📍 Delivery Address:</b> Kartikey Sharma • 402, Skyline Residency, Bangalore - 560001</div>'
-            f'<div style="font-weight: 800; color: #03A685;">🛡️ 14-Day Free Returns</div>'
+            f'<div style="font-weight: 800; color: #03A685;">🛡️ 30-Day VIP Trial & Free Exchange</div>'
             f'</div>'
             f'</div>'
         )
@@ -1863,11 +1863,17 @@ def render_wishlist_view() -> None:
                 <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 0.8rem;">
                     <span style="font-size: 1.4rem; font-weight: 900; color: #282C3F;">{anchor['price']}</span>
                     <span style="font-size: 0.95rem; color: #94969F; text-decoration: line-through;">{anchor.get('original_price', anchor['price'])}</span>
-                    <span style="font-size: 0.85rem; font-weight: 800; color: #FF3F6C;">({anchor.get('discount', '30% OFF')})</span>
+                    <span style="font-size: 0.75rem; font-weight: 800; background: #E8F8F5; color: #03A685; padding: 2px 8px; border-radius: 4px;">✨ StyleSync Verified Anchor</span>
                 </div>
-                <p style="font-size: 0.84rem; color: #535766; line-height: 1.4; margin-bottom: 1rem;">
+                <p style="font-size: 0.84rem; color: #535766; line-height: 1.4; margin-bottom: 0.8rem;">
                     Unlocks <b>3 modular outfits</b> using clothes and accessories you already own in your closet. Zero styling hesitation!
                 </p>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; background: #FAFBFC; border: 1px solid #ECEEF0; border-radius: 8px; padding: 8px; margin-bottom: 0.8rem; font-size: 0.74rem; color: #535766;">
+                    <div>⚡ <b>VIP Next-Day Dispatch:</b> Priority courier slot</div>
+                    <div>👔 <b>Free AI Lookbook:</b> 3 complete ensemble pairings</div>
+                    <div>📦 <b>Smart Closet Sync:</b> Auto-cataloged in wardrobe</div>
+                    <div>🛡️ <b>30-Day Free Trial:</b> Doorstep fit exchange</div>
+                </div>
             </div>
             """,
             unsafe_allow_html=True
@@ -2264,9 +2270,16 @@ def render_stylesync_view() -> None:
                 f'<div style="background: #C3E6CB; border-radius: 6px; height: 10px; width: 100%; overflow: hidden; margin-bottom: 8px;">'
                 f'<div style="background: #03A685; width: {buy_pct}%; height: 100%;"></div>'
                 f'</div>'
-                f'<div style="font-size: 0.72rem; color: #535766; display: flex; justify-content: space-between;">'
+                f'<div style="font-size: 0.72rem; color: #535766; display: flex; justify-content: space-between; margin-bottom: 10px;">'
                 f'<span>🔥 {buy_count} Voted \'Buy\' ({buy_pct}%)</span>'
                 f'<span>{drop_count} Voted \'Drop\' ({drop_pct}%)</span>'
+                f'</div>'
+                f'<div style="background: #FFFFFF; border: 1px solid #A3E6D8; border-radius: 8px; padding: 8px; font-size: 0.73rem; color: #282C3F;">'
+                f'<div style="font-weight: 800; color: #03A685; margin-bottom: 4px;">🎁 Non-Monetary VIP Perks Unlocked:</div>'
+                f'<div>• ⚡ <b>Priority 24-Hr Courier Dispatch Slot</b></div>'
+                f'<div>• 👔 <b>Free Digital Lookbook & Modular Styling PDF</b></div>'
+                f'<div>• 📦 <b>Auto-Sync into Your Smart Closet Inventory</b></div>'
+                f'<div>• 🛡️ <b>30-Day Doorstep Fit Exchange Guarantee</b></div>'
                 f'</div>'
                 f'</div>'
             )
@@ -2278,12 +2291,12 @@ def render_stylesync_view() -> None:
                     "brand": "MANGO MAN",
                     "price": look_price,
                     "mrp": "₹4,999",
-                    "discount": "30% OFF",
+                    "discount": "StyleSync VIP",
                     "img": look_img
                 }
                 st.session_state["show_order_modal"] = True
                 st.session_state["bag_count"] += 1
-                st.toast("🎉 Order placed successfully with StyleSync savings!")
+                st.toast("🎉 Order placed! VIP Express Delivery & Virtual Wardrobe Sync unlocked!")
                 st.rerun()
         elif feedback == "drop":
             st.markdown(
