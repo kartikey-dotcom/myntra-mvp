@@ -400,7 +400,7 @@ MICRO_CATALOG: List[CatalogItem] = [
         "rating": "4.8 ★",
         "is_stylesync_eligible": False,
         "tags": "tshirt t-shirt tee graphic nike sportswear white",
-        "img": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80"
+        "img": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800&auto=format&fit=crop&q=80"
     },
     {
         "id": "tshirt_2",
