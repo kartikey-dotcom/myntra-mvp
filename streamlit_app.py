@@ -208,14 +208,85 @@ CUSTOM_CSS = """
     .wa-chat-body {
         padding: 16px;
     }
-    .wa-chat-bubble {
-        background: #DCF8C6;
-        border-radius: 8px 8px 8px 0;
-        padding: 12px 14px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.12);
-        max-width: 90%;
-        margin-bottom: 12px;
+    /* Sparkling Green Tick Order Success Modal */
+    @keyframes celebrationPop {
+        0% { transform: scale(0.7); opacity: 0; }
+        60% { transform: scale(1.05); opacity: 1; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes sparkleFloat1 {
+        0%, 100% { transform: translate(0, 0) scale(0.8) rotate(0deg); opacity: 0.6; }
+        50% { transform: translate(-10px, -15px) scale(1.3) rotate(20deg); opacity: 1; }
+    }
+    @keyframes sparkleFloat2 {
+        0%, 100% { transform: translate(0, 0) scale(0.8) rotate(0deg); opacity: 0.6; }
+        50% { transform: translate(12px, -14px) scale(1.3) rotate(-25deg); opacity: 1; }
+    }
+    @keyframes sparkleFloat3 {
+        0%, 100% { transform: translate(0, 0) scale(0.7) rotate(0deg); opacity: 0.5; }
+        50% { transform: translate(-8px, 12px) scale(1.2) rotate(15deg); opacity: 0.9; }
+    }
+    @keyframes greenGlowPulse {
+        0% { box-shadow: 0 0 0 0 rgba(3, 166, 133, 0.5); }
+        70% { box-shadow: 0 0 0 22px rgba(3, 166, 133, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(3, 166, 133, 0); }
+    }
+    @keyframes drawCheck {
+        0% { stroke-dashoffset: 48; }
+        100% { stroke-dashoffset: 0; }
+    }
+
+    .order-celebration-container {
+        background: linear-gradient(135deg, #FFFFFF 0%, #F4FDFB 100%);
+        border: 2.5px solid #03A685;
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 16px 45px rgba(3, 166, 133, 0.2);
+        animation: celebrationPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        margin-bottom: 2rem;
         position: relative;
+    }
+    .sparkle-badge-center {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        margin: 0 auto 12px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .green-tick-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #03A685 0%, #00876C 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: greenGlowPulse 2s infinite;
+        box-shadow: 0 8px 24px rgba(3, 166, 133, 0.35);
+    }
+    .sparkle-icon-1 {
+        position: absolute;
+        top: -6px;
+        left: -4px;
+        font-size: 1.4rem;
+        animation: sparkleFloat1 2s infinite ease-in-out;
+    }
+    .sparkle-icon-2 {
+        position: absolute;
+        top: -4px;
+        right: -6px;
+        font-size: 1.4rem;
+        animation: sparkleFloat2 2.2s infinite ease-in-out;
+    }
+    .sparkle-icon-3 {
+        position: absolute;
+        bottom: -2px;
+        right: 4px;
+        font-size: 1.2rem;
+        animation: sparkleFloat3 1.8s infinite ease-in-out;
     }
 
     /* Streamlit Button Universal Overrides */
@@ -1119,33 +1190,55 @@ def render_top_navbar() -> None:
 # ==============================================================================
 
 def render_drawers_and_modals() -> None:
-    # 1-Click Order Placed Celebration Modal
+    # 1-Click Order Placed Celebration Modal with Sparkling Green Tick
     if st.session_state.get("show_order_modal", False) and st.session_state.get("ordered_item"):
         ord_item = st.session_state["ordered_item"]
+        img_url = ord_item.get("img", ord_item.get("image_url", TARGET_ITEM["image_url"]))
         st.markdown(
             f"""
-            <div class="modal-banner" style="border: 2px solid #03A685; box-shadow: 0 10px 30px rgba(3, 166, 133, 0.15); animation: fadeIn 0.3s ease-in-out;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <div style="font-size: 1.3rem; font-weight: 900; color: #282C3F;">
-                        🎉 ORDER CONFIRMED & READY TO DISPATCH!
+            <div class="order-celebration-container">
+                <div class="sparkle-badge-center">
+                    <span class="sparkle-icon-1">✨</span>
+                    <span class="sparkle-icon-2">⭐</span>
+                    <span class="sparkle-icon-3">✨</span>
+                    <div class="green-tick-circle">
+                        <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
                     </div>
-                    <span style="font-size: 0.8rem; font-weight: 800; color: #03A685; background: #E8F8F5; padding: 4px 10px; border-radius: 6px;">
-                        Order #MYN-{int(time.time()) % 1000000}
-                    </span>
                 </div>
-                <div style="display: flex; gap: 1.2rem; align-items: center; background: #F9FAFB; padding: 14px; border-radius: 10px; margin-bottom: 1rem; border: 1px solid #ECEEF0;">
-                    <img src="{ord_item['img']}" style="width: 80px; height: 100px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                <div style="font-size: 0.76rem; font-weight: 900; color: #03A685; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px;">
+                    PAYMENT VERIFIED • 100% GENUINE GUARANTEE
+                </div>
+                <h1 style="font-size: 1.8rem; font-weight: 900; color: #282C3F; margin: 0 0 6px 0;">
+                    ORDER PLACED SUCCESSFULLY! 🎉
+                </h1>
+                <p style="font-size: 0.88rem; color: #535766; margin-bottom: 1.2rem;">
+                    Order <b>#MYN-{int(time.time()) % 1000000}</b> • Estimated Express Delivery: <b>Tomorrow by 5:00 PM</b> ⚡
+                </p>
+
+                <div style="display: flex; gap: 1.2rem; align-items: center; background: #FFFFFF; padding: 14px; border-radius: 12px; margin-bottom: 1.2rem; border: 1.5px solid #E0F2FE; box-shadow: 0 4px 12px rgba(0,0,0,0.03); text-align: left;">
+                    <img src="{img_url}" style="width: 80px; height: 100px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
                     <div style="flex: 1;">
-                        <span style="font-size: 0.75rem; font-weight: 800; color: #FF3F6C; text-transform: uppercase;">{ord_item['brand']}</span>
-                        <h4 style="font-size: 1.05rem; font-weight: 900; color: #282C3F; margin: 2px 0;">{ord_item['name']}</h4>
+                        <span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C; text-transform: uppercase;">{ord_item['brand']}</span>
+                        <h4 style="font-size: 1.1rem; font-weight: 900; color: #282C3F; margin: 2px 0;">{ord_item['name']}</h4>
                         <div style="display: flex; align-items: baseline; gap: 8px; margin: 4px 0;">
-                            <span style="font-size: 1.1rem; font-weight: 900; color: #282C3F;">{ord_item['price']}</span>
-                            <span style="font-size: 0.85rem; color: #94969F; text-decoration: line-through;">{ord_item['mrp']}</span>
-                            <span style="font-size: 0.75rem; font-weight: 800; color: #FF3F6C;">{ord_item['discount']}</span>
+                            <span style="font-size: 1.15rem; font-weight: 900; color: #282C3F;">{ord_item['price']}</span>
+                            <span style="font-size: 0.85rem; color: #94969F; text-decoration: line-through;">{ord_item.get('mrp', ord_item.get('original_price', ord_item['price']))}</span>
+                            <span style="font-size: 0.75rem; font-weight: 800; color: #03A685; background: #E8F8F5; padding: 2px 6px; border-radius: 4px;">{ord_item.get('discount', '30% OFF')}</span>
                         </div>
-                        <div style="font-size: 0.8rem; color: #03A685; font-weight: 700;">
-                            ⚡ Fast Express Delivery: <b>Tomorrow by 5:00 PM</b> • 100% Genuine • Free Returns
+                        <div style="font-size: 0.78rem; color: #03A685; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                            <span>✨ Added to your Smart Wardrobe Closet Inventory</span>
                         </div>
+                    </div>
+                </div>
+
+                <div style="background: #F9FAFB; border: 1px solid #ECEEF0; border-radius: 10px; padding: 10px 14px; margin-bottom: 1.2rem; font-size: 0.8rem; color: #535766; display: flex; justify-content: space-between; align-items: center; text-align: left;">
+                    <div>
+                        <b>📍 Delivery Address:</b> Kartikey Sharma • 402, Skyline Residency, Bangalore - 560001
+                    </div>
+                    <div style="font-weight: 800; color: #03A685;">
+                        🛡️ 14-Day Free Returns
                     </div>
                 </div>
             </div>
@@ -1198,8 +1291,18 @@ def render_drawers_and_modals() -> None:
         b_c1, b_c2 = st.columns(2)
         with b_c1:
             if st.button("💳 Proceed to Checkout Now", key="drawer_checkout_btn", type="primary", use_container_width=True):
-                st.toast("🎉 Order placed successfully! Delivery scheduled by tomorrow.")
+                st.session_state["ordered_item"] = {
+                    "id": "hero_1",
+                    "name": "Rust Linen Relaxed-Fit Blazer + Zara Trousers",
+                    "brand": "MANGO MAN & ZARA",
+                    "price": "₹6,289",
+                    "mrp": "₹8,989",
+                    "discount": "30% OFF",
+                    "img": TARGET_ITEM["image_url"]
+                }
+                st.session_state["show_order_modal"] = True
                 st.session_state["show_bag_drawer"] = False
+                st.toast("🎉 Order placed successfully! Delivery scheduled by tomorrow.")
                 st.rerun()
         with b_c2:
             if st.button("✖️ Close Bag", key="close_bag_btn", use_container_width=True):
@@ -2121,8 +2224,19 @@ def render_stylesync_view() -> None:
                 unsafe_allow_html=True
             )
             if st.button("🛍️ PROCEED TO 1-CLICK CHECKOUT (₹3,499)", key="wa_checkout_btn", type="primary", use_container_width=True):
+                st.session_state["ordered_item"] = {
+                    "id": "hero_1",
+                    "name": "Rust Linen Relaxed-Fit Blazer",
+                    "brand": "MANGO MAN",
+                    "price": "₹3,499",
+                    "mrp": "₹4,999",
+                    "discount": "30% OFF",
+                    "img": TARGET_ITEM["image_url"]
+                }
+                st.session_state["show_order_modal"] = True
                 st.session_state["bag_count"] += 1
                 st.toast("🎉 Order placed successfully with StyleSync savings!")
+                st.rerun()
         elif feedback == "drop":
             st.markdown(
                 """
