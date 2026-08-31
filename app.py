@@ -2034,7 +2034,16 @@ def render_stylesync_view() -> None:
             if st.button("💬 Poll Look 1", key="poll_look_1_btn", type="primary", use_container_width=True):
                 st.session_state["poll_sent"] = True
                 st.session_state["poll_look_title"] = "Look 1: Sunset Linen (Smart Casual)"
-                st.toast("💬 Look 1 shared to WhatsApp Peer Poll!")
+                st.session_state["poll_look_match"] = "98% MATCH"
+                st.session_state["poll_look_img"] = "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=800&auto=format&fit=crop&q=80"
+                st.session_state["poll_look_desc"] = "Anchor Blazer + Linen Shirt + Zara Trousers"
+                st.session_state["poll_look_price"] = "₹3,499"
+                st.session_state["poll_buy_pct"] = 84
+                st.session_state["poll_drop_pct"] = 16
+                st.session_state["poll_buy_count"] = 5
+                st.session_state["poll_drop_count"] = 1
+                st.session_state["vote_feedback"] = None
+                st.toast("💬 Look 1 (98% Match) shared to WhatsApp Peer Poll!")
                 st.rerun()
         with b_p2:
             if st.button("🛍️ Add Look 1", key="add_l1_btn", use_container_width=True):
@@ -2081,7 +2090,16 @@ def render_stylesync_view() -> None:
             if st.button("💬 Poll Look 2", key="poll_look_2_btn", type="primary", use_container_width=True):
                 st.session_state["poll_sent"] = True
                 st.session_state["poll_look_title"] = "Look 2: Urban Brunch (Layered)"
-                st.toast("💬 Look 2 shared to WhatsApp Peer Poll!")
+                st.session_state["poll_look_match"] = "94% MATCH"
+                st.session_state["poll_look_img"] = "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80"
+                st.session_state["poll_look_desc"] = "Anchor Blazer + White Tee + Puma Sneakers"
+                st.session_state["poll_look_price"] = "₹6,248"
+                st.session_state["poll_buy_pct"] = 92
+                st.session_state["poll_drop_pct"] = 8
+                st.session_state["poll_buy_count"] = 6
+                st.session_state["poll_drop_count"] = 0
+                st.session_state["vote_feedback"] = None
+                st.toast("💬 Look 2 (94% Match) shared to WhatsApp Peer Poll!")
                 st.rerun()
         with b_p4:
             if st.button("🛍️ Add Look 2", key="add_l2_btn", use_container_width=True):
@@ -2128,7 +2146,16 @@ def render_stylesync_view() -> None:
             if st.button("💬 Poll Look 3", key="poll_look_3_btn", type="primary", use_container_width=True):
                 st.session_state["poll_sent"] = True
                 st.session_state["poll_look_title"] = "Look 3: Smart Business (Executive)"
-                st.toast("💬 Look 3 shared to WhatsApp Peer Poll!")
+                st.session_state["poll_look_match"] = "91% MATCH"
+                st.session_state["poll_look_img"] = "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&auto=format&fit=crop&q=80"
+                st.session_state["poll_look_desc"] = "Anchor Blazer + Fossil Watch + Levi's Denim"
+                st.session_state["poll_look_price"] = "₹3,499"
+                st.session_state["poll_buy_pct"] = 78
+                st.session_state["poll_drop_pct"] = 22
+                st.session_state["poll_buy_count"] = 4
+                st.session_state["poll_drop_count"] = 1
+                st.session_state["vote_feedback"] = None
+                st.toast("💬 Look 3 (91% Match) shared to WhatsApp Peer Poll!")
                 st.rerun()
         with b_p6:
             if st.button("🛍️ Add Look 3", key="add_l3_btn", use_container_width=True):
@@ -2155,82 +2182,89 @@ def render_stylesync_view() -> None:
 
     with wa_col1:
         look_name = st.session_state.get("poll_look_title", "Look 1: Sunset Linen (Smart Casual)")
-        
+        look_match = st.session_state.get("poll_look_match", "98% MATCH")
+        look_img = st.session_state.get("poll_look_img", "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=800&auto=format&fit=crop&q=80")
+        look_desc = st.session_state.get("poll_look_desc", "Anchor Blazer (₹3,499) + 2 Owned Closet Pieces")
+        look_price = st.session_state.get("poll_look_price", "₹3,499")
+        buy_pct = st.session_state.get("poll_buy_pct", 84)
+        drop_pct = st.session_state.get("poll_drop_pct", 16)
+        buy_count = st.session_state.get("poll_buy_count", 5)
+        drop_count = st.session_state.get("poll_drop_count", 1)
+
+        match_bg = "#E8F8F5" if "98" in look_match or "91" in look_match else "#FFF0F4"
+        match_color = "#03A685" if "98" in look_match or "91" in look_match else "#FF3F6C"
+
         # WhatsApp Chat UI Container
-        st.markdown(
-            f"""
-            <div class="wa-chat-container">
-                <div class="wa-chat-header">
-                    <div style="width: 34px; height: 34px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #FFF;">👗</div>
-                    <div>
-                        <div style="font-weight: 800; font-size: 0.92rem; color: #FFF; line-height: 1.2;">Style Circle (5 Members)</div>
-                        <div style="font-size: 0.72rem; color: #D1E7DD; font-weight: 500;">Online • Style Poll Active</div>
-                    </div>
-                </div>
-                <div class="wa-chat-body">
-                    <div class="wa-chat-bubble">
-                        <div style="font-weight: 800; font-size: 0.88rem; color: #111B21; margin-bottom: 6px; line-height: 1.4;">
-                            "Hey guys! Thinking of buying this <b>Rust Linen Blazer</b>. StyleSync paired it with my old Zara trousers. <b>Buy or Drop?</b> 🔥"
-                        </div>
-                        <div style="background: #FFFFFF; border-radius: 8px; padding: 10px; margin: 8px 0; border: 1px solid #D9FDD3; display: flex; align-items: center; gap: 10px;">
-                            <img src="{TARGET_ITEM['image_url']}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;" />
-                            <div style="flex: 1;">
-                                <div style="font-size: 0.76rem; font-weight: 800; color: #FF3F6C;">✨ {look_name}</div>
-                                <div style="font-size: 0.72rem; color: #54656F;">Anchor Blazer (₹3,499) + 2 Owned Closet Pieces</div>
-                            </div>
-                            <span style="font-size: 0.7rem; font-weight: 900; background: #E8F8F5; color: #03A685; padding: 2px 6px; border-radius: 4px;">98% MATCH</span>
-                        </div>
-                        <div style="text-align: right; font-size: 0.65rem; color: #667781; font-weight: 600;">10:42 AM ✓✓</div>
-                    </div>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
+        chat_html = (
+            f'<div class="wa-chat-container">'
+            f'<div class="wa-chat-header">'
+            f'<div style="width: 34px; height: 34px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #FFF;">👗</div>'
+            f'<div>'
+            f'<div style="font-weight: 800; font-size: 0.92rem; color: #FFF; line-height: 1.2;">Style Circle (5 Members)</div>'
+            f'<div style="font-size: 0.72rem; color: #D1E7DD; font-weight: 500;">Online • Style Poll Active</div>'
+            f'</div>'
+            f'</div>'
+            f'<div class="wa-chat-body">'
+            f'<div class="wa-chat-bubble">'
+            f'<div style="font-weight: 800; font-size: 0.88rem; color: #111B21; margin-bottom: 6px; line-height: 1.4;">'
+            f'"Hey guys! Thinking of buying this <b>Rust Linen Blazer</b>. StyleSync generated {look_name}. <b>Buy or Drop?</b> 🔥"'
+            f'</div>'
+            f'<div style="background: #FFFFFF; border-radius: 8px; padding: 10px; margin: 8px 0; border: 1px solid #D9FDD3; display: flex; align-items: center; gap: 10px;">'
+            f'<img src="{look_img}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;" />'
+            f'<div style="flex: 1;">'
+            f'<div style="font-size: 0.76rem; font-weight: 800; color: #FF3F6C;">✨ {look_name}</div>'
+            f'<div style="font-size: 0.72rem; color: #54656F;">{look_desc}</div>'
+            f'</div>'
+            f'<span style="font-size: 0.7rem; font-weight: 900; background: {match_bg}; color: {match_color}; padding: 2px 6px; border-radius: 4px;">{look_match}</span>'
+            f'</div>'
+            f'<div style="text-align: right; font-size: 0.65rem; color: #667781; font-weight: 600;">10:42 AM ✓✓</div>'
+            f'</div>'
+            f'</div>'
+            f'</div>'
         )
+        st.markdown(chat_html, unsafe_allow_html=True)
 
         st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
         v1, v2 = st.columns(2)
         with v1:
             if st.button("💬 Send 'Buy or Drop' Poll to WhatsApp Group", key="send_wa_poll_btn", type="primary", use_container_width=True):
                 st.session_state["vote_feedback"] = "buy"
-                st.toast("💬 Live Poll sent to WhatsApp Group! 5 friends voted 'BUY IT'.")
+                st.toast(f"💬 Live Poll for {look_name} sent to WhatsApp Group! Friends voted 'BUY IT'.")
                 st.rerun()
         with v2:
             if st.button("🗳️ Simulate Friends' Peer Feedback", key="sim_wa_votes_btn", type="secondary", use_container_width=True):
                 st.session_state["vote_feedback"] = "buy"
-                st.toast("📊 Feedback received: 84% voted BUY IT!")
+                st.toast(f"📊 Feedback received for {look_name}: {buy_pct}% voted BUY IT!")
                 st.rerun()
 
     with wa_col2:
         feedback = st.session_state.get("vote_feedback", None)
         if feedback == "buy":
-            st.markdown(
-                """
-                <div style="background: #E8F8F5; border: 1.5px solid #03A685; border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem;">
-                    <div style="font-weight: 900; font-size: 0.95rem; color: #03A685; margin-bottom: 6px;">🌟 High Peer Confidence Verified (5/6 Votes)</div>
-                    <div style="font-size: 0.82rem; color: #282C3F; margin-bottom: 10px;">
-                        <b>84% of friends voted BUY IT</b> • Styling hesitation eliminated!
-                    </div>
-                    <div style="background: #C3E6CB; border-radius: 6px; height: 10px; width: 100%; overflow: hidden; margin-bottom: 8px;">
-                        <div style="background: #03A685; width: 84%; height: 100%;"></div>
-                    </div>
-                    <div style="font-size: 0.72rem; color: #535766; display: flex; justify-content: space-between;">
-                        <span>🔥 5 Voted 'Buy' (84%)</span>
-                        <span>1 Voted 'Drop' (16%)</span>
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True
+            feedback_html = (
+                f'<div style="background: #E8F8F5; border: 1.5px solid #03A685; border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem;">'
+                f'<div style="font-weight: 900; font-size: 0.95rem; color: #03A685; margin-bottom: 6px;">🌟 High Peer Confidence Verified ({buy_count}/{buy_count + drop_count} Votes)</div>'
+                f'<div style="font-size: 0.82rem; color: #282C3F; margin-bottom: 10px;">'
+                f'<b>{buy_pct}% of friends voted BUY IT for {look_name} ({look_match})</b> • Zero styling hesitation!'
+                f'</div>'
+                f'<div style="background: #C3E6CB; border-radius: 6px; height: 10px; width: 100%; overflow: hidden; margin-bottom: 8px;">'
+                f'<div style="background: #03A685; width: {buy_pct}%; height: 100%;"></div>'
+                f'</div>'
+                f'<div style="font-size: 0.72rem; color: #535766; display: flex; justify-content: space-between;">'
+                f'<span>🔥 {buy_count} Voted \'Buy\' ({buy_pct}%)</span>'
+                f'<span>{drop_count} Voted \'Drop\' ({drop_pct}%)</span>'
+                f'</div>'
+                f'</div>'
             )
-            if st.button("🛍️ PROCEED TO 1-CLICK CHECKOUT (₹3,499)", key="wa_checkout_btn", type="primary", use_container_width=True):
+            st.markdown(feedback_html, unsafe_allow_html=True)
+            if st.button(f"🛍️ PROCEED TO 1-CLICK CHECKOUT ({look_price})", key="wa_checkout_btn", type="primary", use_container_width=True):
                 st.session_state["ordered_item"] = {
                     "id": "hero_1",
-                    "name": "Rust Linen Relaxed-Fit Blazer",
+                    "name": f"Rust Linen Relaxed-Fit Blazer ({look_name})",
                     "brand": "MANGO MAN",
-                    "price": "₹3,499",
+                    "price": look_price,
                     "mrp": "₹4,999",
                     "discount": "30% OFF",
-                    "img": TARGET_ITEM["image_url"]
+                    "img": look_img
                 }
                 st.session_state["show_order_modal"] = True
                 st.session_state["bag_count"] += 1
