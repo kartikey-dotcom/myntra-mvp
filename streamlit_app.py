@@ -1194,57 +1194,56 @@ def render_drawers_and_modals() -> None:
     if st.session_state.get("show_order_modal", False) and st.session_state.get("ordered_item"):
         ord_item = st.session_state["ordered_item"]
         img_url = ord_item.get("img", ord_item.get("image_url", TARGET_ITEM["image_url"]))
-        st.markdown(
-            f"""
-            <div class="order-celebration-container">
-                <div class="sparkle-badge-center">
-                    <span class="sparkle-icon-1">✨</span>
-                    <span class="sparkle-icon-2">⭐</span>
-                    <span class="sparkle-icon-3">✨</span>
-                    <div class="green-tick-circle">
-                        <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                    </div>
-                </div>
-                <div style="font-size: 0.76rem; font-weight: 900; color: #03A685; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px;">
-                    PAYMENT VERIFIED • 100% GENUINE GUARANTEE
-                </div>
-                <h1 style="font-size: 1.8rem; font-weight: 900; color: #282C3F; margin: 0 0 6px 0;">
-                    ORDER PLACED SUCCESSFULLY! 🎉
-                </h1>
-                <p style="font-size: 0.88rem; color: #535766; margin-bottom: 1.2rem;">
-                    Order <b>#MYN-{int(time.time()) % 1000000}</b> • Estimated Express Delivery: <b>Tomorrow by 5:00 PM</b> ⚡
-                </p>
+        brand_name = ord_item.get("brand", "MANGO MAN")
+        prod_name = ord_item.get("name", "Rust Linen Relaxed-Fit Blazer")
+        prod_price = ord_item.get("price", "₹3,499")
+        prod_mrp = ord_item.get("mrp", ord_item.get("original_price", "₹4,999"))
+        prod_disc = ord_item.get("discount", "30% OFF")
+        order_num = int(time.time()) % 1000000
 
-                <div style="display: flex; gap: 1.2rem; align-items: center; background: #FFFFFF; padding: 14px; border-radius: 12px; margin-bottom: 1.2rem; border: 1.5px solid #E0F2FE; box-shadow: 0 4px 12px rgba(0,0,0,0.03); text-align: left;">
-                    <img src="{img_url}" style="width: 80px; height: 100px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                    <div style="flex: 1;">
-                        <span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C; text-transform: uppercase;">{ord_item['brand']}</span>
-                        <h4 style="font-size: 1.1rem; font-weight: 900; color: #282C3F; margin: 2px 0;">{ord_item['name']}</h4>
-                        <div style="display: flex; align-items: baseline; gap: 8px; margin: 4px 0;">
-                            <span style="font-size: 1.15rem; font-weight: 900; color: #282C3F;">{ord_item['price']}</span>
-                            <span style="font-size: 0.85rem; color: #94969F; text-decoration: line-through;">{ord_item.get('mrp', ord_item.get('original_price', ord_item['price']))}</span>
-                            <span style="font-size: 0.75rem; font-weight: 800; color: #03A685; background: #E8F8F5; padding: 2px 6px; border-radius: 4px;">{ord_item.get('discount', '30% OFF')}</span>
-                        </div>
-                        <div style="font-size: 0.78rem; color: #03A685; font-weight: 700; display: flex; align-items: center; gap: 6px;">
-                            <span>✨ Added to your Smart Wardrobe Closet Inventory</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="background: #F9FAFB; border: 1px solid #ECEEF0; border-radius: 10px; padding: 10px 14px; margin-bottom: 1.2rem; font-size: 0.8rem; color: #535766; display: flex; justify-content: space-between; align-items: center; text-align: left;">
-                    <div>
-                        <b>📍 Delivery Address:</b> Kartikey Sharma • 402, Skyline Residency, Bangalore - 560001
-                    </div>
-                    <div style="font-weight: 800; color: #03A685;">
-                        🛡️ 14-Day Free Returns
-                    </div>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
+        html_content = (
+            f'<div class="order-celebration-container">'
+            f'<div class="sparkle-badge-center">'
+            f'<span class="sparkle-icon-1">✨</span>'
+            f'<span class="sparkle-icon-2">⭐</span>'
+            f'<span class="sparkle-icon-3">✨</span>'
+            f'<div class="green-tick-circle">'
+            f'<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">'
+            f'<polyline points="20 6 9 17 4 12"></polyline>'
+            f'</svg>'
+            f'</div>'
+            f'</div>'
+            f'<div style="font-size: 0.76rem; font-weight: 900; color: #03A685; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px;">'
+            f'PAYMENT VERIFIED • 100% GENUINE GUARANTEE'
+            f'</div>'
+            f'<h1 style="font-size: 1.8rem; font-weight: 900; color: #282C3F; margin: 0 0 6px 0;">'
+            f'ORDER PLACED SUCCESSFULLY! 🎉'
+            f'</h1>'
+            f'<p style="font-size: 0.88rem; color: #535766; margin-bottom: 1.2rem;">'
+            f'Order <b>#MYN-{order_num}</b> • Estimated Express Delivery: <b>Tomorrow by 5:00 PM</b> ⚡'
+            f'</p>'
+            f'<div style="display: flex; gap: 1.2rem; align-items: center; background: #FFFFFF; padding: 14px; border-radius: 12px; margin-bottom: 1.2rem; border: 1.5px solid #E0F2FE; box-shadow: 0 4px 12px rgba(0,0,0,0.03); text-align: left;">'
+            f'<img src="{img_url}" style="width: 80px; height: 100px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">'
+            f'<div style="flex: 1;">'
+            f'<span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C; text-transform: uppercase;">{brand_name}</span>'
+            f'<h4 style="font-size: 1.1rem; font-weight: 900; color: #282C3F; margin: 2px 0;">{prod_name}</h4>'
+            f'<div style="display: flex; align-items: baseline; gap: 8px; margin: 4px 0;">'
+            f'<span style="font-size: 1.15rem; font-weight: 900; color: #282C3F;">{prod_price}</span>'
+            f'<span style="font-size: 0.85rem; color: #94969F; text-decoration: line-through;">{prod_mrp}</span>'
+            f'<span style="font-size: 0.75rem; font-weight: 800; color: #03A685; background: #E8F8F5; padding: 2px 6px; border-radius: 4px;">{prod_disc}</span>'
+            f'</div>'
+            f'<div style="font-size: 0.78rem; color: #03A685; font-weight: 700;">'
+            f'✨ Added to your Smart Wardrobe Closet Inventory'
+            f'</div>'
+            f'</div>'
+            f'</div>'
+            f'<div style="background: #F9FAFB; border: 1px solid #ECEEF0; border-radius: 10px; padding: 10px 14px; margin-bottom: 1.2rem; font-size: 0.8rem; color: #535766; display: flex; justify-content: space-between; align-items: center; text-align: left;">'
+            f'<div><b>📍 Delivery Address:</b> Kartikey Sharma • 402, Skyline Residency, Bangalore - 560001</div>'
+            f'<div style="font-weight: 800; color: #03A685;">🛡️ 14-Day Free Returns</div>'
+            f'</div>'
+            f'</div>'
         )
+        st.markdown(html_content, unsafe_allow_html=True)
         oc1, oc2 = st.columns(2)
         with oc1:
             if st.button("🛍️ View in Shopping Bag", key="order_view_bag_btn", type="primary", use_container_width=True):
@@ -1769,13 +1768,13 @@ def render_pdp_view() -> None:
                 pdp_prog = st.progress(0)
                 pdp_status.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🔍 Scanning your past Myntra purchases & closet inventory...</div></div>', unsafe_allow_html=True)
                 pdp_prog.progress(33)
-                time.sleep(0.65)
+                time.sleep(0.18)
                 pdp_status.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🎨 Computing color harmonies & Rule-of-3 modular versatility...</div></div>', unsafe_allow_html=True)
                 pdp_prog.progress(68)
-                time.sleep(0.65)
+                time.sleep(0.18)
                 pdp_status.markdown('<div style="background: #E8F8F5; border: 1.5px solid #A3E6D8; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #03A685; font-size: 0.88rem;">✨ Assembling 3 complete styled outfits from owned pieces!</div></div>', unsafe_allow_html=True)
                 pdp_prog.progress(100)
-                time.sleep(0.6)
+                time.sleep(0.15)
                 st.toast("✨ 3 Outfits Assembled by StyleSync AI!")
                 set_view("stylesync")
 
@@ -1873,13 +1872,13 @@ def render_wishlist_view() -> None:
             prog_bar = st.progress(0)
             status_box.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🔍 Step 1/3: Scanning your past Myntra purchases & closet inventory...</div></div>', unsafe_allow_html=True)
             prog_bar.progress(33)
-            time.sleep(0.65)
+            time.sleep(0.18)
             status_box.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🎨 Step 2/3: Computing color harmonies, silhouettes & Rule-of-3 modular versatility...</div></div>', unsafe_allow_html=True)
             prog_bar.progress(68)
-            time.sleep(0.65)
+            time.sleep(0.18)
             status_box.markdown('<div style="background: #E8F8F5; border: 1.5px solid #A3E6D8; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #03A685; font-size: 0.88rem;">✨ Step 3/3: Assembling 3 complete styled outfits from owned pieces!</div></div>', unsafe_allow_html=True)
             prog_bar.progress(100)
-            time.sleep(0.6)
+            time.sleep(0.15)
             st.toast("✨ 3 Outfits Assembled by StyleSync AI!")
             set_view("stylesync")
 
