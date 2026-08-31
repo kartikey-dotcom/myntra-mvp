@@ -1915,7 +1915,7 @@ def render_stylesync_view() -> None:
 
     l_col1, l_col2, l_col3 = st.columns(3)
 
-    # Look 1
+    # Look 1: Sunset Linen (Smart Casual)
     with l_col1:
         st.markdown(
             """
@@ -1931,27 +1931,34 @@ def render_stylesync_view() -> None:
             """,
             unsafe_allow_html=True
         )
-        st.image(TARGET_ITEM["image_url"], caption="Anchor: Rust Linen Blazer (₹3,499)", use_container_width=True)
+        st.markdown(
+            '<img src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 220px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
+            unsafe_allow_html=True
+        )
+        st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Smart Casual Ensemble</div><div style='font-size: 0.72rem; color: #7E818C;'>Blazer + Linen Shirt + Tailored Trousers</div>", unsafe_allow_html=True)
+        
         img_sub1, img_sub2 = st.columns(2)
         with img_sub1:
-            st.image(IMAGE_OLIVE_SHIRT, caption="H&M Shirt (In Closet)", use_container_width=True)
+            st.markdown(f'<img src="{IMAGE_OLIVE_SHIRT}" style="width: 100%; height: 85px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 0.68rem; font-weight: 700; color: #03A685;'>H&M Shirt (In Closet)</div>", unsafe_allow_html=True)
         with img_sub2:
-            st.image(IMAGE_BLACK_TROUSERS, caption="Zara Pants (In Closet)", use_container_width=True)
+            st.markdown(f'<img src="{IMAGE_BLACK_TROUSERS}" style="width: 100%; height: 85px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 0.68rem; font-weight: 700; color: #03A685;'>Zara Pants (In Closet)</div>", unsafe_allow_html=True)
         
         b_p1, b_p2 = st.columns(2)
         with b_p1:
             if st.button("💬 Poll Look 1", key="poll_look_1_btn", type="primary", use_container_width=True):
                 st.session_state["poll_sent"] = True
-                st.session_state["poll_look_title"] = "Look 1: Sunset Linen"
-                st.toast("💬 Look 1 shared to WhatsApp Poll!")
+                st.session_state["poll_look_title"] = "Look 1: Sunset Linen (Smart Casual)"
+                st.toast("💬 Look 1 shared to WhatsApp Peer Poll!")
                 st.rerun()
         with b_p2:
             if st.button("🛍️ Add Look 1", key="add_l1_btn", use_container_width=True):
                 st.session_state["bag_count"] += 1
-                st.toast("Added Look 1 Anchor Blazer to Bag!")
+                st.toast("Added Look 1 Ensemble to Bag!")
                 st.rerun()
 
-    # Look 2
+    # Look 2: Urban Brunch (Layered Streetwear)
     with l_col2:
         st.markdown(
             """
@@ -1960,34 +1967,41 @@ def render_stylesync_view() -> None:
                     <span class="look-card-title">Look 2: Urban Brunch</span>
                     <span class="look-score-badge">94% Match</span>
                 </div>
-                <div style="font-size: 0.75rem; font-weight: 700; color: #535766; margin-bottom: 8px;">
+                <div style="font-size: 0.75rem; font-weight: 700; color: #FF3F6C; margin-bottom: 8px;">
                     ✨ 2 Closet + 1 Wishlist Add-on
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
-        st.image(TARGET_ITEM["image_url"], caption="Anchor: Rust Linen Blazer (₹3,499)", use_container_width=True)
+        st.markdown(
+            '<img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 220px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
+            unsafe_allow_html=True
+        )
+        st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Relaxed Weekend Layering</div><div style='font-size: 0.72rem; color: #7E818C;'>Blazer + White Crewneck Tee + Retro Sneakers</div>", unsafe_allow_html=True)
+
         img_sub3, img_sub4 = st.columns(2)
         with img_sub3:
-            st.image(IMAGE_WHITE_TANK, caption="Mango Tank (Wishlist)", use_container_width=True)
+            st.markdown(f'<img src="{IMAGE_WHITE_TANK}" style="width: 100%; height: 85px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 0.68rem; font-weight: 700; color: #03A685;'>White Tee (In Closet)</div>", unsafe_allow_html=True)
         with img_sub4:
-            st.image(IMAGE_PUMA_SNEAKERS, caption="Puma Sneakers (Wishlist)", use_container_width=True)
+            st.markdown(f'<img src="{IMAGE_PUMA_SNEAKERS}" style="width: 100%; height: 85px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 0.68rem; font-weight: 700; color: #FF3F6C;'>Puma Sneakers (₹2,749)</div>", unsafe_allow_html=True)
 
         b_p3, b_p4 = st.columns(2)
         with b_p3:
-            if st.button("💬 Poll Look 2", key="poll_look_2_btn", use_container_width=True):
+            if st.button("💬 Poll Look 2", key="poll_look_2_btn", type="primary", use_container_width=True):
                 st.session_state["poll_sent"] = True
-                st.session_state["poll_look_title"] = "Look 2: Urban Brunch"
-                st.toast("💬 Look 2 shared to WhatsApp Poll!")
+                st.session_state["poll_look_title"] = "Look 2: Urban Brunch (Layered)"
+                st.toast("💬 Look 2 shared to WhatsApp Peer Poll!")
                 st.rerun()
         with b_p4:
             if st.button("🛍️ Add Look 2", key="add_l2_btn", use_container_width=True):
                 st.session_state["bag_count"] += 2
-                st.toast("Added Look 2 Blazer + Tank to Bag!")
+                st.toast("Added Look 2 Blazer + Sneakers to Bag!")
                 st.rerun()
 
-    # Look 3
+    # Look 3: Smart Business / Gallery Evening
     with l_col3:
         st.markdown(
             """
@@ -1997,25 +2011,32 @@ def render_stylesync_view() -> None:
                     <span class="look-score-badge">91% Match</span>
                 </div>
                 <div style="font-size: 0.75rem; font-weight: 700; color: #03A685; margin-bottom: 8px;">
-                    ✅ Formal Office Friday Ready
+                    ✅ Evening Gallery & Office Ready
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
-        st.image(TARGET_ITEM["image_url"], caption="Anchor: Rust Linen Blazer (₹3,499)", use_container_width=True)
+        st.markdown(
+            '<img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 220px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
+            unsafe_allow_html=True
+        )
+        st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Tailored Executive Sharp</div><div style='font-size: 0.72rem; color: #7E818C;'>Blazer + Chrono Watch + Raw Indigo Denim</div>", unsafe_allow_html=True)
+
         img_sub5, img_sub6 = st.columns(2)
         with img_sub5:
-            st.image(IMAGE_FOSSIL_WATCH, caption="Fossil Watch (In Closet)", use_container_width=True)
+            st.markdown(f'<img src="{IMAGE_FOSSIL_WATCH}" style="width: 100%; height: 85px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 0.68rem; font-weight: 700; color: #03A685;'>Fossil Watch (In Closet)</div>", unsafe_allow_html=True)
         with img_sub6:
-            st.image(IMAGE_LIGHT_DENIM, caption="Levi's Denim (Wishlist)", use_container_width=True)
+            st.markdown(f'<img src="{IMAGE_LIGHT_DENIM}" style="width: 100%; height: 85px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 0.68rem; font-weight: 700; color: #03A685;'>Levi's Denim (In Closet)</div>", unsafe_allow_html=True)
 
         b_p5, b_p6 = st.columns(2)
         with b_p5:
-            if st.button("💬 Poll Look 3", key="poll_look_3_btn", use_container_width=True):
+            if st.button("💬 Poll Look 3", key="poll_look_3_btn", type="primary", use_container_width=True):
                 st.session_state["poll_sent"] = True
-                st.session_state["poll_look_title"] = "Look 3: Smart Business"
-                st.toast("💬 Look 3 shared to WhatsApp Poll!")
+                st.session_state["poll_look_title"] = "Look 3: Smart Business (Executive)"
+                st.toast("💬 Look 3 shared to WhatsApp Peer Poll!")
                 st.rerun()
         with b_p6:
             if st.button("🛍️ Add Look 3", key="add_l3_btn", use_container_width=True):
