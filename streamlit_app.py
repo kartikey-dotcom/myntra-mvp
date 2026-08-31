@@ -9,6 +9,8 @@ Master Micro-Catalog & Search Architecture + StyleSync AI Engine:
 5. StyleSync AI Studio & WhatsApp Social Validation Loop ("Buy or Drop" Peer Poll)
 """
 
+import os
+import base64
 import time
 import re
 from typing import TypedDict, List, Dict, Optional
