@@ -1117,25 +1117,28 @@ SYNONYMS = {
     "belt": ["belt", "leather belt", "reversible belt", "tommy hilfiger"]
 }
 
+def get_logo_base64() -> str:
+    logo_path = os.path.join(os.path.dirname(__file__), "myntra_logo.png")
+    if os.path.exists(logo_path):
+        with open(logo_path, "rb") as f:
+            return "data:image/png;base64," + base64.b64encode(f.read()).decode("utf-8")
+    return ""
+
 def render_top_navbar() -> None:
     curr = st.session_state.get("current_view", "catalog")
     bag_num = st.session_state.get("bag_count", 2)
     wl_num = st.session_state.get("wishlist_count", 1)
+    logo_src = get_logo_base64()
 
     # Clean, Spacious Single-Row Top Navigation Bar
     nav_col1, nav_col2, nav_col3 = st.columns([2.6, 5.4, 2.8], gap="medium")
     
-    # Left: Myntra Logo + StyleSync Badge
+    # Left: Official Myntra Logo + StyleSync Badge
     with nav_col1:
         st.markdown(
-            """
+            f"""
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 2px;">
-                <svg width="38" height="34" viewBox="0 0 45 42" fill="none">
-                    <path d="M7 32L17.5 11H21.5L30 32H25.5L20.5 19.5L15.5 32H7Z" fill="#F48946"/>
-                    <path d="M20.5 19.5L25.5 32H30L21.5 11H17.5L20.5 19.5Z" fill="#FF3F6C"/>
-                    <path d="M17.5 11H21.5L19.5 15.5L17.5 11Z" fill="#E65A2C"/>
-                    <path d="M15.5 32L24.5 11H28.5L38 32H33.5L28 19.5L23.5 32H15.5Z" fill="#FF3F6C" opacity="0.9"/>
-                </svg>
+                <img src="{logo_src}" style="height: 36px; width: auto; object-fit: contain; display: block;" />
                 <div>
                     <span style="font-weight: 900; font-size: 1.35rem; color: #282C3F; letter-spacing: -0.5px;">myntra</span>
                     <span style="font-size: 0.65rem; font-weight: 800; background: #FFF0F4; color: #FF3F6C; border: 1px solid #FFD8E4; padding: 2px 6px; border-radius: 4px; margin-left: 4px;">STYLESYNC™</span>
