@@ -10,6 +10,7 @@ Master Micro-Catalog & Search Architecture + StyleSync AI Engine:
 """
 
 import time
+import re
 from typing import TypedDict, List, Dict, Optional
 import streamlit as st
 
@@ -1333,26 +1334,39 @@ def render_catalog_view() -> None:
     def filter_catalog(target_filter: str) -> List[CatalogItem]:
         results = []
         for item in MICRO_CATALOG:
-            # Category filter check
+            item_text = f"{item['name']} {item['brand']} {item['master_category']} {item['sub_category']} {item.get('tags', '')}".lower()
+
+            # 1. Category filter check
             if target_filter == "All":
                 pass
             elif target_filter == "Apparel":
                 if item["master_category"] not in ["Apparel", "Shirts", "T-Shirts"]:
                     continue
             elif target_filter == "Shirts":
-                if item["master_category"] != "Shirts":
+                is_shirt = (item["master_category"] == "Shirts" or bool(re.search(r'(?<![a-z0-9\-])shirts?(?![a-z0-9\-])', item_text)))
+                is_tshirt = (item["master_category"] == "T-Shirts" or bool(re.search(r't[\-\s]?shirts?|tees?', item_text)))
+                if not (is_shirt and not is_tshirt):
                     continue
             elif target_filter == "T-Shirts":
-                if item["master_category"] != "T-Shirts":
+                is_tshirt = (item["master_category"] == "T-Shirts" or bool(re.search(r't[\-\s]?shirts?|tees?', item_text)))
+                if not is_tshirt:
                     continue
             elif item["master_category"] != target_filter:
                 continue
 
-            # Search query check
+            # 2. Search query check
             if query:
-                item_text = f"{item['name']} {item['brand']} {item['master_category']} {item['sub_category']} {item.get('tags', '')}".lower()
-                if not (query in item_text or any(token in item_text for token in search_tokens)):
-                    continue
+                if query in ["shirt", "shirts"]:
+                    has_shirt = bool(re.search(r'(?<![a-z0-9\-])shirts?(?![a-z0-9\-])', item_text))
+                    is_tshirt = bool(re.search(r't[\-\s]?shirts?|tees?', item_text))
+                    if not (has_shirt and not is_tshirt):
+                        continue
+                elif query in ["tshirt", "t-shirt", "tshirts", "t-shirts", "tee", "tees"]:
+                    if not bool(re.search(r't[\-\s]?shirts?|tees?', item_text)):
+                        continue
+                else:
+                    if not (query in item_text or any(token in item_text for token in search_tokens)):
+                        continue
             results.append(item)
         return results
 
