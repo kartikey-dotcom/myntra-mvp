@@ -1771,15 +1771,15 @@ def render_pdp_view() -> None:
             if st.button("✨ Launch StyleSync™ AI Studio & WhatsApp Poll →", key="pdp_stylesync_cta_btn", type="primary", use_container_width=True):
                 pdp_status = st.empty()
                 pdp_prog = st.progress(0)
-                pdp_status.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🔍 Scanning your past Myntra purchases & closet inventory...</div></div>', unsafe_allow_html=True)
+                pdp_status.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🔍 Step 1/3: Scanning your past Myntra purchases & closet inventory...</div></div>', unsafe_allow_html=True)
                 pdp_prog.progress(33)
-                time.sleep(0.18)
-                pdp_status.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🎨 Computing color harmonies & Rule-of-3 modular versatility...</div></div>', unsafe_allow_html=True)
+                time.sleep(0.65)
+                pdp_status.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🎨 Step 2/3: Matching color palettes, silhouettes & Rule-of-3 modular versatility...</div></div>', unsafe_allow_html=True)
                 pdp_prog.progress(68)
-                time.sleep(0.18)
-                pdp_status.markdown('<div style="background: #E8F8F5; border: 1.5px solid #A3E6D8; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #03A685; font-size: 0.88rem;">✨ Assembling 3 complete styled outfits from owned pieces!</div></div>', unsafe_allow_html=True)
+                time.sleep(0.65)
+                pdp_status.markdown('<div style="background: #E8F8F5; border: 1.5px solid #A3E6D8; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #03A685; font-size: 0.88rem;">✨ Step 3/3: Assembling 3 complete modular outfits from owned pieces!</div></div>', unsafe_allow_html=True)
                 pdp_prog.progress(100)
-                time.sleep(0.15)
+                time.sleep(0.6)
                 st.toast("✨ 3 Outfits Assembled by StyleSync AI!")
                 set_view("stylesync")
 
@@ -1877,13 +1877,13 @@ def render_wishlist_view() -> None:
             prog_bar = st.progress(0)
             status_box.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🔍 Step 1/3: Scanning your past Myntra purchases & closet inventory...</div></div>', unsafe_allow_html=True)
             prog_bar.progress(33)
-            time.sleep(0.18)
-            status_box.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🎨 Step 2/3: Computing color harmonies, silhouettes & Rule-of-3 modular versatility...</div></div>', unsafe_allow_html=True)
+            time.sleep(0.65)
+            status_box.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🎨 Step 2/3: Matching color palettes, silhouettes & Rule-of-3 modular versatility...</div></div>', unsafe_allow_html=True)
             prog_bar.progress(68)
-            time.sleep(0.18)
-            status_box.markdown('<div style="background: #E8F8F5; border: 1.5px solid #A3E6D8; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #03A685; font-size: 0.88rem;">✨ Step 3/3: Assembling 3 complete styled outfits from owned pieces!</div></div>', unsafe_allow_html=True)
+            time.sleep(0.65)
+            status_box.markdown('<div style="background: #E8F8F5; border: 1.5px solid #A3E6D8; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #03A685; font-size: 0.88rem;">✨ Step 3/3: Assembling 3 complete modular outfits from owned pieces!</div></div>', unsafe_allow_html=True)
             prog_bar.progress(100)
-            time.sleep(0.15)
+            time.sleep(0.6)
             st.toast("✨ 3 Outfits Assembled by StyleSync AI!")
             set_view("stylesync")
 
@@ -2211,16 +2211,26 @@ def render_stylesync_view() -> None:
             f'</div>'
             f'<div class="wa-chat-body">'
             f'<div class="wa-chat-bubble">'
-            f'<div style="font-weight: 800; font-size: 0.88rem; color: #111B21; margin-bottom: 6px; line-height: 1.4;">'
-            f'"Hey guys! Thinking of buying this <b>Rust Linen Blazer</b>. StyleSync generated {look_name}. <b>Buy or Drop?</b> 🔥"'
+            f'<div style="font-weight: 800; font-size: 0.88rem; color: #111B21; margin-bottom: 8px; line-height: 1.4;">'
+            f'Hey guys! Thinking of buying this <b>Rust Linen Blazer</b>. StyleSync paired it with my old Zara trousers. <b>Buy or Drop?</b>'
             f'</div>'
-            f'<div style="background: #FFFFFF; border-radius: 8px; padding: 10px; margin: 8px 0; border: 1px solid #D9FDD3; display: flex; align-items: center; gap: 10px;">'
-            f'<img src="{look_img}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;" />'
+            f'<div style="background: #FFFFFF; border-radius: 10px; padding: 10px; margin: 8px 0; border: 1px solid #D9FDD3;">'
+            f'<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">'
+            f'<img src="{look_img}" style="width: 52px; height: 52px; object-fit: cover; border-radius: 6px;" />'
             f'<div style="flex: 1;">'
-            f'<div style="font-size: 0.76rem; font-weight: 800; color: #FF3F6C;">✨ {look_name}</div>'
+            f'<div style="font-size: 0.78rem; font-weight: 800; color: #FF3F6C;">✨ {look_name}</div>'
             f'<div style="font-size: 0.72rem; color: #54656F;">{look_desc}</div>'
             f'</div>'
-            f'<span style="font-size: 0.7rem; font-weight: 900; background: {match_bg}; color: {match_color}; padding: 2px 6px; border-radius: 4px;">{look_match}</span>'
+            f'<span style="font-size: 0.7rem; font-weight: 900; background: {match_bg}; color: {match_color}; padding: 3px 8px; border-radius: 4px;">{look_match}</span>'
+            f'</div>'
+            f'<div style="display: flex; gap: 6px; align-items: center; background: #F8F9FA; padding: 6px; border-radius: 6px;">'
+            f'<img src="{TARGET_ITEM["image_url"]}" style="width: 38px; height: 38px; object-fit: cover; border-radius: 4px; border: 1px solid #FFD8E4;" />'
+            f'<span style="font-size: 0.75rem; color: #7E818C;">+</span>'
+            f'<img src="{IMAGE_OLIVE_SHIRT}" style="width: 38px; height: 38px; object-fit: cover; border-radius: 4px; border: 1px solid #ECEEF0;" />'
+            f'<span style="font-size: 0.75rem; color: #7E818C;">+</span>'
+            f'<img src="{IMAGE_BLACK_TROUSERS}" style="width: 38px; height: 38px; object-fit: cover; border-radius: 4px; border: 1px solid #ECEEF0;" />'
+            f'<span style="font-size: 0.68rem; font-weight: 800; color: #03A685; margin-left: auto;">(2 Owned + 1 Anchor)</span>'
+            f'</div>'
             f'</div>'
             f'<div style="text-align: right; font-size: 0.65rem; color: #667781; font-weight: 600;">10:42 AM ✓✓</div>'
             f'</div>'
@@ -2237,7 +2247,7 @@ def render_stylesync_view() -> None:
                 st.toast(f"💬 Live Poll for {look_name} sent to WhatsApp Group! Friends voted 'BUY IT'.")
                 st.rerun()
         with v2:
-            if st.button("🗳️ Simulate Friends' Peer Feedback", key="sim_wa_votes_btn", type="secondary", use_container_width=True):
+            if st.button("🗳️ Simulate Friends' Response", key="sim_wa_votes_btn", type="secondary", use_container_width=True):
                 st.session_state["vote_feedback"] = "buy"
                 st.toast(f"📊 Feedback received for {look_name}: {buy_pct}% voted BUY IT!")
                 st.rerun()
