@@ -975,8 +975,16 @@ def init_session_state() -> None:
         st.session_state["show_profile_modal"] = False
     if "show_size_chart" not in st.session_state:
         st.session_state["show_size_chart"] = False
-    if "show_order_modal" not in st.session_state:
-        st.session_state["show_order_modal"] = False
+    if "anchor_item" not in st.session_state:
+        st.session_state["anchor_item"] = {
+            "id": "hero_1",
+            "name": "Rust Linen Relaxed-Fit Blazer",
+            "brand": "MANGO MAN",
+            "price": "₹3,499",
+            "original_price": "₹4,999",
+            "discount": "30% OFF",
+            "image_url": "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?w=800&auto=format&fit=crop&q=80"
+        }
     if "ordered_item" not in st.session_state:
         st.session_state["ordered_item"] = None
 
@@ -1481,7 +1489,16 @@ def render_catalog_view() -> None:
                 with qb2:
                     if st.button("❤️ Save", key=f"quick_wl_{item['id']}", use_container_width=True):
                         st.session_state["wishlist_count"] += 1
-                        st.toast(f"❤️ Added {item['name']} to Wishlist!")
+                        st.session_state["anchor_item"] = {
+                            "id": item["id"],
+                            "name": item["name"],
+                            "brand": item["brand"],
+                            "price": item["price"],
+                            "original_price": item.get("mrp", item["price"]),
+                            "discount": item.get("discount", "20% OFF").replace("(", "").replace(")", ""),
+                            "image_url": item["img"]
+                        }
+                        st.toast(f"❤️ Saved {item['brand']} {item['name']} as Active Anchor in Wishlist!")
                         st.rerun()
 
                 if st.button("⚡ 1-Click Order", key=f"quick_order_{item['id']}", type="primary", use_container_width=True):
@@ -1739,12 +1756,14 @@ def render_pdp_view() -> None:
 # ==============================================================================
 
 def render_wishlist_view() -> None:
+    anchor = st.session_state.get("anchor_item", TARGET_ITEM)
+
     st.markdown(
-        """
+        f"""
         <div class="section-header-wrap" style="margin-top: 0;">
             <div>
                 <div class="section-title">MY WISHLIST & SAVED WARDROBE</div>
-                <div class="section-subtitle">1 Target Anchor Garment • 6 Paired Wardrobe Pieces</div>
+                <div class="section-subtitle">Active Anchor Garment: <b>{anchor['brand']} {anchor['name']}</b></div>
             </div>
         </div>
         """,
@@ -1754,20 +1773,24 @@ def render_wishlist_view() -> None:
     # 1. Target Anchor Garment Card
     w_col1, w_col2 = st.columns([1, 2.2])
     with w_col1:
-        st.image(TARGET_ITEM["image_url"], caption="Wishlisted Anchor Item", use_container_width=True)
+        st.markdown(
+            f'<img src="{anchor["image_url"]}" style="width: 100%; height: 250px; object-fit: cover; object-position: center; border-radius: 12px; display: block; border: 1px solid #FFE0E6;" />',
+            unsafe_allow_html=True
+        )
+        st.markdown("<div style='text-align: center; font-size: 0.72rem; color: #7E818C; margin-top: 4px;'>Selected Active Anchor</div>", unsafe_allow_html=True)
     with w_col2:
         st.markdown(
             f"""
             <div style="background: #FFFFFF; border: 1.5px solid #FFE0E6; border-radius: 14px; padding: 1.4rem; box-shadow: 0 4px 14px rgba(255, 63, 108, 0.05);">
-                <span style="font-size: 0.72rem; font-weight: 900; background: #FF3F6C; color: #FFFFFF; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">ANCHOR ITEM</span>
-                <h2 style="font-size: 1.35rem; font-weight: 900; color: #282C3F; margin: 8px 0 4px 0;">{TARGET_ITEM['brand']} {TARGET_ITEM['name']}</h2>
+                <span style="font-size: 0.72rem; font-weight: 900; background: #FF3F6C; color: #FFFFFF; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">ACTIVE ANCHOR ITEM</span>
+                <h2 style="font-size: 1.35rem; font-weight: 900; color: #282C3F; margin: 8px 0 4px 0;">{anchor['brand']} {anchor['name']}</h2>
                 <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 0.8rem;">
-                    <span style="font-size: 1.4rem; font-weight: 900; color: #282C3F;">{TARGET_ITEM['price']}</span>
-                    <span style="font-size: 0.95rem; color: #94969F; text-decoration: line-through;">{TARGET_ITEM['original_price']}</span>
-                    <span style="font-size: 0.85rem; font-weight: 800; color: #FF3F6C;">({TARGET_ITEM['discount']})</span>
+                    <span style="font-size: 1.4rem; font-weight: 900; color: #282C3F;">{anchor['price']}</span>
+                    <span style="font-size: 0.95rem; color: #94969F; text-decoration: line-through;">{anchor.get('original_price', anchor['price'])}</span>
+                    <span style="font-size: 0.85rem; font-weight: 800; color: #FF3F6C;">({anchor.get('discount', '30% OFF')})</span>
                 </div>
                 <p style="font-size: 0.84rem; color: #535766; line-height: 1.4; margin-bottom: 1rem;">
-                    Unlocks <b>3 modular outfits</b> using clothes you already own in your closet. Zero styling hesitation!
+                    Unlocks <b>3 modular outfits</b> using clothes and accessories you already own in your closet. Zero styling hesitation!
                 </p>
             </div>
             """,
@@ -1776,16 +1799,16 @@ def render_wishlist_view() -> None:
         if st.button("✨ Style with My Closet (Run StyleSync AI) →", key="wl_run_ai_btn", type="primary", use_container_width=True):
             with st.spinner("✨ StyleSync AI analyzing your wardrobe purchase history & color harmonies..."):
                 time.sleep(0.6)
-            st.toast("3 Outfits Assembled!")
+            st.toast("3 Outfits Assembled for Active Anchor!")
             set_view("stylesync")
 
     # 2. Curated Wardrobe & Wishlist Grid
     st.markdown(
         """
-        <div class="section-header-wrap">
+        <div class="section-header-wrap" style="margin-top: 1.5rem;">
             <div>
                 <div class="section-title">YOUR CLOSET INVENTORY & WISHLIST MATCHES</div>
-                <div class="section-subtitle">Auto-synced from your order history and saved items</div>
+                <div class="section-subtitle">Click '📌 Make Anchor' on any item below to restyle around it!</div>
             </div>
         </div>
         """,
@@ -1795,7 +1818,10 @@ def render_wishlist_view() -> None:
     g1, g2, g3 = st.columns(3)
     for idx, item in enumerate(WISHLIST_PRODUCTS[:3]):
         with [g1, g2, g3][idx]:
-            st.image(item["image_url"], use_container_width=True)
+            st.markdown(
+                f'<img src="{item["image_url"]}" style="width: 100%; height: 180px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
+                unsafe_allow_html=True
+            )
             st.markdown(
                 f"""
                 <div style="padding: 4px 0 6px 0;">
@@ -1809,15 +1835,33 @@ def render_wishlist_view() -> None:
                 """,
                 unsafe_allow_html=True
             )
-            if st.button(f"🛍️ Move to Bag", key=f"wl_bag_{item['id']}", use_container_width=True):
-                st.session_state["bag_count"] += 1
-                st.toast(f"Added {item['name']} to Bag!")
-                st.rerun()
+            c_b1, c_b2 = st.columns(2)
+            with c_b1:
+                if st.button(f"🛍️ +Bag", key=f"wl_bag_{item['id']}", use_container_width=True):
+                    st.session_state["bag_count"] += 1
+                    st.toast(f"Added {item['name']} to Bag!")
+                    st.rerun()
+            with c_b2:
+                if st.button("📌 Set Anchor", key=f"wl_set_anc_{item['id']}", use_container_width=True):
+                    st.session_state["anchor_item"] = {
+                        "id": item["id"],
+                        "name": item["name"],
+                        "brand": item["brand"],
+                        "price": item["price"],
+                        "original_price": item.get("original_price", item["price"]),
+                        "discount": item.get("discount", "20% OFF"),
+                        "image_url": item["image_url"]
+                    }
+                    st.toast(f"📌 Set {item['brand']} {item['name']} as Active Anchor!")
+                    st.rerun()
 
     g4, g5, g6 = st.columns(3)
     for idx, item in enumerate(WISHLIST_PRODUCTS[3:6]):
         with [g4, g5, g6][idx]:
-            st.image(item["image_url"], use_container_width=True)
+            st.markdown(
+                f'<img src="{item["image_url"]}" style="width: 100%; height: 180px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
+                unsafe_allow_html=True
+            )
             st.markdown(
                 f"""
                 <div style="padding: 4px 0 6px 0;">
@@ -1831,10 +1875,25 @@ def render_wishlist_view() -> None:
                 """,
                 unsafe_allow_html=True
             )
-            if st.button(f"🛍️ Move to Bag", key=f"wl_bag_{item['id']}", use_container_width=True):
-                st.session_state["bag_count"] += 1
-                st.toast(f"Added {item['name']} to Bag!")
-                st.rerun()
+            c_b3, c_b4 = st.columns(2)
+            with c_b3:
+                if st.button(f"🛍️ +Bag", key=f"wl_bag_{item['id']}", use_container_width=True):
+                    st.session_state["bag_count"] += 1
+                    st.toast(f"Added {item['name']} to Bag!")
+                    st.rerun()
+            with c_b4:
+                if st.button("📌 Set Anchor", key=f"wl_set_anc_{item['id']}", use_container_width=True):
+                    st.session_state["anchor_item"] = {
+                        "id": item["id"],
+                        "name": item["name"],
+                        "brand": item["brand"],
+                        "price": item["price"],
+                        "original_price": item.get("original_price", item["price"]),
+                        "discount": item.get("discount", "20% OFF"),
+                        "image_url": item["image_url"]
+                    }
+                    st.toast(f"📌 Set {item['brand']} {item['name']} as Active Anchor!")
+                    st.rerun()
 
 
 # ==============================================================================
