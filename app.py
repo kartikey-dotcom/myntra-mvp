@@ -1243,7 +1243,7 @@ def render_drawers_and_modals() -> None:
             f'</div>'
             f'</div>'
             f'<div style="background: #F9FAFB; border: 1px solid #ECEEF0; border-radius: 10px; padding: 10px 14px; margin-bottom: 1.2rem; font-size: 0.8rem; color: #535766; display: flex; justify-content: space-between; align-items: center; text-align: left;">'
-            f'<div><b>📍 Delivery Address:</b> Kartikey Sharma • 402, Skyline Residency, Bangalore - 560001</div>'
+            f'<div><b>📍 Delivery Address:</b> 402, Skyline Residency, Bangalore - 560001</div>'
             f'<div style="font-weight: 800; color: #03A685;">🛡️ 30-Day VIP Trial & Free Exchange</div>'
             f'</div>'
             f'</div>'
