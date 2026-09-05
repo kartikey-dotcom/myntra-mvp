@@ -1025,8 +1025,31 @@ def init_session_state() -> None:
         st.session_state["search_query"] = ""
     if "selected_category_filter" not in st.session_state:
         st.session_state["selected_category_filter"] = "All"
+    if "bag_items" not in st.session_state:
+        st.session_state["bag_items"] = [
+            {
+                "id": "hero_1",
+                "name": "Rust Linen Relaxed-Fit Blazer",
+                "brand": "MANGO MAN",
+                "price": "₹3,499",
+                "mrp": "₹4,999",
+                "discount": "30% OFF",
+                "size": "40",
+                "img": TARGET_ITEM["image_url"]
+            },
+            {
+                "id": "item_trouser",
+                "name": "Tailored Pleated Trousers",
+                "brand": "ZARA",
+                "price": "₹2,990",
+                "mrp": "₹3,990",
+                "discount": "25% OFF",
+                "size": "32",
+                "img": IMAGE_BLACK_TROUSERS
+            }
+        ]
     if "bag_count" not in st.session_state:
-        st.session_state["bag_count"] = 2
+        st.session_state["bag_count"] = len(st.session_state["bag_items"])
     if "wishlist_count" not in st.session_state:
         st.session_state["wishlist_count"] = 1
     if "selected_size" not in st.session_state:
@@ -1055,6 +1078,38 @@ def init_session_state() -> None:
         st.session_state["ordered_item"] = None
 
 init_session_state()
+
+def add_to_bag(item: dict, size: str = None) -> None:
+    """Adds any product to the dynamic shopping bag drawer and updates counts."""
+    if "bag_items" not in st.session_state:
+        st.session_state["bag_items"] = []
+    
+    img = item.get("img") or item.get("image_url") or TARGET_ITEM["image_url"]
+    brand = item.get("brand", "MYNTRA")
+    name = item.get("name", "Fashion Item")
+    price = item.get("price", "₹1,999")
+    mrp = item.get("mrp") or item.get("original_price") or price
+    discount = str(item.get("discount", "Special Offer")).replace("(", "").replace(")", "")
+    item_id = item.get("id", f"item_{int(time.time()*1000)}")
+    selected_sz = size or st.session_state.get("selected_size", "40")
+
+    st.session_state["bag_items"].append({
+        "id": item_id,
+        "name": name,
+        "brand": brand,
+        "price": price,
+        "mrp": mrp,
+        "discount": discount,
+        "size": selected_sz,
+        "img": img
+    })
+    st.session_state["bag_count"] = len(st.session_state["bag_items"])
+
+def remove_from_bag(index: int) -> None:
+    """Removes an item from the shopping bag by index."""
+    if "bag_items" in st.session_state and 0 <= index < len(st.session_state["bag_items"]):
+        st.session_state["bag_items"].pop(index)
+        st.session_state["bag_count"] = len(st.session_state["bag_items"])
 
 def set_view(view_name: str) -> None:
     st.session_state["current_view"] = view_name
@@ -1198,12 +1253,12 @@ def render_drawers_and_modals() -> None:
     # 1-Click Order Placed Celebration Modal with Sparkling Green Tick
     if st.session_state.get("show_order_modal", False) and st.session_state.get("ordered_item"):
         ord_item = st.session_state["ordered_item"]
-        img_url = ord_item.get("img", ord_item.get("image_url", TARGET_ITEM["image_url"]))
-        brand_name = ord_item.get("brand", "MANGO MAN")
-        prod_name = ord_item.get("name", "Rust Linen Relaxed-Fit Blazer")
+        img_url = ord_item.get("img") or ord_item.get("image_url") or TARGET_ITEM["image_url"]
+        brand_name = ord_item.get("brand", "MYNTRA")
+        prod_name = ord_item.get("name", "Purchased Fashion Item")
         prod_price = ord_item.get("price", "₹3,499")
-        prod_mrp = ord_item.get("mrp", ord_item.get("original_price", "₹4,999"))
-        prod_disc = ord_item.get("discount", "30% OFF")
+        prod_mrp = ord_item.get("mrp") or ord_item.get("original_price") or prod_price
+        prod_disc = str(ord_item.get("discount", "30% OFF")).replace("(", "").replace(")", "")
         order_num = int(time.time()) % 1000000
 
         html_content = (
@@ -1263,55 +1318,125 @@ def render_drawers_and_modals() -> None:
 
     # Shopping Bag Drawer
     if st.session_state.get("show_bag_drawer", False):
-        bag_count = st.session_state.get("bag_count", 2)
+        bag_items = st.session_state.get("bag_items", [])
+        bag_count = len(bag_items)
+        
+        # Calculate subtotal, MRP, and discount
+        total_price = 0
+        total_mrp = 0
+        for b_item in bag_items:
+            try:
+                p_digits = "".join(filter(str.isdigit, str(b_item.get("price", "0"))))
+                m_digits = "".join(filter(str.isdigit, str(b_item.get("mrp", b_item.get("price", "0")))))
+                total_price += int(p_digits) if p_digits else 0
+                total_mrp += int(m_digits) if m_digits else 0
+            except Exception:
+                pass
+
+        coupon_applied = total_price >= 500
+        coupon_discount = 200 if coupon_applied else 0
+        final_payable = max(0, total_price - coupon_discount)
+
         st.markdown(
             f"""
             <div class="modal-banner">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                     <div style="font-size: 1.25rem; font-weight: 900; color: #282C3F;">
-                        🛍️ YOUR SHOPPING BAG ({bag_count} Items)
+                        🛍️ YOUR SHOPPING BAG ({bag_count} {'Item' if bag_count == 1 else 'Items'})
                     </div>
                     <span style="font-size: 0.8rem; font-weight: 800; color: #03A685; background: #E8F8F5; padding: 4px 10px; border-radius: 6px;">
                         ⚡ 100% Genuine Guaranteed
                     </span>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                    <div style="background: #F9FAFB; padding: 12px; border-radius: 10px; border: 1px solid #ECEEF0;">
-                        <b>MANGO MAN Rust Linen Blazer</b> (Size {st.session_state.get('selected_size', '40')})<br>
-                        <span style="color: #FF3F6C; font-weight: 800;">₹3,499</span> <span style="color: #94969F; text-decoration: line-through;">₹4,999</span> (30% OFF)
-                    </div>
-                    <div style="background: #F9FAFB; padding: 12px; border-radius: 10px; border: 1px solid #ECEEF0;">
-                        <b>ZARA Tailored Pleated Trousers</b> (Size 32)<br>
-                        <span style="color: #FF3F6C; font-weight: 800;">₹2,990</span> <span style="color: #94969F; text-decoration: line-through;">₹3,990</span> (25% OFF)
-                    </div>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ECEEF0; padding-top: 10px;">
-                    <div><b>Total Payable:</b> <span style="font-size: 1.2rem; font-weight: 900; color: #282C3F;">₹6,289</span> (Coupon: <code>MYNTRASAVE</code> applied -₹200)</div>
-                </div>
-            </div>
             """,
             unsafe_allow_html=True
         )
-        b_c1, b_c2 = st.columns(2)
-        with b_c1:
-            if st.button("💳 Proceed to Checkout Now", key="drawer_checkout_btn", type="primary", use_container_width=True):
-                st.session_state["ordered_item"] = {
-                    "id": "hero_1",
-                    "name": "Rust Linen Relaxed-Fit Blazer + Zara Trousers",
-                    "brand": "MANGO MAN & ZARA",
-                    "price": "₹6,289",
-                    "mrp": "₹8,989",
-                    "discount": "30% OFF",
-                    "img": TARGET_ITEM["image_url"]
-                }
-                st.session_state["show_order_modal"] = True
-                st.session_state["show_bag_drawer"] = False
-                st.toast("🎉 Order placed successfully! Delivery scheduled by tomorrow.")
-                st.rerun()
-        with b_c2:
-            if st.button("✖️ Close Bag", key="close_bag_btn", use_container_width=True):
-                st.session_state["show_bag_drawer"] = False
-                st.rerun()
+
+        if not bag_items:
+            st.info("Your shopping bag is currently empty. Explore our master catalog to add fashion items!")
+            b_c1, b_c2 = st.columns(2)
+            with b_c1:
+                if st.button("🔍 Explore Catalog Now", key="drawer_explore_btn", type="primary", use_container_width=True):
+                    st.session_state["show_bag_drawer"] = False
+                    set_view("catalog")
+            with b_c2:
+                if st.button("✖️ Close Bag", key="close_empty_bag_btn", use_container_width=True):
+                    st.session_state["show_bag_drawer"] = False
+                    st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
+        else:
+            # Render each item dynamically in the bag
+            for b_idx, b_item in enumerate(bag_items):
+                b_c1, b_c2, b_c3 = st.columns([1, 3.2, 0.8])
+                with b_c1:
+                    st.markdown(
+                        f'<img src="{b_item["img"]}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px; display: block;" />',
+                        unsafe_allow_html=True
+                    )
+                with b_c2:
+                    st.markdown(
+                        f"""
+                        <div style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C; text-transform: uppercase;">{b_item['brand']}</div>
+                        <div style="font-size: 0.85rem; font-weight: 800; color: #282C3F; margin-bottom: 2px;">{b_item['name']} <span style="font-size: 0.75rem; color: #7E818C; font-weight: 600;">(Size {b_item.get('size', '40')})</span></div>
+                        <div style="display: flex; align-items: baseline; gap: 8px;">
+                            <span style="font-weight: 900; font-size: 0.95rem; color: #282C3F;">{b_item['price']}</span>
+                            <span style="font-size: 0.75rem; color: #94969F; text-decoration: line-through;">{b_item['mrp']}</span>
+                            <span style="font-size: 0.72rem; font-weight: 800; color: #03A685; background: #E8F8F5; padding: 1px 5px; border-radius: 3px;">{b_item['discount']}</span>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+                with b_c3:
+                    if st.button("🗑️", key=f"remove_bag_item_{b_idx}_{b_item['id']}", help="Remove item from bag"):
+                        remove_from_bag(b_idx)
+                        st.rerun()
+                st.markdown("<hr style='margin: 6px 0; border: none; border-top: 1px solid #ECEEF0;'>", unsafe_allow_html=True)
+
+            # Bill Summary & Checkout
+            coupon_html = f"<br><span style='font-size: 0.75rem; color: #03A685; font-weight: 700;'>🎟️ Coupon 'MYNTRASAVE' applied (-₹{coupon_discount})</span>" if coupon_applied else ""
+            st.markdown(
+                f"""
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0 12px 0;">
+                    <div><b>Total MRP:</b> <span style="color: #94969F; text-decoration: line-through;">₹{total_mrp:,}</span> &nbsp;|&nbsp; <b>Total Payable:</b> <span style="font-size: 1.2rem; font-weight: 900; color: #282C3F;">₹{final_payable:,}</span>{coupon_html}</div>
+                </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+            b_c1, b_c2 = st.columns(2)
+            with b_c1:
+                if st.button("💳 Proceed to Checkout Now", key="drawer_checkout_btn", type="primary", use_container_width=True):
+                    if len(bag_items) == 1:
+                        single_it = bag_items[0]
+                        st.session_state["ordered_item"] = {
+                            "id": single_it["id"],
+                            "name": single_it["name"],
+                            "brand": single_it["brand"],
+                            "price": f"₹{final_payable:,}" if final_payable else single_it["price"],
+                            "mrp": single_it["mrp"],
+                            "discount": single_it["discount"],
+                            "img": single_it["img"]
+                        }
+                    else:
+                        first_it = bag_items[0]
+                        st.session_state["ordered_item"] = {
+                            "id": "bag_bundle",
+                            "name": " + ".join([it["name"] for it in bag_items[:2]]) + (f" (+{len(bag_items)-2} more)" if len(bag_items) > 2 else ""),
+                            "brand": " & ".join(list(dict.fromkeys([it["brand"] for it in bag_items]))[:2]),
+                            "price": f"₹{final_payable:,}",
+                            "mrp": f"₹{total_mrp:,}",
+                            "discount": f"{round((1 - final_payable/max(total_mrp, 1))*100)}% OFF" if total_mrp > final_payable else "VIP SAVINGS",
+                            "img": first_it["img"]
+                        }
+                    st.session_state["show_order_modal"] = True
+                    st.session_state["show_bag_drawer"] = False
+                    st.toast("🎉 Order placed successfully! Delivery scheduled by tomorrow.")
+                    st.rerun()
+            with b_c2:
+                if st.button("✖️ Close Bag", key="close_bag_btn", use_container_width=True):
+                    st.session_state["show_bag_drawer"] = False
+                    st.rerun()
 
     # User Profile Modal
     if st.session_state.get("show_profile_modal", False):
@@ -1548,7 +1673,7 @@ def render_catalog_view() -> None:
                 qb1, qb2 = st.columns(2)
                 with qb1:
                     if st.button("🛍️ +Bag", key=f"quick_bag_{item['id']}", use_container_width=True):
-                        st.session_state["bag_count"] += 1
+                        add_to_bag(item)
                         st.toast(f"✅ Added {item['brand']} {item['name']} to Bag!")
                         st.rerun()
                 with qb2:
@@ -1822,7 +1947,7 @@ def render_pdp_view() -> None:
         btn_bag, btn_wish, btn_order = st.columns([1, 1, 1.2])
         with btn_bag:
             if st.button("🛍️ ADD TO BAG", key="pdp_add_bag_standard", type="secondary", use_container_width=True):
-                st.session_state["bag_count"] += 1
+                add_to_bag(item, size=st.session_state.get("selected_size", "40"))
                 st.toast(f"✅ {item['brand']} {item['name']} added to shopping bag!")
                 st.rerun()
         with btn_wish:
@@ -1843,7 +1968,15 @@ def render_pdp_view() -> None:
                 st.rerun()
         with btn_order:
             if st.button("⚡ BUY NOW (1-CLICK)", key="pdp_buy_now_btn", type="primary", use_container_width=True):
-                st.session_state["ordered_item"] = item
+                st.session_state["ordered_item"] = {
+                    "id": item["id"],
+                    "name": item["name"],
+                    "brand": item["brand"],
+                    "price": item["price"],
+                    "mrp": item.get("mrp", item.get("original_price", item["price"])),
+                    "discount": item.get("discount", "Special Offer").replace("(", "").replace(")", ""),
+                    "img": item.get("img") or item.get("image_url", TARGET_ITEM["image_url"])
+                }
                 st.session_state["show_order_modal"] = True
                 st.toast(f"🎉 Order placed for {item['brand']} {item['name']}!")
                 st.rerun()
@@ -1900,22 +2033,43 @@ def render_wishlist_view() -> None:
             """,
             unsafe_allow_html=True
         )
-        if st.button("✨ Style with My Closet (Run StyleSync AI) →", key="wl_run_ai_btn", type="primary", use_container_width=True):
-            st.session_state["poll_look_title"] = None
-            st.session_state["vote_feedback"] = None
-            status_box = st.empty()
-            prog_bar = st.progress(0)
-            status_box.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🔍 Step 1/3: Scanning your past Myntra purchases & closet inventory...</div></div>', unsafe_allow_html=True)
-            prog_bar.progress(33)
-            time.sleep(0.65)
-            status_box.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🎨 Step 2/3: Matching color palettes, silhouettes & Rule-of-3 modular versatility...</div></div>', unsafe_allow_html=True)
-            prog_bar.progress(68)
-            time.sleep(0.65)
-            status_box.markdown('<div style="background: #E8F8F5; border: 1.5px solid #A3E6D8; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #03A685; font-size: 0.88rem;">✨ Step 3/3: Assembling 3 complete modular outfits from owned pieces!</div></div>', unsafe_allow_html=True)
-            prog_bar.progress(100)
-            time.sleep(0.6)
-            st.toast("✨ 3 Outfits Assembled by StyleSync AI!")
-            set_view("stylesync")
+        w_b1, w_b2, w_b3 = st.columns([1.6, 1, 1])
+        with w_b1:
+            if st.button("✨ Style with My Closet →", key="wl_run_ai_btn", type="primary", use_container_width=True):
+                st.session_state["poll_look_title"] = None
+                st.session_state["vote_feedback"] = None
+                status_box = st.empty()
+                prog_bar = st.progress(0)
+                status_box.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🔍 Step 1/3: Scanning your past Myntra purchases & closet inventory...</div></div>', unsafe_allow_html=True)
+                prog_bar.progress(33)
+                time.sleep(0.65)
+                status_box.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🎨 Step 2/3: Matching color palettes, silhouettes & Rule-of-3 modular versatility...</div></div>', unsafe_allow_html=True)
+                prog_bar.progress(68)
+                time.sleep(0.65)
+                status_box.markdown('<div style="background: #E8F8F5; border: 1.5px solid #A3E6D8; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #03A685; font-size: 0.88rem;">✨ Step 3/3: Assembling 3 complete modular outfits from owned pieces!</div></div>', unsafe_allow_html=True)
+                prog_bar.progress(100)
+                time.sleep(0.6)
+                st.toast("✨ 3 Outfits Assembled by StyleSync AI!")
+                set_view("stylesync")
+        with w_b2:
+            if st.button("🛍️ +Bag", key="wl_anchor_add_bag_btn", use_container_width=True):
+                add_to_bag(anchor)
+                st.toast(f"✅ Added {anchor['brand']} {anchor['name']} to Bag!")
+                st.rerun()
+        with w_b3:
+            if st.button("⚡ Buy Now", key="wl_anchor_buy_btn", use_container_width=True):
+                st.session_state["ordered_item"] = {
+                    "id": anchor.get("id", "ITEM-9081"),
+                    "name": anchor.get("name", "Anchor Item"),
+                    "brand": anchor.get("brand", "MYNTRA"),
+                    "price": anchor.get("price", "₹3,499"),
+                    "mrp": anchor.get("original_price", anchor.get("mrp", "₹4,999")),
+                    "discount": str(anchor.get("discount", "30% OFF")).replace("(", "").replace(")", ""),
+                    "img": anchor.get("image_url") or anchor.get("img", TARGET_ITEM["image_url"])
+                }
+                st.session_state["show_order_modal"] = True
+                st.toast(f"🎉 Order placed for {anchor['brand']} {anchor['name']}!")
+                st.rerun()
 
     # 2. Curated Wardrobe & Wishlist Grid
     st.markdown(
@@ -1953,7 +2107,7 @@ def render_wishlist_view() -> None:
             c_b1, c_b2 = st.columns(2)
             with c_b1:
                 if st.button(f"🛍️ +Bag", key=f"wl_bag_{item['id']}", use_container_width=True):
-                    st.session_state["bag_count"] += 1
+                    add_to_bag(item)
                     st.toast(f"Added {item['name']} to Bag!")
                     st.rerun()
             with c_b2:
@@ -1995,7 +2149,7 @@ def render_wishlist_view() -> None:
             c_b3, c_b4 = st.columns(2)
             with c_b3:
                 if st.button(f"🛍️ +Bag", key=f"wl_bag_{item['id']}", use_container_width=True):
-                    st.session_state["bag_count"] += 1
+                    add_to_bag(item)
                     st.toast(f"Added {item['name']} to Bag!")
                     st.rerun()
             with c_b4:
@@ -2597,8 +2751,8 @@ def render_stylesync_view() -> None:
                     st.rerun()
             with b_p2:
                 if st.button(f"🛍️ Add Look {i+1}", key=f"add_l{i+1}_btn", use_container_width=True):
-                    st.session_state["bag_count"] += look["add_to_bag_count"]
-                    st.toast(f"Added {look['short_title']} Ensemble to Bag!")
+                    add_to_bag(anchor)
+                    st.toast(f"Added {look['short_title']} ({anchor['brand']} {anchor['name']}) to Bag!")
                     st.rerun()
 
     st.markdown("<hr style='margin: 2rem 0; border: none; border-top: 1px solid #ECEEF0;'>", unsafe_allow_html=True)
@@ -2720,16 +2874,15 @@ def render_stylesync_view() -> None:
             if st.button(f"🛍️ PROCEED TO 1-CLICK CHECKOUT ({look_price})", key="wa_checkout_btn", type="primary", use_container_width=True):
                 st.session_state["ordered_item"] = {
                     "id": anchor.get("id", "hero_1"),
-                    "name": f"{anchor_brand} {anchor_name} ({matched_look['short_title']})",
+                    "name": f"{anchor_brand} {anchor_name}",
                     "brand": anchor_brand,
                     "price": look_price,
                     "mrp": anchor.get("original_price", anchor.get("mrp", look_price)),
-                    "discount": anchor.get("discount", "StyleSync VIP"),
-                    "img": look_img
+                    "discount": str(anchor.get("discount", "StyleSync VIP")).replace("(", "").replace(")", ""),
+                    "img": anchor.get("image_url") or anchor.get("img", anchor_img)
                 }
                 st.session_state["show_order_modal"] = True
-                st.session_state["bag_count"] += 1
-                st.toast("🎉 Order placed! VIP Express Delivery & Virtual Wardrobe Sync unlocked!")
+                st.toast(f"🎉 Order placed for {anchor_brand} {anchor_name}!")
                 st.rerun()
         elif feedback == "drop":
             st.markdown(

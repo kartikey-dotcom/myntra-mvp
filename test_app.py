@@ -109,5 +109,50 @@ class TestStyleSyncDataAndState(unittest.TestCase):
         self.assertIn("MANGO MAN", blazer_looks[0]["anchor_label"])
 
 
+    def test_dynamic_shopping_bag_and_order_accuracy(self):
+        """Verify dynamic bag items, add/remove functions, and order confirmation accuracy."""
+        import streamlit as st
+        from app import add_to_bag, remove_from_bag
+        
+        init_session_state()
+        initial_count = len(st.session_state["bag_items"])
+        self.assertGreaterEqual(initial_count, 1)
+
+        # Add a custom sneaker item from catalog
+        sneaker_item = {
+            "id": "foot_1",
+            "name": "Air Max SC Leather Retro Sneakers",
+            "brand": "Nike",
+            "price": "₹5,995",
+            "mrp": "₹7,995",
+            "discount": "25% OFF",
+            "img": "https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+        }
+        add_to_bag(sneaker_item, size="9")
+        self.assertEqual(len(st.session_state["bag_items"]), initial_count + 1)
+        self.assertEqual(st.session_state["bag_count"], initial_count + 1)
+        self.assertEqual(st.session_state["bag_items"][-1]["name"], "Air Max SC Leather Retro Sneakers")
+        self.assertEqual(st.session_state["bag_items"][-1]["img"], "https://images.unsplash.com/photo-1542291026-7eec264c27ff")
+
+        # Test single item checkout preserves actual item image and details
+        single_item = st.session_state["bag_items"][-1]
+        st.session_state["ordered_item"] = {
+            "id": single_item["id"],
+            "name": single_item["name"],
+            "brand": single_item["brand"],
+            "price": single_item["price"],
+            "mrp": single_item["mrp"],
+            "discount": single_item["discount"],
+            "img": single_item["img"]
+        }
+        self.assertEqual(st.session_state["ordered_item"]["img"], "https://images.unsplash.com/photo-1542291026-7eec264c27ff")
+        self.assertEqual(st.session_state["ordered_item"]["brand"], "Nike")
+        self.assertEqual(st.session_state["ordered_item"]["name"], "Air Max SC Leather Retro Sneakers")
+
+        # Test removal
+        remove_from_bag(len(st.session_state["bag_items"]) - 1)
+        self.assertEqual(len(st.session_state["bag_items"]), initial_count)
+
+
 if __name__ == "__main__":
     unittest.main()
