@@ -72,6 +72,42 @@ class TestStyleSyncDataAndState(unittest.TestCase):
         self.assertIn("selected_category_filter", st.session_state)
         self.assertIn("poll_sent", st.session_state)
 
+    def test_dynamic_stylesync_looks(self):
+        """Verify dynamic Rule-of-3 outfit generation for various anchor garment types."""
+        from app import get_stylesync_looks_for_anchor
+        
+        # 1. Shirt / Top anchor
+        shirt_anchor = {
+            "id": "W-102",
+            "brand": "H&M",
+            "name": "Relaxed Fit Olive Linen Shirt",
+            "price": "₹1,999",
+            "image_url": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf"
+        }
+        shirt_looks = get_stylesync_looks_for_anchor(shirt_anchor)
+        self.assertEqual(len(shirt_looks), 3)
+        self.assertIn("H&M Relaxed Fit Olive Linen Shirt", shirt_looks[0]["anchor_label"])
+        self.assertIn("Zara Pants", shirt_looks[0]["sub1_name"])
+        self.assertIn("Fossil Watch", shirt_looks[0]["sub2_name"])
+
+        # 2. Footwear anchor
+        foot_anchor = {
+            "id": "foot_1",
+            "brand": "Nike",
+            "name": "Air Max SC Leather Retro Sneakers",
+            "price": "₹5,995",
+            "image_url": "https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+        }
+        foot_looks = get_stylesync_looks_for_anchor(foot_anchor)
+        self.assertEqual(len(foot_looks), 3)
+        self.assertIn("Nike Air Max SC Leather Retro Sneakers", foot_looks[0]["anchor_label"])
+        self.assertIn("Levi's 511", foot_looks[0]["sub1_name"])
+
+        # 3. Blazer anchor
+        blazer_looks = get_stylesync_looks_for_anchor(TARGET_ITEM)
+        self.assertEqual(len(blazer_looks), 3)
+        self.assertIn("MANGO MAN", blazer_looks[0]["anchor_label"])
+
 
 if __name__ == "__main__":
     unittest.main()

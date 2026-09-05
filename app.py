@@ -1769,6 +1769,17 @@ def render_pdp_view() -> None:
                 unsafe_allow_html=True
             )
             if st.button("✨ Launch StyleSync™ AI Studio & WhatsApp Poll →", key="pdp_stylesync_cta_btn", type="primary", use_container_width=True):
+                st.session_state["anchor_item"] = {
+                    "id": item["id"],
+                    "name": item["name"],
+                    "brand": item["brand"],
+                    "price": item["price"],
+                    "original_price": item.get("mrp", item.get("original_price", item["price"])),
+                    "discount": item.get("discount", "20% OFF").replace("(", "").replace(")", ""),
+                    "image_url": item.get("img", item.get("image_url", ""))
+                }
+                st.session_state["poll_look_title"] = None
+                st.session_state["vote_feedback"] = None
                 pdp_status = st.empty()
                 pdp_prog = st.progress(0)
                 pdp_status.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🔍 Step 1/3: Scanning your past Myntra purchases & closet inventory...</div></div>', unsafe_allow_html=True)
@@ -1817,7 +1828,18 @@ def render_pdp_view() -> None:
         with btn_wish:
             if st.button("❤️ WISHLIST", key="pdp_add_wl_standard", use_container_width=True):
                 st.session_state["wishlist_count"] += 1
-                st.toast(f"❤️ Added {item['name']} to Wishlist!")
+                st.session_state["anchor_item"] = {
+                    "id": item["id"],
+                    "name": item["name"],
+                    "brand": item["brand"],
+                    "price": item["price"],
+                    "original_price": item.get("mrp", item.get("original_price", item["price"])),
+                    "discount": item.get("discount", "20% OFF").replace("(", "").replace(")", ""),
+                    "image_url": item.get("img", item.get("image_url", ""))
+                }
+                st.session_state["poll_look_title"] = None
+                st.session_state["vote_feedback"] = None
+                st.toast(f"❤️ Added {item['name']} to Wishlist & Set as Anchor!")
                 st.rerun()
         with btn_order:
             if st.button("⚡ BUY NOW (1-CLICK)", key="pdp_buy_now_btn", type="primary", use_container_width=True):
@@ -1879,6 +1901,8 @@ def render_wishlist_view() -> None:
             unsafe_allow_html=True
         )
         if st.button("✨ Style with My Closet (Run StyleSync AI) →", key="wl_run_ai_btn", type="primary", use_container_width=True):
+            st.session_state["poll_look_title"] = None
+            st.session_state["vote_feedback"] = None
             status_box = st.empty()
             prog_bar = st.progress(0)
             status_box.markdown('<div style="background: #FFF0F4; border: 1.5px solid #FFCCD7; border-radius: 10px; padding: 12px 16px; margin: 10px 0;"><div style="font-weight: 800; color: #FF3F6C; font-size: 0.88rem;">🔍 Step 1/3: Scanning your past Myntra purchases & closet inventory...</div></div>', unsafe_allow_html=True)
@@ -1943,6 +1967,8 @@ def render_wishlist_view() -> None:
                         "discount": item.get("discount", "20% OFF"),
                         "image_url": item["image_url"]
                     }
+                    st.session_state["poll_look_title"] = None
+                    st.session_state["vote_feedback"] = None
                     st.toast(f"📌 Set {item['brand']} {item['name']} as Active Anchor!")
                     st.rerun()
 
@@ -1983,6 +2009,8 @@ def render_wishlist_view() -> None:
                         "discount": item.get("discount", "20% OFF"),
                         "image_url": item["image_url"]
                     }
+                    st.session_state["poll_look_title"] = None
+                    st.session_state["vote_feedback"] = None
                     st.toast(f"📌 Set {item['brand']} {item['name']} as Active Anchor!")
                     st.rerun()
 
@@ -1991,188 +2019,587 @@ def render_wishlist_view() -> None:
 # 10. SCREEN 5: STYLESYNC AI STUDIO & WHATSAPP SOCIAL POLL
 # ==============================================================================
 
+def get_stylesync_looks_for_anchor(anchor: dict) -> list[dict]:
+    """
+    Generates 3 dynamic, harmonized Rule-of-3 modular outfit pairings for ANY active anchor item.
+    Adapts intelligently to tops, blazers/outerwear, trousers/denim, footwear, dresses/ethnic, and accessories.
+    """
+    name_lower = (anchor.get("name", "") + " " + anchor.get("brand", "")).lower()
+    anchor_brand = anchor.get("brand", "MANGO MAN")
+    anchor_name = anchor.get("name", "Anchor Garment")
+    anchor_price = anchor.get("price", "₹2,999")
+
+    # Parse numeric price
+    price_num = 2999
+    try:
+        clean_p = "".join([c for c in str(anchor_price) if c.isdigit()])
+        if clean_p:
+            price_num = int(clean_p)
+    except Exception:
+        price_num = 2999
+
+    is_blazer = any(k in name_lower for k in ["blazer", "jacket", "coat", "suit", "overshirt", "cardigan", "bomber", "shacket"])
+    is_top = (any(k in name_lower for k in ["shirt", "t-shirt", "tee", "tank", "polo", "top", "hoodie", "sweatshirt", "sweater"]) and not is_blazer)
+    is_bottom = any(k in name_lower for k in ["trouser", "trousers", "pant", "pants", "jeans", "denim", "bottom", "cargo", "jogger", "shorts", "skirt"])
+    is_footwear = any(k in name_lower for k in ["shoe", "shoes", "sneaker", "sneakers", "boot", "boots", "heel", "heels", "sandal", "sandals", "trainer", "footwear", "loafers", "caven", "ultraboost", "air max"])
+    is_dress = any(k in name_lower for k in ["dress", "maxi", "gown", "frock", "kurti", "kurta", "anarkali", "saree", "dungaree", "co-ord", "onesie"])
+
+    if is_blazer:
+        return [
+            {
+                "id": "look_1",
+                "title": "Look 1: Sunset Linen (Smart Casual)",
+                "short_title": "Look 1: Sunset Linen",
+                "tag": "Smart Casual Ensemble",
+                "match": "98% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Linen Shirt + Tailored Trousers",
+                "sub1_name": "H&M Shirt",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_OLIVE_SHIRT,
+                "sub2_name": "Zara Pants",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": IMAGE_BLACK_TROUSERS,
+                "price": anchor_price,
+                "buy_pct": 84,
+                "drop_pct": 16,
+                "buy_count": 5,
+                "drop_count": 1,
+                "add_to_bag_count": 1
+            },
+            {
+                "id": "look_2",
+                "title": "Look 2: Urban Brunch (Layered Streetwear)",
+                "short_title": "Look 2: Urban Brunch",
+                "tag": "Relaxed Weekend Layering",
+                "match": "94% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + White Crewneck Tee + Retro Sneakers",
+                "sub1_name": "White Tee",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_WHITE_TANK,
+                "sub2_name": "Puma Court",
+                "sub2_tag": "Add-on (₹2,749)",
+                "sub2_tag_class": "ui-badge-wishlist",
+                "sub2_img": IMAGE_PUMA_SNEAKERS,
+                "price": f"₹{price_num + 2749:,}",
+                "buy_pct": 92,
+                "drop_pct": 8,
+                "buy_count": 6,
+                "drop_count": 0,
+                "add_to_bag_count": 2
+            },
+            {
+                "id": "look_3",
+                "title": "Look 3: Smart Business (Tailored Executive)",
+                "short_title": "Look 3: Smart Business",
+                "tag": "Tailored Executive Sharp",
+                "match": "91% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Chrono Watch + Raw Indigo Denim",
+                "sub1_name": "Fossil Watch",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_FOSSIL_WATCH,
+                "sub2_name": "Levi's 511",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": IMAGE_LIGHT_DENIM,
+                "price": anchor_price,
+                "buy_pct": 78,
+                "drop_pct": 22,
+                "buy_count": 4,
+                "drop_count": 1,
+                "add_to_bag_count": 1
+            }
+        ]
+    elif is_top:
+        return [
+            {
+                "id": "look_1",
+                "title": "Look 1: Smart Casual Office",
+                "short_title": "Look 1: Smart Casual Office",
+                "tag": "Contemporary Sharp Ensemble",
+                "match": "98% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Tailored Pleated Trousers + Chrono Watch",
+                "sub1_name": "Zara Pants",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_BLACK_TROUSERS,
+                "sub2_name": "Fossil Watch",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": IMAGE_FOSSIL_WATCH,
+                "price": anchor_price,
+                "buy_pct": 90,
+                "drop_pct": 10,
+                "buy_count": 6,
+                "drop_count": 0,
+                "add_to_bag_count": 1
+            },
+            {
+                "id": "look_2",
+                "title": "Look 2: Urban Weekend Casual",
+                "short_title": "Look 2: Urban Weekend Casual",
+                "tag": "Relaxed Streetwear Pairing",
+                "match": "95% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Levi's 501 Denim + Retro Sneakers",
+                "sub1_name": "Levi's 511",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_LIGHT_DENIM,
+                "sub2_name": "Puma Court",
+                "sub2_tag": "Add-on (₹2,749)",
+                "sub2_tag_class": "ui-badge-wishlist",
+                "sub2_img": IMAGE_PUMA_SNEAKERS,
+                "price": f"₹{price_num + 2749:,}",
+                "buy_pct": 88,
+                "drop_pct": 12,
+                "buy_count": 5,
+                "drop_count": 1,
+                "add_to_bag_count": 2
+            },
+            {
+                "id": "look_3",
+                "title": "Look 3: Minimalist Evening Layer",
+                "short_title": "Look 3: Minimalist Evening",
+                "tag": "Clean Layered Aesthetic",
+                "match": "91% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Leather Belt + Pleated Dark Trousers",
+                "sub1_name": "Zara Pants",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_BLACK_TROUSERS,
+                "sub2_name": "Tommy Belt",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=600&auto=format&fit=crop&q=80",
+                "price": anchor_price,
+                "buy_pct": 82,
+                "drop_pct": 18,
+                "buy_count": 4,
+                "drop_count": 1,
+                "add_to_bag_count": 1
+            }
+        ]
+    elif is_bottom:
+        return [
+            {
+                "id": "look_1",
+                "title": "Look 1: Clean Minimalist Sharp",
+                "short_title": "Look 1: Clean Minimalist",
+                "tag": "Smart Daily Workwear",
+                "match": "97% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Relaxed Linen Shirt + Chrono Watch",
+                "sub1_name": "H&M Shirt",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_OLIVE_SHIRT,
+                "sub2_name": "Fossil Watch",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": IMAGE_FOSSIL_WATCH,
+                "price": anchor_price,
+                "buy_pct": 89,
+                "drop_pct": 11,
+                "buy_count": 5,
+                "drop_count": 1,
+                "add_to_bag_count": 1
+            },
+            {
+                "id": "look_2",
+                "title": "Look 2: Streetwear Casual Flow",
+                "short_title": "Look 2: Streetwear Casual",
+                "tag": "Relaxed Brunch Vibe",
+                "match": "94% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + White Ribbed Tee + Retro Sneakers",
+                "sub1_name": "White Tee",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_WHITE_TANK,
+                "sub2_name": "Puma Court",
+                "sub2_tag": "Add-on (₹2,749)",
+                "sub2_tag_class": "ui-badge-wishlist",
+                "sub2_img": IMAGE_PUMA_SNEAKERS,
+                "price": f"₹{price_num + 2749:,}",
+                "buy_pct": 86,
+                "drop_pct": 14,
+                "buy_count": 5,
+                "drop_count": 1,
+                "add_to_bag_count": 2
+            },
+            {
+                "id": "look_3",
+                "title": "Look 3: Smart Layered Fit",
+                "short_title": "Look 3: Smart Layered",
+                "tag": "Contemporary Tailored Look",
+                "match": "92% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Olive Overshirt + Leather Belt",
+                "sub1_name": "H&M Shirt",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_OLIVE_SHIRT,
+                "sub2_name": "Tommy Belt",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=600&auto=format&fit=crop&q=80",
+                "price": anchor_price,
+                "buy_pct": 80,
+                "drop_pct": 20,
+                "buy_count": 4,
+                "drop_count": 1,
+                "add_to_bag_count": 1
+            }
+        ]
+    elif is_footwear:
+        return [
+            {
+                "id": "look_1",
+                "title": "Look 1: Urban Athleisure Flow",
+                "short_title": "Look 1: Urban Athleisure",
+                "tag": "Everyday Sportstyle Ensemble",
+                "match": "97% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Light Wash Denim + Ribbed Tank",
+                "sub1_name": "Levi's 511",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_LIGHT_DENIM,
+                "sub2_name": "White Tee",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": IMAGE_WHITE_TANK,
+                "price": anchor_price,
+                "buy_pct": 91,
+                "drop_pct": 9,
+                "buy_count": 6,
+                "drop_count": 0,
+                "add_to_bag_count": 1
+            },
+            {
+                "id": "look_2",
+                "title": "Look 2: Monochrome Smart Street",
+                "short_title": "Look 2: Smart Street",
+                "tag": "Elevated Casual Silhouette",
+                "match": "93% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Pleated Trousers + Olive Linen Shirt",
+                "sub1_name": "Zara Pants",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_BLACK_TROUSERS,
+                "sub2_name": "H&M Shirt",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": IMAGE_OLIVE_SHIRT,
+                "price": anchor_price,
+                "buy_pct": 85,
+                "drop_pct": 15,
+                "buy_count": 5,
+                "drop_count": 1,
+                "add_to_bag_count": 1
+            },
+            {
+                "id": "look_3",
+                "title": "Look 3: Weekend Casual Chill",
+                "short_title": "Look 3: Weekend Chill",
+                "tag": "Effortless Off-Duty Pairing",
+                "match": "90% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Chronograph Watch + Vintage Denim",
+                "sub1_name": "Fossil Watch",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_FOSSIL_WATCH,
+                "sub2_name": "Levi's 511",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": IMAGE_LIGHT_DENIM,
+                "price": anchor_price,
+                "buy_pct": 81,
+                "drop_pct": 19,
+                "buy_count": 4,
+                "drop_count": 1,
+                "add_to_bag_count": 1
+            }
+        ]
+    elif is_dress:
+        return [
+            {
+                "id": "look_1",
+                "title": "Look 1: Daytime Elegance",
+                "short_title": "Look 1: Daytime Elegance",
+                "tag": "Brunch & Soiree Ensemble",
+                "match": "98% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Strappy Block Heels + Satchel Bag",
+                "sub1_name": "Carlton Heels",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&auto=format&fit=crop&q=80",
+                "sub2_name": "Satchel Bag",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&auto=format&fit=crop&q=80",
+                "price": anchor_price,
+                "buy_pct": 94,
+                "drop_pct": 6,
+                "buy_count": 6,
+                "drop_count": 0,
+                "add_to_bag_count": 1
+            },
+            {
+                "id": "look_2",
+                "title": "Look 2: Contemporary Chic",
+                "short_title": "Look 2: Contemporary Chic",
+                "tag": "Modern Statement Style",
+                "match": "94% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Aviator Sunglasses + Satchel",
+                "sub1_name": "Ray-Ban Aviators",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&auto=format&fit=crop&q=80",
+                "sub2_name": "Structured Bag",
+                "sub2_tag": "Add-on (₹2,499)",
+                "sub2_tag_class": "ui-badge-wishlist",
+                "sub2_img": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&auto=format&fit=crop&q=80",
+                "price": f"₹{price_num + 2499:,}",
+                "buy_pct": 89,
+                "drop_pct": 11,
+                "buy_count": 5,
+                "drop_count": 1,
+                "add_to_bag_count": 2
+            },
+            {
+                "id": "look_3",
+                "title": "Look 3: Festive Glamour",
+                "short_title": "Look 3: Festive Glamour",
+                "tag": "Elevated Evening Silhouette",
+                "match": "92% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Ruby Woo Lipstick + Block Heels",
+                "sub1_name": "MAC Ruby Woo",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=600&auto=format&fit=crop&q=80",
+                "sub2_name": "Carlton Heels",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&auto=format&fit=crop&q=80",
+                "price": anchor_price,
+                "buy_pct": 83,
+                "drop_pct": 17,
+                "buy_count": 4,
+                "drop_count": 1,
+                "add_to_bag_count": 1
+            }
+        ]
+    else:
+        return [
+            {
+                "id": "look_1",
+                "title": "Look 1: Signature Daily Look",
+                "short_title": "Look 1: Signature Daily",
+                "tag": "Everyday Versatile Pairing",
+                "match": "97% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + H&M Linen Shirt + Zara Trousers",
+                "sub1_name": "H&M Shirt",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_OLIVE_SHIRT,
+                "sub2_name": "Zara Pants",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": IMAGE_BLACK_TROUSERS,
+                "price": anchor_price,
+                "buy_pct": 91,
+                "drop_pct": 9,
+                "buy_count": 6,
+                "drop_count": 0,
+                "add_to_bag_count": 1
+            },
+            {
+                "id": "look_2",
+                "title": "Look 2: Weekend Casual Vibe",
+                "short_title": "Look 2: Weekend Casual",
+                "tag": "Smart Streetwear Match",
+                "match": "93% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + White Tee + Levi's 501 Denim",
+                "sub1_name": "White Tee",
+                "sub1_tag": "In Closet",
+                "sub1_tag_class": "ui-badge-owned",
+                "sub1_img": IMAGE_WHITE_TANK,
+                "sub2_name": "Levi's 511",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": IMAGE_LIGHT_DENIM,
+                "price": anchor_price,
+                "buy_pct": 87,
+                "drop_pct": 13,
+                "buy_count": 5,
+                "drop_count": 1,
+                "add_to_bag_count": 1
+            },
+            {
+                "id": "look_3",
+                "title": "Look 3: Smart Travel Ready",
+                "short_title": "Look 3: Travel Ready",
+                "tag": "Effortless Active Coordination",
+                "match": "89% MATCH",
+                "anchor_label": f"{anchor_brand} {anchor_name}",
+                "anchor_price": anchor_price,
+                "look_img": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80",
+                "desc": f"{anchor_name} + Puma Court + Vintage Denim",
+                "sub1_name": "Puma Court",
+                "sub1_tag": "Add-on (₹2,749)",
+                "sub1_tag_class": "ui-badge-wishlist",
+                "sub1_img": IMAGE_PUMA_SNEAKERS,
+                "sub2_name": "Levi's 511",
+                "sub2_tag": "In Closet",
+                "sub2_tag_class": "ui-badge-owned",
+                "sub2_img": IMAGE_LIGHT_DENIM,
+                "price": f"₹{price_num + 2749:,}",
+                "buy_pct": 82,
+                "drop_pct": 18,
+                "buy_count": 4,
+                "drop_count": 1,
+                "add_to_bag_count": 2
+            }
+        ]
+
+
 def render_stylesync_view() -> None:
+    anchor = st.session_state.get("anchor_item", TARGET_ITEM)
+    anchor_brand = anchor.get("brand", "MANGO MAN")
+    anchor_name = anchor.get("name", "Rust Linen Relaxed-Fit Blazer")
+    anchor_price = anchor.get("price", "₹3,499")
+    anchor_img = anchor.get("image_url", anchor.get("img", TARGET_ITEM["image_url"]))
+
+    looks = get_stylesync_looks_for_anchor(anchor)
+
     st.markdown(
-        """
+        f"""
         <div class="section-header-wrap" style="margin-top: 0;">
             <div>
                 <div class="section-title">✨ STYLESYNC™ AI WARDROBE STUDIO</div>
-                <div class="section-subtitle">3 Complete Rule-of-3 Outfits Generated from Your Closet + WhatsApp Peer Poll Loop</div>
+                <div class="section-subtitle">3 Complete Rule-of-3 Outfits Generated for <b>{anchor_brand} {anchor_name}</b> from Your Closet</div>
             </div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    l_col1, l_col2, l_col3 = st.columns(3)
+    cols = st.columns(3)
 
-    # Look 1: Sunset Linen (Smart Casual)
-    with l_col1:
-        st.markdown(
-            """
-            <div class="look-card-box">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <span style="font-size: 1.05rem; font-weight: 900; color: #282C3F;">Look 1: Sunset Linen</span>
-                    <span style="font-size: 0.72rem; font-weight: 900; background: #E8F8F5; color: #03A685; padding: 2px 8px; border-radius: 9999px;">98% MATCH</span>
+    for i, (col, look) in enumerate(zip(cols, looks)):
+        with col:
+            match_bg = "#E8F8F5" if int("".join(filter(str.isdigit, look["match"])) or "90") >= 95 else "#FFF0F4"
+            match_color = "#03A685" if int("".join(filter(str.isdigit, look["match"])) or "90") >= 95 else "#FF3F6C"
+            st.markdown(
+                f"""
+                <div class="look-card-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="font-size: 1.05rem; font-weight: 900; color: #282C3F;">{look['short_title']}</span>
+                        <span style="font-size: 0.72rem; font-weight: 900; background: {match_bg}; color: {match_color}; padding: 2px 8px; border-radius: 9999px;">{look['match']}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; background: #FFF5F7; border: 1.5px solid #FFD8E4; border-radius: 8px; padding: 5px 8px; margin-bottom: 8px;">
+                        <span style="font-size: 0.65rem; font-weight: 900; color: #FFF; background: #FF3F6C; padding: 2px 6px; border-radius: 4px;">ANCHOR</span>
+                        <span style="font-size: 0.72rem; font-weight: 800; color: #282C3F; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{look['anchor_label']}</span>
+                        <span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C; margin-left: auto; white-space: nowrap;">{look['anchor_price']}</span>
+                    </div>
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px; background: #FFF5F7; border: 1.5px solid #FFD8E4; border-radius: 8px; padding: 5px 8px; margin-bottom: 8px;">
-                    <span style="font-size: 0.65rem; font-weight: 900; color: #FFF; background: #FF3F6C; padding: 2px 6px; border-radius: 4px;">ANCHOR</span>
-                    <span style="font-size: 0.72rem; font-weight: 800; color: #282C3F;">MANGO MAN Linen Blazer</span>
-                    <span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C; margin-left: auto;">₹3,499</span>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        st.markdown(
-            '<img src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 180px; object-fit: cover; object-position: center; border-radius: 8px; display: block;" />',
-            unsafe_allow_html=True
-        )
-        st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Smart Casual Ensemble</div><div style='font-size: 0.72rem; color: #7E818C; margin-bottom: 4px;'>Blazer + Linen Shirt + Tailored Trousers</div>", unsafe_allow_html=True)
-        
-        img_sub1, img_sub2 = st.columns(2)
-        with img_sub1:
-            st.markdown(f'<img src="{IMAGE_OLIVE_SHIRT}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
-            st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
-            st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>H&M Shirt</div>", unsafe_allow_html=True)
-        with img_sub2:
-            st.markdown(f'<img src="{IMAGE_BLACK_TROUSERS}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
-            st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
-            st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>Zara Pants</div>", unsafe_allow_html=True)
-        
-        b_p1, b_p2 = st.columns(2)
-        with b_p1:
-            if st.button("💬 Poll Look 1", key="poll_look_1_btn", type="primary", use_container_width=True):
-                st.session_state["poll_sent"] = True
-                st.session_state["poll_look_title"] = "Look 1: Sunset Linen (Smart Casual)"
-                st.session_state["poll_look_match"] = "98% MATCH"
-                st.session_state["poll_look_img"] = "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=800&auto=format&fit=crop&q=80"
-                st.session_state["poll_look_desc"] = "Anchor Blazer + Linen Shirt + Zara Trousers"
-                st.session_state["poll_look_price"] = "₹3,499"
-                st.session_state["poll_buy_pct"] = 84
-                st.session_state["poll_drop_pct"] = 16
-                st.session_state["poll_buy_count"] = 5
-                st.session_state["poll_drop_count"] = 1
-                st.session_state["vote_feedback"] = None
-                st.toast("💬 Look 1 (98% Match) shared to WhatsApp Peer Poll!")
-                st.rerun()
-        with b_p2:
-            if st.button("🛍️ Add Look 1", key="add_l1_btn", use_container_width=True):
-                st.session_state["bag_count"] += 1
-                st.toast("Added Look 1 Ensemble to Bag!")
-                st.rerun()
+                """,
+                unsafe_allow_html=True
+            )
+            st.markdown(
+                f'<img src="{look["look_img"]}" style="width: 100%; height: 180px; object-fit: cover; object-position: center; border-radius: 8px; display: block;" />',
+                unsafe_allow_html=True
+            )
+            st.markdown(
+                f"<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>{look['tag']}</div>"
+                f"<div style='font-size: 0.72rem; color: #7E818C; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>{look['desc']}</div>",
+                unsafe_allow_html=True
+            )
 
-    # Look 2: Urban Brunch (Layered Streetwear)
-    with l_col2:
-        st.markdown(
-            """
-            <div class="look-card-box">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <span style="font-size: 1.05rem; font-weight: 900; color: #282C3F;">Look 2: Urban Brunch</span>
-                    <span style="font-size: 0.72rem; font-weight: 900; background: #FFF0F4; color: #FF3F6C; padding: 2px 8px; border-radius: 9999px;">94% MATCH</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 8px; background: #FFF5F7; border: 1.5px solid #FFD8E4; border-radius: 8px; padding: 5px 8px; margin-bottom: 8px;">
-                    <span style="font-size: 0.65rem; font-weight: 900; color: #FFF; background: #FF3F6C; padding: 2px 6px; border-radius: 4px;">ANCHOR</span>
-                    <span style="font-size: 0.72rem; font-weight: 800; color: #282C3F;">MANGO MAN Linen Blazer</span>
-                    <span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C; margin-left: auto;">₹3,499</span>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        st.markdown(
-            '<img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 180px; object-fit: cover; object-position: center; border-radius: 8px; display: block;" />',
-            unsafe_allow_html=True
-        )
-        st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Relaxed Weekend Layering</div><div style='font-size: 0.72rem; color: #7E818C; margin-bottom: 4px;'>Blazer + White Crewneck Tee + Retro Sneakers</div>", unsafe_allow_html=True)
+            img_sub1, img_sub2 = st.columns(2)
+            with img_sub1:
+                st.markdown(f'<img src="{look["sub1_img"]}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+                st.markdown(f"<div class='{look['sub1_tag_class']}' style='margin-top: 3px;'>{look['sub1_tag']}</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>{look['sub1_name']}</div>", unsafe_allow_html=True)
+            with img_sub2:
+                st.markdown(f'<img src="{look["sub2_img"]}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
+                st.markdown(f"<div class='{look['sub2_tag_class']}' style='margin-top: 3px;'>{look['sub2_tag']}</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>{look['sub2_name']}</div>", unsafe_allow_html=True)
 
-        img_sub3, img_sub4 = st.columns(2)
-        with img_sub3:
-            st.markdown(f'<img src="{IMAGE_WHITE_TANK}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
-            st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
-            st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>White Tee</div>", unsafe_allow_html=True)
-        with img_sub4:
-            st.markdown(f'<img src="{IMAGE_PUMA_SNEAKERS}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
-            st.markdown("<div class='ui-badge-wishlist' style='margin-top: 3px;'>Add-on (₹2,749)</div>", unsafe_allow_html=True)
-            st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>Puma Court</div>", unsafe_allow_html=True)
-
-        b_p3, b_p4 = st.columns(2)
-        with b_p3:
-            if st.button("💬 Poll Look 2", key="poll_look_2_btn", type="primary", use_container_width=True):
-                st.session_state["poll_sent"] = True
-                st.session_state["poll_look_title"] = "Look 2: Urban Brunch (Layered)"
-                st.session_state["poll_look_match"] = "94% MATCH"
-                st.session_state["poll_look_img"] = "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80"
-                st.session_state["poll_look_desc"] = "Anchor Blazer + White Tee + Puma Sneakers"
-                st.session_state["poll_look_price"] = "₹6,248"
-                st.session_state["poll_buy_pct"] = 92
-                st.session_state["poll_drop_pct"] = 8
-                st.session_state["poll_buy_count"] = 6
-                st.session_state["poll_drop_count"] = 0
-                st.session_state["vote_feedback"] = None
-                st.toast("💬 Look 2 (94% Match) shared to WhatsApp Peer Poll!")
-                st.rerun()
-        with b_p4:
-            if st.button("🛍️ Add Look 2", key="add_l2_btn", use_container_width=True):
-                st.session_state["bag_count"] += 2
-                st.toast("Added Look 2 Blazer + Sneakers to Bag!")
-                st.rerun()
-
-    # Look 3: Smart Business / Gallery Evening
-    with l_col3:
-        st.markdown(
-            """
-            <div class="look-card-box">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <span style="font-size: 1.05rem; font-weight: 900; color: #282C3F;">Look 3: Smart Business</span>
-                    <span style="font-size: 0.72rem; font-weight: 900; background: #E8F8F5; color: #03A685; padding: 2px 8px; border-radius: 9999px;">91% MATCH</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 8px; background: #FFF5F7; border: 1.5px solid #FFD8E4; border-radius: 8px; padding: 5px 8px; margin-bottom: 8px;">
-                    <span style="font-size: 0.65rem; font-weight: 900; color: #FFF; background: #FF3F6C; padding: 2px 6px; border-radius: 4px;">ANCHOR</span>
-                    <span style="font-size: 0.72rem; font-weight: 800; color: #282C3F;">MANGO MAN Linen Blazer</span>
-                    <span style="font-size: 0.72rem; font-weight: 800; color: #FF3F6C; margin-left: auto;">₹3,499</span>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        st.markdown(
-            '<img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&auto=format&fit=crop&q=80" style="width: 100%; height: 180px; object-fit: cover; object-position: center; border-radius: 8px; display: block;" />',
-            unsafe_allow_html=True
-        )
-        st.markdown("<div style='font-size: 0.76rem; font-weight: 800; color: #282C3F; margin: 6px 0 2px 0;'>Tailored Executive Sharp</div><div style='font-size: 0.72rem; color: #7E818C; margin-bottom: 4px;'>Blazer + Chrono Watch + Raw Indigo Denim</div>", unsafe_allow_html=True)
-
-        img_sub5, img_sub6 = st.columns(2)
-        with img_sub5:
-            st.markdown(f'<img src="{IMAGE_FOSSIL_WATCH}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
-            st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
-            st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>Fossil Watch</div>", unsafe_allow_html=True)
-        with img_sub6:
-            st.markdown(f'<img src="{IMAGE_LIGHT_DENIM}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 6px;" />', unsafe_allow_html=True)
-            st.markdown("<div class='ui-badge-owned' style='margin-top: 3px;'>In Closet</div>", unsafe_allow_html=True)
-            st.markdown("<div style='font-size: 0.72rem; font-weight: 700; color: #282C3F;'>Levi's 511</div>", unsafe_allow_html=True)
-
-        b_p5, b_p6 = st.columns(2)
-        with b_p5:
-            if st.button("💬 Poll Look 3", key="poll_look_3_btn", type="primary", use_container_width=True):
-                st.session_state["poll_sent"] = True
-                st.session_state["poll_look_title"] = "Look 3: Smart Business (Executive)"
-                st.session_state["poll_look_match"] = "91% MATCH"
-                st.session_state["poll_look_img"] = "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&auto=format&fit=crop&q=80"
-                st.session_state["poll_look_desc"] = "Anchor Blazer + Fossil Watch + Levi's Denim"
-                st.session_state["poll_look_price"] = "₹3,499"
-                st.session_state["poll_buy_pct"] = 78
-                st.session_state["poll_drop_pct"] = 22
-                st.session_state["poll_buy_count"] = 4
-                st.session_state["poll_drop_count"] = 1
-                st.session_state["vote_feedback"] = None
-                st.toast("💬 Look 3 (91% Match) shared to WhatsApp Peer Poll!")
-                st.rerun()
-        with b_p6:
-            if st.button("🛍️ Add Look 3", key="add_l3_btn", use_container_width=True):
-                st.session_state["bag_count"] += 1
-                st.toast("Added Look 3 to Bag!")
-                st.rerun()
+            b_p1, b_p2 = st.columns(2)
+            with b_p1:
+                if st.button(f"💬 Poll Look {i+1}", key=f"poll_look_{i+1}_btn", type="primary", use_container_width=True):
+                    st.session_state["poll_sent"] = True
+                    st.session_state["poll_look_title"] = look["title"]
+                    st.session_state["poll_look_match"] = look["match"]
+                    st.session_state["poll_look_img"] = look["look_img"]
+                    st.session_state["poll_look_desc"] = f"Anchor {anchor_name} + {look['sub1_name']} + {look['sub2_name']}"
+                    st.session_state["poll_look_price"] = look["price"]
+                    st.session_state["poll_look_sub1_img"] = look["sub1_img"]
+                    st.session_state["poll_look_sub2_img"] = look["sub2_img"]
+                    st.session_state["poll_buy_pct"] = look["buy_pct"]
+                    st.session_state["poll_drop_pct"] = look["drop_pct"]
+                    st.session_state["poll_buy_count"] = look["buy_count"]
+                    st.session_state["poll_drop_count"] = look["drop_count"]
+                    st.session_state["vote_feedback"] = None
+                    st.toast(f"💬 {look['short_title']} ({look['match']}) shared to WhatsApp Peer Poll!")
+                    st.rerun()
+            with b_p2:
+                if st.button(f"🛍️ Add Look {i+1}", key=f"add_l{i+1}_btn", use_container_width=True):
+                    st.session_state["bag_count"] += look["add_to_bag_count"]
+                    st.toast(f"Added {look['short_title']} Ensemble to Bag!")
+                    st.rerun()
 
     st.markdown("<hr style='margin: 2rem 0; border: none; border-top: 1px solid #ECEEF0;'>", unsafe_allow_html=True)
 
@@ -2191,19 +2618,25 @@ def render_stylesync_view() -> None:
 
     wa_col1, wa_col2 = st.columns([1.3, 1], gap="large")
 
-    with wa_col1:
-        look_name = st.session_state.get("poll_look_title", "Look 1: Sunset Linen (Smart Casual)")
-        look_match = st.session_state.get("poll_look_match", "98% MATCH")
-        look_img = st.session_state.get("poll_look_img", "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=800&auto=format&fit=crop&q=80")
-        look_desc = st.session_state.get("poll_look_desc", "Anchor Blazer (₹3,499) + 2 Owned Closet Pieces")
-        look_price = st.session_state.get("poll_look_price", "₹3,499")
-        buy_pct = st.session_state.get("poll_buy_pct", 84)
-        drop_pct = st.session_state.get("poll_drop_pct", 16)
-        buy_count = st.session_state.get("poll_buy_count", 5)
-        drop_count = st.session_state.get("poll_drop_count", 1)
+    # Match active polled look with current anchor
+    current_polled_title = st.session_state.get("poll_look_title")
+    matched_look = next((l for l in looks if l["title"] == current_polled_title), looks[0])
 
-        match_bg = "#E8F8F5" if "98" in look_match or "91" in look_match else "#FFF0F4"
-        match_color = "#03A685" if "98" in look_match or "91" in look_match else "#FF3F6C"
+    with wa_col1:
+        look_name = matched_look["title"]
+        look_match = matched_look["match"]
+        look_img = matched_look["look_img"]
+        look_desc = f"Anchor {anchor_name} + {matched_look['sub1_name']} + {matched_look['sub2_name']}"
+        look_price = matched_look["price"]
+        buy_pct = matched_look["buy_pct"]
+        drop_pct = matched_look["drop_pct"]
+        buy_count = matched_look["buy_count"]
+        drop_count = matched_look["drop_count"]
+        sub1_img = matched_look["sub1_img"]
+        sub2_img = matched_look["sub2_img"]
+
+        match_bg = "#E8F8F5" if int("".join(filter(str.isdigit, look_match)) or "90") >= 95 else "#FFF0F4"
+        match_color = "#03A685" if int("".join(filter(str.isdigit, look_match)) or "90") >= 95 else "#FF3F6C"
 
         # WhatsApp Chat UI Container
         chat_html = (
@@ -2218,7 +2651,7 @@ def render_stylesync_view() -> None:
             f'<div class="wa-chat-body">'
             f'<div class="wa-chat-bubble">'
             f'<div style="font-weight: 800; font-size: 0.88rem; color: #111B21; margin-bottom: 8px; line-height: 1.4;">'
-            f'Hey guys! Thinking of buying this <b>Rust Linen Blazer</b>. StyleSync paired it with my old Zara trousers. <b>Buy or Drop?</b>'
+            f'Hey guys! Thinking of buying this <b>{anchor_brand} {anchor_name}</b>. StyleSync paired it with my closet pieces. <b>Buy or Drop?</b>'
             f'</div>'
             f'<div style="background: #FFFFFF; border-radius: 10px; padding: 10px; margin: 8px 0; border: 1px solid #D9FDD3;">'
             f'<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">'
@@ -2230,12 +2663,12 @@ def render_stylesync_view() -> None:
             f'<span style="font-size: 0.7rem; font-weight: 900; background: {match_bg}; color: {match_color}; padding: 3px 8px; border-radius: 4px;">{look_match}</span>'
             f'</div>'
             f'<div style="display: flex; gap: 6px; align-items: center; background: #F8F9FA; padding: 6px; border-radius: 6px;">'
-            f'<img src="{TARGET_ITEM["image_url"]}" style="width: 38px; height: 38px; object-fit: cover; border-radius: 4px; border: 1px solid #FFD8E4;" />'
+            f'<img src="{anchor_img}" style="width: 38px; height: 38px; object-fit: cover; border-radius: 4px; border: 1px solid #FFD8E4;" />'
             f'<span style="font-size: 0.75rem; color: #7E818C;">+</span>'
-            f'<img src="{IMAGE_OLIVE_SHIRT}" style="width: 38px; height: 38px; object-fit: cover; border-radius: 4px; border: 1px solid #ECEEF0;" />'
+            f'<img src="{sub1_img}" style="width: 38px; height: 38px; object-fit: cover; border-radius: 4px; border: 1px solid #ECEEF0;" />'
             f'<span style="font-size: 0.75rem; color: #7E818C;">+</span>'
-            f'<img src="{IMAGE_BLACK_TROUSERS}" style="width: 38px; height: 38px; object-fit: cover; border-radius: 4px; border: 1px solid #ECEEF0;" />'
-            f'<span style="font-size: 0.68rem; font-weight: 800; color: #03A685; margin-left: auto;">(2 Owned + 1 Anchor)</span>'
+            f'<img src="{sub2_img}" style="width: 38px; height: 38px; object-fit: cover; border-radius: 4px; border: 1px solid #ECEEF0;" />'
+            f'<span style="font-size: 0.68rem; font-weight: 800; color: #03A685; margin-left: auto;">(2 Closet/Wishlist + 1 Anchor)</span>'
             f'</div>'
             f'</div>'
             f'<div style="text-align: right; font-size: 0.65rem; color: #667781; font-weight: 600;">10:42 AM ✓✓</div>'
@@ -2286,12 +2719,12 @@ def render_stylesync_view() -> None:
             st.markdown(feedback_html, unsafe_allow_html=True)
             if st.button(f"🛍️ PROCEED TO 1-CLICK CHECKOUT ({look_price})", key="wa_checkout_btn", type="primary", use_container_width=True):
                 st.session_state["ordered_item"] = {
-                    "id": "hero_1",
-                    "name": f"Rust Linen Relaxed-Fit Blazer ({look_name})",
-                    "brand": "MANGO MAN",
+                    "id": anchor.get("id", "hero_1"),
+                    "name": f"{anchor_brand} {anchor_name} ({matched_look['short_title']})",
+                    "brand": anchor_brand,
                     "price": look_price,
-                    "mrp": "₹4,999",
-                    "discount": "StyleSync VIP",
+                    "mrp": anchor.get("original_price", anchor.get("mrp", look_price)),
+                    "discount": anchor.get("discount", "StyleSync VIP"),
                     "img": look_img
                 }
                 st.session_state["show_order_modal"] = True
@@ -2303,7 +2736,7 @@ def render_stylesync_view() -> None:
                 """
                 <div style="background: #FFF5F5; border: 1.5px solid #FF4B4B; border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem;">
                     <div style="font-weight: 900; font-size: 0.95rem; color: #FF4B4B; margin-bottom: 4px;">💡 Peer Feedback Noted</div>
-                    <p style="font-size: 0.82rem; color: #282C3F; margin-bottom: 0;">2 friends suggested checking out olive blazers or lightweight shirts instead.</p>
+                    <p style="font-size: 0.82rem; color: #282C3F; margin-bottom: 0;">2 friends suggested checking out alternative pieces or lightweight layers instead.</p>
                 </div>
                 """,
                 unsafe_allow_html=True
