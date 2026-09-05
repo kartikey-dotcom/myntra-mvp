@@ -1050,8 +1050,10 @@ def init_session_state() -> None:
         ]
     if "bag_count" not in st.session_state:
         st.session_state["bag_count"] = len(st.session_state["bag_items"])
+    if "wishlist_items" not in st.session_state:
+        st.session_state["wishlist_items"] = [dict(p) for p in WISHLIST_PRODUCTS]
     if "wishlist_count" not in st.session_state:
-        st.session_state["wishlist_count"] = 1
+        st.session_state["wishlist_count"] = len(st.session_state["wishlist_items"])
     if "selected_size" not in st.session_state:
         st.session_state["selected_size"] = "40"
     if "poll_sent" not in st.session_state:
@@ -1110,6 +1112,61 @@ def remove_from_bag(index: int) -> None:
     if "bag_items" in st.session_state and 0 <= index < len(st.session_state["bag_items"]):
         st.session_state["bag_items"].pop(index)
         st.session_state["bag_count"] = len(st.session_state["bag_items"])
+
+def clear_bag() -> None:
+    """Clears all items from the shopping bag."""
+    st.session_state["bag_items"] = []
+    st.session_state["bag_count"] = 0
+
+def add_to_wishlist(item: dict) -> None:
+    """Adds an item to the user's wishlist and updates wishlist count."""
+    if "wishlist_items" not in st.session_state:
+        st.session_state["wishlist_items"] = [dict(p) for p in WISHLIST_PRODUCTS]
+    
+    img = item.get("img") or item.get("image_url") or TARGET_ITEM["image_url"]
+    brand = item.get("brand", "MYNTRA")
+    name = item.get("name", "Fashion Item")
+    price = item.get("price", "₹1,999")
+    mrp = item.get("mrp") or item.get("original_price") or price
+    discount = str(item.get("discount", "20% OFF")).replace("(", "").replace(")", "")
+    item_id = item.get("id", f"W-{int(time.time()*1000)}")
+    
+    existing = next((it for it in st.session_state["wishlist_items"] if it.get("id") == item_id), None)
+    if not existing:
+        st.session_state["wishlist_items"].insert(0, {
+            "id": item_id,
+            "brand": brand,
+            "name": name,
+            "price": price,
+            "original_price": mrp,
+            "discount": discount,
+            "rating": item.get("rating", "4.4"),
+            "image_url": img,
+            "tag": "Saved Wishlist Item"
+        })
+    st.session_state["wishlist_count"] = len(st.session_state["wishlist_items"])
+    st.session_state["anchor_item"] = {
+        "id": item_id,
+        "name": name,
+        "brand": brand,
+        "price": price,
+        "original_price": mrp,
+        "discount": discount,
+        "image_url": img
+    }
+
+def remove_from_wishlist(item_id: str) -> None:
+    """Removes an item from the wishlist by item ID."""
+    if "wishlist_items" not in st.session_state:
+        st.session_state["wishlist_items"] = [dict(p) for p in WISHLIST_PRODUCTS]
+    
+    st.session_state["wishlist_items"] = [it for it in st.session_state["wishlist_items"] if it.get("id") != item_id]
+    st.session_state["wishlist_count"] = len(st.session_state["wishlist_items"])
+
+def clear_wishlist() -> None:
+    """Clears all items from the wishlist."""
+    st.session_state["wishlist_items"] = []
+    st.session_state["wishlist_count"] = 0
 
 def set_view(view_name: str) -> None:
     st.session_state["current_view"] = view_name
@@ -1404,7 +1461,7 @@ def render_drawers_and_modals() -> None:
                 unsafe_allow_html=True
             )
 
-            b_c1, b_c2 = st.columns(2)
+            b_c1, b_c2, b_c3 = st.columns([2, 1, 1])
             with b_c1:
                 if st.button("💳 Proceed to Checkout Now", key="drawer_checkout_btn", type="primary", use_container_width=True):
                     if len(bag_items) == 1:
@@ -1434,7 +1491,12 @@ def render_drawers_and_modals() -> None:
                     st.toast("🎉 Order placed successfully! Delivery scheduled by tomorrow.")
                     st.rerun()
             with b_c2:
-                if st.button("✖️ Close Bag", key="close_bag_btn", use_container_width=True):
+                if st.button("🗑️ Empty Bag", key="empty_bag_btn", use_container_width=True):
+                    clear_bag()
+                    st.toast("🗑️ Shopping bag cleared!")
+                    st.rerun()
+            with b_c3:
+                if st.button("✖️ Close", key="close_bag_btn", use_container_width=True):
                     st.session_state["show_bag_drawer"] = False
                     st.rerun()
 
@@ -1678,17 +1740,8 @@ def render_catalog_view() -> None:
                         st.rerun()
                 with qb2:
                     if st.button("❤️ Save", key=f"quick_wl_{item['id']}", use_container_width=True):
-                        st.session_state["wishlist_count"] += 1
-                        st.session_state["anchor_item"] = {
-                            "id": item["id"],
-                            "name": item["name"],
-                            "brand": item["brand"],
-                            "price": item["price"],
-                            "original_price": item.get("mrp", item["price"]),
-                            "discount": item.get("discount", "20% OFF").replace("(", "").replace(")", ""),
-                            "image_url": item["img"]
-                        }
-                        st.toast(f"❤️ Saved {item['brand']} {item['name']} as Active Anchor in Wishlist!")
+                        add_to_wishlist(item)
+                        st.toast(f"❤️ Saved {item['brand']} {item['name']} to Wishlist & Set as Anchor!")
                         st.rerun()
 
                 if st.button("⚡ 1-Click Order", key=f"quick_order_{item['id']}", type="primary", use_container_width=True):
@@ -1952,19 +2005,10 @@ def render_pdp_view() -> None:
                 st.rerun()
         with btn_wish:
             if st.button("❤️ WISHLIST", key="pdp_add_wl_standard", use_container_width=True):
-                st.session_state["wishlist_count"] += 1
-                st.session_state["anchor_item"] = {
-                    "id": item["id"],
-                    "name": item["name"],
-                    "brand": item["brand"],
-                    "price": item["price"],
-                    "original_price": item.get("mrp", item.get("original_price", item["price"])),
-                    "discount": item.get("discount", "20% OFF").replace("(", "").replace(")", ""),
-                    "image_url": item.get("img", item.get("image_url", ""))
-                }
+                add_to_wishlist(item)
                 st.session_state["poll_look_title"] = None
                 st.session_state["vote_feedback"] = None
-                st.toast(f"❤️ Added {item['name']} to Wishlist & Set as Anchor!")
+                st.toast(f"❤️ Added {item['brand']} {item['name']} to Wishlist & Set as Anchor!")
                 st.rerun()
         with btn_order:
             if st.button("⚡ BUY NOW (1-CLICK)", key="pdp_buy_now_btn", type="primary", use_container_width=True):
@@ -1988,18 +2032,28 @@ def render_pdp_view() -> None:
 
 def render_wishlist_view() -> None:
     anchor = st.session_state.get("anchor_item", TARGET_ITEM)
+    wishlist_items = st.session_state.get("wishlist_items", [dict(p) for p in WISHLIST_PRODUCTS])
+    st.session_state["wishlist_count"] = len(wishlist_items)
 
-    st.markdown(
-        f"""
-        <div class="section-header-wrap" style="margin-top: 0;">
-            <div>
-                <div class="section-title">MY WISHLIST & SAVED WARDROBE</div>
-                <div class="section-subtitle">Active Anchor Garment: <b>{anchor['brand']} {anchor['name']}</b></div>
+    wh_col1, wh_col2 = st.columns([3.5, 1.2])
+    with wh_col1:
+        st.markdown(
+            f"""
+            <div class="section-header-wrap" style="margin-top: 0;">
+                <div>
+                    <div class="section-title">MY WISHLIST & SAVED WARDROBE ({len(wishlist_items)} Items)</div>
+                    <div class="section-subtitle">Active Anchor Garment: <b>{anchor['brand']} {anchor['name']}</b></div>
+                </div>
             </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            """,
+            unsafe_allow_html=True
+        )
+    with wh_col2:
+        if wishlist_items:
+            if st.button("🗑️ Clear Wishlist", key="clear_wl_all_btn", use_container_width=True):
+                clear_wishlist()
+                st.toast("🗑️ Wishlist cleared successfully!")
+                st.rerun()
 
     # 1. Target Anchor Garment Card
     w_col1, w_col2 = st.columns([1, 2.2])
@@ -2077,96 +2131,69 @@ def render_wishlist_view() -> None:
         <div class="section-header-wrap" style="margin-top: 1.5rem;">
             <div>
                 <div class="section-title">YOUR CLOSET INVENTORY & WISHLIST MATCHES</div>
-                <div class="section-subtitle">Click '📌 Make Anchor' on any item below to restyle around it!</div>
+                <div class="section-subtitle">Click '📌 Anchor' to restyle around any item, or '🗑️ Remove' to take it off your wishlist!</div>
             </div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    g1, g2, g3 = st.columns(3)
-    for idx, item in enumerate(WISHLIST_PRODUCTS[:3]):
-        with [g1, g2, g3][idx]:
-            st.markdown(
-                f'<img src="{item["image_url"]}" style="width: 100%; height: 180px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
-                unsafe_allow_html=True
-            )
-            st.markdown(
-                f"""
-                <div style="padding: 4px 0 6px 0;">
-                    <span style="font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; {'background: #282C3F; color: #FFF;' if 'Closet' in item['tag'] else 'background: #E8F8F5; color: #03A685;'}">
-                        {item['tag']}
-                    </span>
-                    <div style="font-weight: 800; font-size: 0.9rem; color: #282C3F; margin-top: 4px;">{item['brand']}</div>
-                    <div style="font-size: 0.82rem; color: #535766;">{item['name']}</div>
-                    <div style="font-weight: 800; font-size: 0.9rem; color: #282C3F; margin-top: 2px;">{item['price']}</div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-            c_b1, c_b2 = st.columns(2)
-            with c_b1:
-                if st.button(f"🛍️ +Bag", key=f"wl_bag_{item['id']}", use_container_width=True):
-                    add_to_bag(item)
-                    st.toast(f"Added {item['name']} to Bag!")
-                    st.rerun()
-            with c_b2:
-                if st.button("📌 Set Anchor", key=f"wl_set_anc_{item['id']}", use_container_width=True):
-                    st.session_state["anchor_item"] = {
-                        "id": item["id"],
-                        "name": item["name"],
-                        "brand": item["brand"],
-                        "price": item["price"],
-                        "original_price": item.get("original_price", item["price"]),
-                        "discount": item.get("discount", "20% OFF"),
-                        "image_url": item["image_url"]
-                    }
-                    st.session_state["poll_look_title"] = None
-                    st.session_state["vote_feedback"] = None
-                    st.toast(f"📌 Set {item['brand']} {item['name']} as Active Anchor!")
-                    st.rerun()
-
-    g4, g5, g6 = st.columns(3)
-    for idx, item in enumerate(WISHLIST_PRODUCTS[3:6]):
-        with [g4, g5, g6][idx]:
-            st.markdown(
-                f'<img src="{item["image_url"]}" style="width: 100%; height: 180px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
-                unsafe_allow_html=True
-            )
-            st.markdown(
-                f"""
-                <div style="padding: 4px 0 6px 0;">
-                    <span style="font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; {'background: #282C3F; color: #FFF;' if 'Closet' in item['tag'] else 'background: #E8F8F5; color: #03A685;'}">
-                        {item['tag']}
-                    </span>
-                    <div style="font-weight: 800; font-size: 0.9rem; color: #282C3F; margin-top: 4px;">{item['brand']}</div>
-                    <div style="font-size: 0.82rem; color: #535766;">{item['name']}</div>
-                    <div style="font-weight: 800; font-size: 0.9rem; color: #282C3F; margin-top: 2px;">{item['price']}</div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-            c_b3, c_b4 = st.columns(2)
-            with c_b3:
-                if st.button(f"🛍️ +Bag", key=f"wl_bag_{item['id']}", use_container_width=True):
-                    add_to_bag(item)
-                    st.toast(f"Added {item['name']} to Bag!")
-                    st.rerun()
-            with c_b4:
-                if st.button("📌 Set Anchor", key=f"wl_set_anc_{item['id']}", use_container_width=True):
-                    st.session_state["anchor_item"] = {
-                        "id": item["id"],
-                        "name": item["name"],
-                        "brand": item["brand"],
-                        "price": item["price"],
-                        "original_price": item.get("original_price", item["price"]),
-                        "discount": item.get("discount", "20% OFF"),
-                        "image_url": item["image_url"]
-                    }
-                    st.session_state["poll_look_title"] = None
-                    st.session_state["vote_feedback"] = None
-                    st.toast(f"📌 Set {item['brand']} {item['name']} as Active Anchor!")
-                    st.rerun()
+    if not wishlist_items:
+        st.info("Your wishlist is currently empty. Explore our master catalog to add items to your wishlist!")
+        if st.button("🔍 Explore Master Catalog Now", key="wl_empty_explore_btn", type="primary", use_container_width=True):
+            set_view("catalog")
+    else:
+        num_cols = 3
+        rows = [wishlist_items[i:i + num_cols] for i in range(0, len(wishlist_items), num_cols)]
+        for r_idx, row_items in enumerate(rows):
+            w_cols = st.columns(num_cols)
+            for c_idx, item in enumerate(row_items):
+                with w_cols[c_idx]:
+                    img_src = item.get("image_url") or item.get("img") or TARGET_ITEM["image_url"]
+                    st.markdown(
+                        f'<img src="{img_src}" style="width: 100%; height: 180px; object-fit: cover; object-position: center; border-radius: 10px; display: block;" />',
+                        unsafe_allow_html=True
+                    )
+                    tag_bg = 'background: #282C3F; color: #FFF;' if 'Closet' in str(item.get('tag', '')) else 'background: #E8F8F5; color: #03A685;'
+                    st.markdown(
+                        f"""
+                        <div style="padding: 4px 0 6px 0;">
+                            <span style="font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; {tag_bg}">
+                                {item.get('tag', 'Saved Item')}
+                            </span>
+                            <div style="font-weight: 800; font-size: 0.9rem; color: #282C3F; margin-top: 4px;">{item.get('brand', 'MYNTRA')}</div>
+                            <div style="font-size: 0.82rem; color: #535766; height: 38px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">{item.get('name', 'Fashion Item')}</div>
+                            <div style="font-weight: 800; font-size: 0.9rem; color: #282C3F; margin-top: 2px;">{item.get('price', '₹1,999')}</div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+                    cb1, cb2, cb3 = st.columns([1, 1.1, 0.9])
+                    with cb1:
+                        if st.button("🛍️ +Bag", key=f"wl_bag_{r_idx}_{c_idx}_{item.get('id', c_idx)}", use_container_width=True):
+                            add_to_bag(item)
+                            st.toast(f"✅ Added {item.get('name')} to Bag!")
+                            st.rerun()
+                    with cb2:
+                        if st.button("📌 Anchor", key=f"wl_set_anc_{r_idx}_{c_idx}_{item.get('id', c_idx)}", use_container_width=True):
+                            st.session_state["anchor_item"] = {
+                                "id": item.get("id"),
+                                "name": item.get("name"),
+                                "brand": item.get("brand"),
+                                "price": item.get("price"),
+                                "original_price": item.get("original_price", item.get("price")),
+                                "discount": item.get("discount", "20% OFF"),
+                                "image_url": img_src
+                            }
+                            st.session_state["poll_look_title"] = None
+                            st.session_state["vote_feedback"] = None
+                            st.toast(f"📌 Set {item.get('brand')} {item.get('name')} as Active Anchor!")
+                            st.rerun()
+                    with cb3:
+                        if st.button("🗑️ Remove", key=f"wl_rem_{r_idx}_{c_idx}_{item.get('id', c_idx)}", help="Remove item from Wishlist", use_container_width=True):
+                            remove_from_wishlist(item.get("id"))
+                            st.toast(f"🗑️ Removed {item.get('brand')} {item.get('name')} from Wishlist!")
+                            st.rerun()
 
 
 # ==============================================================================

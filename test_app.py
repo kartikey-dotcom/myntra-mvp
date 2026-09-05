@@ -153,6 +153,41 @@ class TestStyleSyncDataAndState(unittest.TestCase):
         remove_from_bag(len(st.session_state["bag_items"]) - 1)
         self.assertEqual(len(st.session_state["bag_items"]), initial_count)
 
+    def test_dynamic_wishlist_add_and_remove(self):
+        """Verify dynamic wishlist items, add/remove functions, and count synchronization."""
+        import streamlit as st
+        from app import add_to_wishlist, remove_from_wishlist, clear_wishlist
+        
+        init_session_state()
+        initial_wl_count = len(st.session_state["wishlist_items"])
+        self.assertGreaterEqual(initial_wl_count, 1)
+
+        # Add a test product to wishlist
+        test_prod = {
+            "id": "W-TEST-99",
+            "name": "Luxury Silk Floral Saree",
+            "brand": "KALKI",
+            "price": "₹7,999",
+            "mrp": "₹11,999",
+            "discount": "33% OFF",
+            "img": "https://images.unsplash.com/photo-1610030469983-98e550d6193c"
+        }
+        add_to_wishlist(test_prod)
+        self.assertEqual(len(st.session_state["wishlist_items"]), initial_wl_count + 1)
+        self.assertEqual(st.session_state["wishlist_count"], initial_wl_count + 1)
+        self.assertEqual(st.session_state["wishlist_items"][0]["name"], "Luxury Silk Floral Saree")
+        self.assertEqual(st.session_state["anchor_item"]["name"], "Luxury Silk Floral Saree")
+
+        # Test item removal by ID
+        remove_from_wishlist("W-TEST-99")
+        self.assertEqual(len(st.session_state["wishlist_items"]), initial_wl_count)
+        self.assertEqual(st.session_state["wishlist_count"], initial_wl_count)
+
+        # Test clear wishlist
+        clear_wishlist()
+        self.assertEqual(len(st.session_state["wishlist_items"]), 0)
+        self.assertEqual(st.session_state["wishlist_count"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()
